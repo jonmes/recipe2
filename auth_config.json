@@ -1,0 +1,6 @@
+{
+    "domain": "dev-pl4nvj1n.us.auth0.com",
+    "client_id": "2JYF7mqCxmSM6I8ZFHaPAeBhIAhmhInW",
+    "redirect_uri": "http://localhost:3000/",
+    "audience": "recipe2-api"
+  }
