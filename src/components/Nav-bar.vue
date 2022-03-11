@@ -240,7 +240,6 @@ const {
     result: userResult,
     loading: userLoading,
     error: userError,
-    // refetch: refetchUser,
     onResult
 } = useQuery(get_user_data.query,
     () => ({ user_id: userId.value }),
