@@ -29,7 +29,7 @@
           Your Favorites.
         </h1>
 
-        <p class="pt-8 sm:text-lg max-w-md font-normal text-gray-600 leading-relaxed z-0 slideUp">
+        <p class="pt-4 sm:text-lg max-w-md font-normal text-gray-600 leading-relaxed z-0 slideUp">
           Cook healthy foods with r
           <span class="text-green">E</span>cipe daily meal posted by world wide expert nutritionist,
           chef and even Your mom🤶.

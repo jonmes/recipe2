@@ -1,18 +1,18 @@
 import { createApp, provide, h } from 'vue'
 import App from './App.vue'
-import './index.css'
+import './assets/main.css'
 import router from './router'
 import store from './store'
-// import { DefaultApolloClient } from '@vue/apollo-composable'
+import { DefaultApolloClient } from '@vue/apollo-composable'
 // import * as apolloClient from './auth'
 // import VeeValidate from './includes/validation'
 import { createHead } from '@vueuse/head'
 import authConfig from '../auth_config.json'
-import { setupAuth } from './auth'
+import { setupAuth, apolloclient } from './auth'
 
 const app = createApp({
     setup() {
-        provide()
+        provide(DefaultApolloClient, apolloclient)
     },
 
     render: () => h(App),

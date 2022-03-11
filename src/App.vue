@@ -10,13 +10,13 @@
       <span class="hidden xl:inline-block">XL</span>
     </div>
   <router-view>
+    
   </router-view>
 </div>
 
 </template>
 
 <script setup>
-console.log('app is running')
 </script>
 
 
