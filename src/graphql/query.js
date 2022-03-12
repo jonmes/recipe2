@@ -15,7 +15,7 @@ export const get_all_recipe = {
 export const get_user_data = {
     query: gql`
         query ($user_id: String!) {
-            users_by_pk(id: $user_id) {
+            user_by_pk(id: $user_id) {
                 name
                 avatar
             }

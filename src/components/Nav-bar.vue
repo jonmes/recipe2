@@ -64,7 +64,7 @@
                                         <div class="menu">
                                             <h3
                                                 class="w-full flex justify-center items-center text-black text-md py-4"
-                                            >{{ userResult }}</h3>
+                                            >{{ name }}</h3>
                                             <ul class>
                                                 <li
                                                     class="list-none py-1 flex justify-start hover:text-black"
@@ -211,14 +211,12 @@ const userId = ref(localStorage.getItem('user'))
 const name = ref('')
 const avatar = ref('')
 const enabled = ref(false)
-console.log(userId.value, 'this is useeeeeeeeeeeeeeeer id')
-
 
 const login = async () => {
     authPlug.loginWithRedirect();
     console.log('login pressed', await authPlug.getTokenSilently())
 }
-// Log the user out
+
 const logout = () => {
     // console.log('logout pressed')
     authPlug.logout({
@@ -229,8 +227,6 @@ const logout = () => {
 
 
 // ===================== QUERY =================
-
-console.log(authPlug.isAuthenticated.value, 'is authne')
 
 if(authPlug.isAuthenticated.value){
     enabled.value = true
@@ -249,16 +245,13 @@ const {
 onResult(queryResult => {
     console.log(queryResult.data, 'this is queyr result data')
     if(queryResult.data){
-        avatar.value = queryResult.data.users_by_pk.avatar
-        name.value = queryResult.data.users_by_pk.name
+        avatar.value = queryResult.data.user_by_pk.avatar
+        name.value = queryResult.data.user_by_pk.name
     }
-    console.log(queryResult.loading, 'loading here')
     console.log(queryResult.error, 'error here');
 })
 
-
 </script>
-
 
 <style scoped>
 :deep(.popper) {
