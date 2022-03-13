@@ -301,12 +301,7 @@ const {
         bio: newBio.value
     },
     update: async(cache, { data: { newData } }) => {
-        const data = cache.readQuery({ query: get_user_data.query, variables: {user_id: localStorage.getItem('user')}})
-        console.log(data, 'this is data before mutation')
-        // updateMutation.value.push(await updatePro)
-        console.log(newData,'this is data after mutation');
-        console.log(data, 'this is data after update is done')
-        // cache.writeQuery({ query: get_user_data.query, data})
+        refetchUser()
     },
 }))
 
