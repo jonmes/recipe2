@@ -106,7 +106,6 @@
                                                         class="pl-2 cursor-pointer transition-all duration-500"
                                                         @click="logout()"
                                                     >Logout</span>
-                                                    <!-- <a href="#" @click="logout">Logout</a> -->
                                                 </li>
                                             </ul>
                                         </div>

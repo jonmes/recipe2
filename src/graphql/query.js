@@ -18,6 +18,9 @@ export const get_user_data = {
             user_by_pk(id: $user_id) {
                 name
                 avatar
+                bio
+                email
+                id
             }
         }
     `,

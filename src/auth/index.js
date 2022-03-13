@@ -157,10 +157,6 @@ import { getMainDefinition } from '@apollo/client/utilities'
 
 let apolloClient
 
-
-console.log(localStorage.token, 'token here')
-console.log(state.isAuthenticated, 'is authnetictea')
-
 const getHeaders = async () => {
     const headers = {}
     // if (await state.isAuthenticated) {

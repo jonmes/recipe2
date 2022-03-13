@@ -139,6 +139,11 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
+"@vee-validate/rules@^4.5.10":
+  version "4.5.10"
+  resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.5.10.tgz#c2d1ae539ef105622388f6061c11f9f395a99e17"
+  integrity sha512-8kFsXvCzP1JHuyzXyH7cIhLQOJnba6ySG5GzaKnWGIJnbT1itNJ6dACdedjW3bWWpYiOkxi76Nqj14UL0ukMFQ==
+
 "@vitejs/plugin-vue@^2.2.0":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-2.2.4.tgz#ab8b199ca82496b05d2654c5f34ffcf9b947243d"
@@ -206,6 +211,11 @@
   version "6.0.12"
   resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.12.tgz#7b57cce215ae9f37a86984633b3aa3d595aa5b46"
   integrity sha512-iO/4FIezHKXhiDBdKySCvJVh8/mZPxHpiQrTy+PXVqJZgpTPTdHy4q8GXulaY+UKEagdkBb0onxNQZ0LNiqVhw==
+
+"@vue/devtools-api@^6.0.0-beta.15":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.1.0.tgz#5b7945e656bc0f85b1774c9aca1dbe075bead3c0"
+  integrity sha512-1FtbxEEHN70WGJl1b/h8nLmyN+tOHONNsNLvgVEXF/L/vBrRqQZ0kF+dev1YAz3OtxsQ1sV/vPLKwRlq1axrgg==
 
 "@vue/reactivity-transform@3.2.31":
   version "3.2.31"
@@ -2154,6 +2164,13 @@ v8-compile-cache@^2.0.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
+
+vee-validate@^4.5.10:
+  version "4.5.10"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.5.10.tgz#425d4ca1e317361b86f7deb6600daec8942e9b90"
+  integrity sha512-7dZE0PZTNY3Ztp6Gz8iw+QS7Fz59vU1qkD0rBJkldkf9Faw2lFjWgE0tiCist5RQkLgt7/HaVbojzb/SCdutfA==
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.15"
 
 vite-plugin-components@^0.13.3:
   version "0.13.3"
