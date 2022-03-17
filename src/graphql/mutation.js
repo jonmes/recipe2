@@ -20,3 +20,13 @@ export const update_profile = {
         }
     `,
 }
+
+export const profile_upload = {
+    mutations: gql`
+        mutation ($name: String!, $type: String!, $base64str: String!) {
+            profile_upload(name: $name, type: $type, base64str: $base64str) {
+                imageUrl
+            }
+        }
+    `,
+}
