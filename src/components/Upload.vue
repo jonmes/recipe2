@@ -53,7 +53,7 @@ import { profile_upload } from "../graphql/mutation"
 const is_dragover = ref(false)
 
 const userId = localStorage.getItem('user')
-
+const token = localStorage.getItem('token')
 
 const upload = ($event) => {
     is_dragover.value = false
@@ -90,7 +90,8 @@ const upload = ($event) => {
             const options = {
                 method: 'POST',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    'Authorization': 'Bearer '+ token
                 },
                 body: JSON.stringify({
                     query: FILE_UPLOAD_MUTATION,
