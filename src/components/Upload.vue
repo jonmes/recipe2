@@ -72,10 +72,10 @@ const upload = ($event) => {
     } else {
 
         const reader = new FileReader()
-        reader.readAsBinaryString(files[0])
-        // reader.readAsDataURL(files[0])
+        // reader.readAsBinaryString(files[0])
+        reader.readAsDataURL(files[0])
         reader.onloadend = () => {
-            var base64str = btoa(reader.result)
+            var base64str = reader.result
             // console.log(atob(base64str), 'this is decoded file')
             // console.log(reader.result,'hello');
             const variables = { name: files[0].name, type: files[0].type, base64str: base64str, user: userId}
