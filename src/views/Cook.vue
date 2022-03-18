@@ -5,8 +5,8 @@
 </template>
 
 <script setup>
-import { useHead } from '@vueuse/head'
 import { ref, computed } from 'vue'
+import { useHead } from '@vueuse/head'
 useHead({
   title: 'Recipe',
   style: [
@@ -17,9 +17,13 @@ useHead({
 });
 </script>
 
-<route lang="yaml">
-meta:
-  layout: default
+<route>
+{
+  name: "Cook",
+  meta: {
+    requiresAuth: true
+  },
+}
 </route>
 
 <style  scoped>
