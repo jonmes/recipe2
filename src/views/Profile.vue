@@ -8,6 +8,8 @@
             :validation-schema="schema"
             @submit="updater"
         >
+            
+
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
                 <vee-field
@@ -44,7 +46,15 @@
                 />
                 <ErrorMessage class="text-red-600 ml-5" name="bio" />
             </div>
-            <upload />
+            <div role="alert" v-if="showAlert">
+                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">Not supported file</div>
+                <div
+                    class="border border-t-0 border-red-400 rounded-b bg-red-100 px-2 py-3 text-red-700"
+                >
+                    <p>only supports image files.</p>
+                </div>
+            </div>
+            <upload @alert="alert" />
             <div class="flex items-center justify-between">
                 <button
                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -107,9 +117,8 @@
                             <span>Create Recipe</span>
                         </router-link>
                     </div>
-                    <upload />
-                    
-            <!-- <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+
+                    <!-- <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                     <div class="inline-block min-w-full shadow rounded-lg overflow-y-scrool">
                         <table class="min-w-full leading-normal">
                             <thead>
@@ -221,7 +230,7 @@ useHead({
 // ==================== Variables ==========================
 const userId = ref(localStorage.getItem('user'))
 const newName = ref('')
-// const newAvatar = ref('')
+const showAlert = ref(false)
 const newEmail = ref('')
 const newBio = ref('')
 const updateCard = ref(true)
@@ -250,10 +259,14 @@ const updater = (values) => {
 }
 
 const pickImage = (values) => {
-    
+
     console.log(document.getElementById('fileInputValue').value, 'this are values');
 }
+const alert = () => {
+    showAlert.value = true
+    setTimeout(() => { showAlert.value = false }, 5000);
 
+}
 
 const {
     result: userResult,

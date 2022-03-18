@@ -50,10 +50,22 @@
 import { ref } from 'vue';
 import fetch from 'isomorphic-fetch';
 import { profile_upload } from "../graphql/mutation"
-const is_dragover = ref(false)
 
-const userId = localStorage.getItem('user')
+// ================== Variables ====================
+const userId = localStorage.getItem('user') 
 const token = localStorage.getItem('token')
+const is_dragover = ref(false)
+// const props = defineProps({showAlert: Boolean})
+const emits = defineEmits(["alert"])
+
+
+
+// ============== Functions ==================
+
+const showAlert = () => {
+    emits("alert")
+}
+
 
 const upload = ($event) => {
     is_dragover.value = false
@@ -68,6 +80,7 @@ const upload = ($event) => {
 
     if (files[0].type !== 'image/jpeg' && files[0].type !== 'image/png') {
         console.log("not correct file type")
+        showAlert()
         return
     } else {
 
