@@ -1,5 +1,8 @@
+import store from '../store'
 import createAuth0Client from '@auth0/auth0-spa-js'
 import { computed, reactive, watchEffect } from 'vue'
+
+
 
 let client
 const state = reactive({
@@ -9,6 +12,9 @@ const state = reactive({
     popupOpen: false,
     error: null,
 })
+
+
+export const storeState = state
 
 async function loginWithPopup() {
     state.popupOpen = true
@@ -126,11 +132,24 @@ export const setupAuth = async (options, callbackRedirect) => {
     } finally {
         // Initialize our internal authentication state
         state.isAuthenticated = await client.isAuthenticated()
+        console.log('is authenticated value', state.isAuthenticated);
         state.user = await client.getUser()
         if (state.isAuthenticated) {
+            store.dispatch('main/setAuthLoadingStatus', true)
+            store.dispatch('main/setAuthClient', client)
+            store.dispatch('main/setUser', state.user.sub)
+            store.dispatch(
+                'main/setUserAuthenticated',
+                state.isAuthenticated
+            )
+
+            store.dispatch('main/setAuthLoadingStatus', false)
+            
             localStorage.setItem('user', state.user.sub)
             localStorage.setItem('token', await client.getTokenSilently())
         }
+        store.dispatch('main/setAuthLoadingStatus', false)
+        console.log('show store dispatch');
         state.loading = false
     }
 
