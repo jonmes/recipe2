@@ -19,11 +19,6 @@ const router = createRouter({
     routes,
 })
 
-
-const login = async () => {
-    authPlug.loginWithRedirect();
-}
-
 router.beforeEach(async (to, from, next) => {
     if(!to.meta.requiresAuth){
         next()
@@ -31,19 +26,13 @@ router.beforeEach(async (to, from, next) => {
         if(localStorage.getItem('user')){
             next()
         }else{
-            // let log = new Promise((resolve, reject) => {
                 authPlug.loginWithRedirect();
                 if(localStorage.getItem('user')){
-                    // resolve('logged in successfully!')
+
                     next('/cook')
                 }else{
                     next('/')
-                    // reject('Not logged in!')
                 }
-            // })
-
-            // log.then((logging) => {console.log(logging);})
-            // .catch((rej) => { console.log('error happended', rej);})
         }
     }
 })
