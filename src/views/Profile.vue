@@ -81,7 +81,7 @@
             <div class="w-full grid grid-cols-3 gap-10">
                 <div class="bg-white p-3 border-t-4 border-green-400 col-span-3 md:col-span-1">
                     <div class="image overflow-hidden">
-                        <div class="relative"></div>
+                        <!-- <div class="relative"></div> -->
                         <img class="h-auto w-full mx-auto" :src="user.avatar" alt="profilePicture" />
                     </div>
                     <p class="flex justify-between items-center pt-5">
@@ -244,13 +244,11 @@ const schema = {
 }
 // ============ Functions ====================
 
-const cancelUpdate = () => {
-    updateCard.value = true
-}
+const cancelUpdate = () => updateCard.value = true
 
-const showUpdate = () => {
-    updateCard.value = false
-}
+
+const showUpdate = () => updateCard.value = false
+
 
 const updater = (values) => {
     updatePro()
@@ -258,14 +256,9 @@ const updater = (values) => {
     updateCard.value = true
 }
 
-const pickImage = (values) => {
-
-    console.log(document.getElementById('fileInputValue').value, 'this are values');
-}
 const alert = () => {
     showAlert.value = true
     setTimeout(() => { showAlert.value = false }, 5000);
-
 }
 
 const {

@@ -1,11 +1,371 @@
 <template>
-    <div class="brazil z-50">
-        <h1>Brazil</h1>
-    </div>
+  <div class="flex justify-center mt-20">
+    <h1 class="text-4xl">
+      Create
+      <span
+        class="before:block before:absolute before:-inset-1 hover:shadow-xl hover:before:-skew-y-1 before:-skew-y-6 before:bg-green-100 relative inline-block"
+      >
+        <span class="relative text-green">Your Own &nbsp;</span>
+      </span>&nbsp;Recipe
+    </h1>
+  </div>
+  <div
+    class="flex flex-wrap justify-center px-6 mx-auto max-w-screen-xl sm:px-8 md:px-12 lg:px-16 xl:px-24 z-0 bg-gradient-to-br from-transparent to-green-100"
+  >
+    <vee-form
+      class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      :validation-schema="schema"
+      @submit="register"
+    >
+      <!-- ================================== PROCESSES ================================================== -->
+      <div class="w-full py-6">
+        <div class="flex justify-center">
+          <div class="w-1/3">
+            <div class="relative mb-2">
+              <div
+                class="w-10 h-10 mx-auto bg-green-500 rounded-full text-lg text-white flex items-center"
+              >
+                <span class="text-center text-white w-full flex justify-center">
+                  <svg
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20 3H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zM4 19V5h16l.002 14H4z"
+                    />
+                    <path d="M6 7h12v2H6zm0 4h12v2H6zm0 4h6v2H6z" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="text-xs text-center md:text-base">Add Recipes Description</div>
+          </div>
+
+          <div class="w-1/3">
+            <div class="relative mb-2">
+              <div
+                class="absolute flex align-center items-center align-middle content-center"
+                style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)"
+              >
+                <div
+                  class="w-0 py-1 rounded"
+                  style="width: 100%;"
+                  :class="[process >= 2 ? 'bg-green-300' : 'bg-gray-300']"
+                ></div>
+              </div>
+
+              <div
+                class="w-10 h-10 mx-auto rounded-full text-lg text-white flex items-center"
+                :class="[process >= 2 ? 'bg-green-500' : 'bg-gray-300']"
+              >
+                <span class="text-center text-white w-full flex justify-center">
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 30 30"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    enable-background="new 0 0 314.862 314.862"
+                    width="30"
+                    height="30"
+                  >
+                    <g>
+                      <path
+                        d="m10.667 15.28c0.08 1.02 1.08 1.7 2.054 1.408 0.846 -0.254 1.328 -1.145 1.075 -1.991 -0.429 -1.435 -1.237 -4.282 -2.984 -6.595l0.25 -0.641 0.044 -0.656 0.061 -0.032c0.36 -0.191 0.615 -0.529 0.699 -0.928l0.208 -0.994c0.058 -0.281 0.028 -0.569 -0.088 -0.831l-1.209 -2.756c-0.426 -0.973 -1.558 -1.415 -2.531 -0.988l-7.097 3.113c-0.973 0.426 -1.415 1.558 -0.989 2.531l2.219 5.061c0.425 0.97 1.561 1.414 2.531 0.988l4.817 -2.113c0.656 2.091 0.778 3.077 0.938 5.425zm-1.035 -10.391l-0.139 0.074c-0.422 0.223 -0.694 0.641 -0.726 1.119l-0.058 0.855 -0.36 0.924 -3.971 1.742 -1.85 -4.217 6.253 -2.743 0.894 2.038 -0.044 0.209z"
+                      />
+                      <path
+                        d="m28.85 7.346l-7.096 -3.113c-0.97 -0.425 -2.106 0.017 -2.531 0.988l-1.209 2.758c-0.115 0.262 -0.145 0.55 -0.086 0.83l0.208 0.992c0.084 0.4 0.339 0.74 0.7 0.931l0.06 0.032 0.044 0.656 0.268 0.685c-2.931 3.803 -3.184 6.905 -3.208 7.005h-9.686c-0.658 0 -1.191 0.534 -1.191 1.191 0 2.929 1.405 5.537 3.583 7.204h-0.241c-0.658 0 -1.191 0.534 -1.191 1.191s0.534 1.191 1.191 1.191h11.715c0.658 0 1.191 -0.534 1.191 -1.191s-0.534 -1.191 -1.191 -1.191h-0.241c2.177 -1.667 3.583 -4.277 3.583 -7.204 0 -0.658 -0.534 -1.191 -1.191 -1.191h-3.144c0.15 -1.825 0.377 -3.527 1.073 -5.303l4.835 2.12c0.97 0.425 2.106 -0.017 2.531 -0.988l2.219 -5.061c0.426 -0.973 -0.015 -2.105 -0.989 -2.531zm-7.822 14.145c-0.572 3.14 -3.362 5.53 -6.709 5.53s-6.137 -2.39 -6.709 -5.53h13.419zm4.595 -7.931l-3.971 -1.742 -0.36 -0.924 -0.058 -0.853c-0.032 -0.47 -0.309 -0.898 -0.726 -1.12l-0.139 -0.074 -0.044 -0.209 0.894 -2.038 6.253 2.743 -1.85 4.217z"
+                      />
+                    </g>
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="text-xs text-center md:text-base">Add Ingredients</div>
+          </div>
+
+          <div class="w-1/3">
+            <div class="relative mb-2">
+              <div
+                class="absolute flex align-center items-center align-middle content-center"
+                style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)"
+              >
+                <div
+                  class="w-0 py-1 rounded"
+                  style="width: 100%;"
+                  :class="[process === 3 ? 'bg-green-300' : 'bg-gray-300']"
+                ></div>
+              </div>
+
+              <div
+                class="w-10 h-10 mx-auto border-2 border-gray-200 rounded-full text-lg text-white flex items-center"
+                :class="[process >= 3 ? 'bg-green-500' : 'bg-gray-300']"
+              >
+                <span class="text-center text-green-600 w-full flex justify-center items-center">
+                  <svg
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.92308 7.89744C8.92308 8.46388 8.46388 8.92308 7.89744 8.92308C7.33099 8.92308 6.8718 8.46388 6.8718 7.89744C6.8718 7.33099 7.33099 6.8718 7.89744 6.8718C8.46388 6.8718 8.92308 7.33099 8.92308 7.89744Z"
+                      fill="#030D45"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 3.53846C9.83082 3.53846 6.86615 3.73753 5.01495 3.88095C4.40616 3.92811 3.92811 4.40616 3.88095 5.01495C3.73753 6.86615 3.53846 9.83082 3.53846 12C3.53846 13.7395 3.66648 15.9906 3.79116 17.7688L10.7281 12.2192C12.5558 10.7571 15.165 10.8013 16.942 12.3245L20.3628 15.2566C20.4208 14.1261 20.4615 12.9816 20.4615 12C20.4615 9.83082 20.2625 6.86615 20.1191 5.01495C20.0719 4.40616 19.5938 3.92811 18.985 3.88095C17.1338 3.73753 14.1692 3.53846 12 3.53846ZM21.8094 16.8932C21.9111 15.2951 22 13.4766 22 12C22 9.76547 21.7964 6.74819 21.6529 4.89612C21.5472 3.53141 20.4686 2.45281 19.1039 2.34708C17.2518 2.2036 14.2345 2 12 2C9.76547 2 6.74819 2.2036 4.89612 2.34708C3.53141 2.45281 2.45281 3.53141 2.34708 4.89612C2.2036 6.74819 2 9.76547 2 12C2 14.2345 2.2036 17.2518 2.34708 19.1039C2.45281 20.4686 3.53141 21.5472 4.89612 21.6529C6.74819 21.7964 9.76547 22 12 22C14.2345 22 17.2518 21.7964 19.1039 21.6529C20.4686 21.5472 21.5472 20.4686 21.6529 19.1039C21.7013 18.4796 21.7565 17.7228 21.8084 16.9083C21.8088 16.9033 21.8091 16.8982 21.8094 16.8932ZM20.2487 17.1851L15.9408 13.4926C14.7249 12.4504 12.9397 12.4202 11.6892 13.4206L4.08589 19.5032C4.07529 19.5117 4.06454 19.5199 4.05364 19.5277C4.25321 19.8594 4.60434 20.0872 5.01495 20.1191C6.86615 20.2625 9.83082 20.4615 12 20.4615C14.1692 20.4615 17.1338 20.2625 18.985 20.1191C19.5938 20.0719 20.0719 19.5938 20.1191 18.985C20.1597 18.4601 20.2049 17.8456 20.2487 17.1851Z"
+                      fill="#030D45"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="text-xs text-center md:text-base">Finished</div>
+          </div>
+        </div>
+      </div>
+
+      <transition name="slide" mode="out-in">
+        <div v-if="process === 1">
+          <!-- =========================== title =============================================== -->
+          <hr mt-10 mb-10 />
+          <div class="flex w-full items-center mt-5 mb-5">
+            <label class="w-2/12">Name</label>
+            <vee-field
+              name="Title"
+              type="text"
+              v-model="title"
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Title"
+            />
+            <ErrorMessage class="text-red-600 ml-5" name="Title" />
+          </div>
+          <!-- =========================== CATEGORY ======================= -->
+          <hr mt-10 mb-10 />
+          <div class="flex w-full items-center mt-5 mb-5">
+            <label class="w-2/12">Category</label>
+            <vee-field
+              as="select"
+              name="category"
+              type="text"
+              v-model="category"
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder
+            >
+              <option value="Soup">Soup</option>
+              <option value="Juice">Juice and Coctail</option>
+              <option value="Seafoods">Frozen Seafoods</option>
+              <option value="Meats">Raw Meat</option>
+              <option value="Fruits_and_Vegetables">Fruits and Vegetables</option>
+              <option value="Breads_and_Sweets">Breads and Sweets</option>
+            </vee-field>
+            <ErrorMessage class="text-red-600 ml-5" name="category" />
+          </div>
+          <!-- ================================== PREPARATION TIME ====================================  -->
+          <hr mt-10 mb-10 />
+          <div class="flex w-full items-center mt-5 mb-5">
+            <label class="w-2/12">Preparation Time</label>
+            <vee-field
+              name="prep_time"
+              type="number"
+              v-model="prep_time"
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="10 - 20 min"
+            />
+            <ErrorMessage class="text-red-600 ml-5" name="prep_time" />
+          </div>
+          <!-- ============================= CALORIES   ===================================== -->
+          <hr mt-10 mb-10 />
+          <div class="flex w-full items-center mt-5 mb-5">
+            <label class="w-2/12">Calories</label>
+            <vee-field
+              name="calories"
+              type="number"
+              v-model="calories"
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="1000"
+            />
+            <ErrorMessage class="text-red-600 ml-5" name="calories" />
+          </div>
+          <!-- ============================= SERVING   ===================================== -->
+          <hr mt-10 mb-10 />
+          <div class="flex w-full items-center mt-5 mb-5">
+            <label class="w-2/12">Serving</label>
+            <vee-field
+              name="serving"
+              type="number"
+              v-model="servings"
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="10"
+            />
+            <ErrorMessage class="text-red-600 ml-5" name="serving" />
+          </div>
+
+          <!-- ============================= DESCRIPTION   ===================================== -->
+          <hr mt-10 mb-10 />
+          <div class="flex w-full items-center mt-5 mb-5">
+            <label class="w-2/12">Description</label>
+            <vee-field
+              as="textarea"
+              name="description"
+              v-model="description"
+              type="text"
+              rows="5"
+              cols="60"
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Description..."
+            ></vee-field>
+            <ErrorMessage class="text-red-600 ml-5" name="description" />
+          </div>
+        </div>
+      </transition>
+
+
+      <transition name="slide" mode="out-in">
+        <div v-if="process === 2">
+          <!-- ================================= INGREDIANTS ==================================== -->
+
+          <hr mt-10 mb-10 />
+          <div class="mt-5 mb-5">
+            <div class="mb-5" v-for="(food, index) in ingrediant" :key="index">
+              <div class="flex w-full">
+                <label class="w-2/12">Ingredient</label>
+                <vee-field
+                  :name="`ingrediant[${index}]`"
+                  v-model="food.ing"
+                  type="text"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Ingredient Name"
+                />
+                <ErrorMessage class="text-red-600 ml-5" name="ingrediant[1]" />
+
+                <button
+                  class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
+                  @click="removeIngrediant(index)"
+                  type="button"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 32 32"
+                    style="transform: rotate(360deg)"
+                  >
+                    <path d="M12 12h2v12h-2z" fill="currentColor" />
+                    <path d="M18 12h2v12h-2z" fill="currentColor" />
+                    <path
+                      d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z"
+                      fill="currentColor"
+                    />
+                    <path d="M12 2h8v2h-8z" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10 pb-10">
+            <button
+              @click="addIngrediant"
+              type="button"
+              class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+            >+ Add Ingrediant</button>
+          </div>
+
+          <!-- ========================== STEPS ============================================ -->
+          <hr mt-10 mb-10 />
+          <div class="mt-5 mb-5">
+            <div class="mb-5" v-for="(foodStep, index) in steps" :key="index">
+              <div class="flex w-full">
+                <label class="w-2/12">Step {{ index + 1 }}</label>
+                <vee-field
+                  as="textarea"
+                  :name="`steps[${index}]`"
+                  v-model="foodStep.step"
+                  type="text"
+                  rows="5"
+                  cols="60"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Steps..."
+                ></vee-field>
+                <ErrorMessage class="text-red-600 ml-5" name="steps[1]" />
+                <button
+                  class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
+                  @click="removeStep(index)"
+                  type="button"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 32 32"
+                    style="transform: rotate(360deg)"
+                  >
+                    <path d="M12 12h2v12h-2z" fill="currentColor" />
+                    <path d="M18 12h2v12h-2z" fill="currentColor" />
+                    <path
+                      d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z"
+                      fill="currentColor"
+                    />
+                    <path d="M12 2h8v2h-8z" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10 pb-10">
+            <button
+              @click="addStep"
+              type="button"
+              class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+            >+ Add Steps</button>
+          </div>
+        </div>
+      </transition>
+
+
+      <transition name="slide" mode="out-in">
+        <div v-if="process === 3">
+          <upload/>
+        </div>
+      </transition>
+
+      <div class="form-group flex justify-between">
+        <button
+          v-if="process !== 1"
+          type="button"
+          class="bg-blue hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+          @click="processor('-')"
+        >Back</button>
+        <div></div>
+
+        <button
+          v-if="process !== 3"
+          type="button"
+          class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+          @click="processor('+')"
+        >Next</button>
+
+        <button
+          v-if="process === 3"
+          type="submit"
+          class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+        >Finish</button>
+      </div>
+    </vee-form>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Recipe',
@@ -15,6 +375,69 @@ useHead({
     },
   ],
 });
+
+
+
+// ========================================= VARIABLES ========================================
+const schema = {
+  Title: 'required|min:2|max:50',
+  category: 'required',
+  prep_time: 'required|integer',
+  calories: 'required|integer',
+  serving: 'required|integer',
+  ingrediant: 'required',
+  steps: 'required',
+  description: 'required|max:100',
+  images: 'required'
+}
+
+
+const process = ref(1)
+const title = ref('')
+const imageArray = ref([])
+const category = ref()
+const prep_time = ref('')
+const calories = ref('')
+const servings = ref('')
+const description = ref('')
+const ingrediant = ref([{ ing: '' }])
+const steps = ref([{ step: '' }])
+
+const addIngrediant = () => {
+  ingrediant.value.push({ ing: '' })
+}
+
+const removeIngrediant = (index) => {
+  if (ingrediant.value.length > 1) {
+    ingrediant.value.splice(index, 1)
+  }
+}
+
+const addStep = () => {
+  steps.value.push({ step: '' })
+}
+const removeStep = (index) => {
+  if (steps.value.length > 1) {
+    steps.value.splice(index, 1)
+  }
+}
+// ======================================= FUNCTIONS  ===========================================
+
+
+const processor = (val) => {
+  if (val == '+') {
+    if (process.value < 3) {
+      process.value++
+    }
+  } else if (val == '-') {
+    if (process.value > 1) {
+      process.value--
+    }
+  }
+}
+
+
+
 </script>
 
 <route>
@@ -27,5 +450,13 @@ useHead({
 </route>
 
 <style  scoped>
-
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-10%);
+}
 </style>

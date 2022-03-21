@@ -49,6 +49,9 @@ module.exports = {
               },
               yellow: {
                   DEFAULT: '#FFFF00'
+              },
+              red: {
+                  DEFAULT: '#FF0000'
               }
           },
           spacing: {
