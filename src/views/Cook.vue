@@ -12,10 +12,10 @@
   <div
     class="flex flex-wrap justify-center px-6 mx-auto max-w-screen-xl sm:px-8 md:px-12 lg:px-16 xl:px-24 z-0 bg-gradient-to-br from-transparent to-green-100"
   >
-    <vee-form
+    <Form
+      v-slot="{ errors, values }"
       class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      :validation-schema="schema"
-      @submit="register"
+      @submit="handleSubmit"
     >
       <!-- ================================== PROCESSES ================================================== -->
       <div class="w-full py-6">
@@ -178,31 +178,31 @@
       </div>
 
       <transition name="slide" mode="out-in">
-        <div v-if="process === 1">
+        <div v-show="process === 1">
           <!-- =========================== title =============================================== -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Name</label>
-            <vee-field
+            <Field
+              as="input"
               name="Title"
               type="text"
               v-model="title"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Title"
+              rules="required|max:20"
             />
-            <ErrorMessage class="text-red-600 ml-5" name="Title" />
           </div>
           <!-- =========================== CATEGORY ======================= -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Category</label>
-            <vee-field
+            <Field
               as="select"
               name="category"
-              type="text"
               v-model="category"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder
+              rules="required"
             >
               <option value="Soup">Soup</option>
               <option value="Juice">Juice and Coctail</option>
@@ -210,54 +210,53 @@
               <option value="Meats">Raw Meat</option>
               <option value="Fruits_and_Vegetables">Fruits and Vegetables</option>
               <option value="Breads_and_Sweets">Breads and Sweets</option>
-            </vee-field>
-            <ErrorMessage class="text-red-600 ml-5" name="category" />
+            </Field>
           </div>
           <!-- ================================== PREPARATION TIME ====================================  -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Preparation Time</label>
-            <vee-field
+            <Field
+              as="input"
               name="prep_time"
               type="number"
               v-model="prep_time"
+              rules="required|integer"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="10 - 20 min"
             />
-            <ErrorMessage class="text-red-600 ml-5" name="prep_time" />
           </div>
           <!-- ============================= CALORIES   ===================================== -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Calories</label>
-            <vee-field
+            <Field
+              as="input"
               name="calories"
               type="number"
               v-model="calories"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="1000"
+              rules="required|integer"
             />
-            <ErrorMessage class="text-red-600 ml-5" name="calories" />
           </div>
           <!-- ============================= SERVING   ===================================== -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Serving</label>
-            <vee-field
+            <Field
+              as="input"
               name="serving"
               type="number"
               v-model="servings"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="10"
+              rules="required|integer"
             />
-            <ErrorMessage class="text-red-600 ml-5" name="serving" />
           </div>
 
           <!-- ============================= DESCRIPTION   ===================================== -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Description</label>
-            <vee-field
+            <Field
               as="textarea"
               name="description"
               v-model="description"
@@ -265,56 +264,39 @@
               rows="5"
               cols="60"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              rules="required|max:80"
               placeholder="Description..."
-            ></vee-field>
-            <ErrorMessage class="text-red-600 ml-5" name="description" />
+            ></Field>
           </div>
         </div>
       </transition>
 
       <transition name="slide" mode="out-in">
-        <div v-if="process === 2">
+        <div v-show="process === 2">
           <!-- ================================= INGREDIANTS ==================================== -->
 
           <hr mt-10 mb-10 />
-          <div class="mt-5 mb-5">
+
+          <!-- <div class="mt-5 mb-5">
             <div class="mb-5" v-for="(food, index) in ingrediant" :key="index">
               <div class="flex w-full">
                 <label class="w-2/12">Ingredient</label>
-                <input
-                  v-model="food.grediant"
-                  :name="`ingrediant[${index}][grediant]`"
-                  type="text"
-                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
+                <Field v-model="food.grediant" :name="`ingrediant[${index}][grediant]`" type="text"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
                 <label class="pl-12 w-2/12">Amount</label>
-                <input
-                  v-model="food.amount"
-                  :name="`ingrediant[${index}][title]`"
-                  type="number"
+                <Field v-model="food.amount" :name="`ingrediant[${index}][title]`" type="number"
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder
-                />
+                  placeholder />
 
                 <button
                   class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
-                  @click="removeIngrediant(index)"
-                  type="button"
-                >
-                  <svg
-                    width="32"
-                    height="32"
-                    preserveAspectRatio="xMidYMid meet"
-                    viewBox="0 0 32 32"
-                    style="transform: rotate(360deg)"
-                  >
+                  @click="removeIngrediant(index)" type="button">
+                  <svg width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"
+                    style="transform: rotate(360deg)">
                     <path d="M12 12h2v12h-2z" fill="currentColor" />
                     <path d="M18 12h2v12h-2z" fill="currentColor" />
-                    <path
-                      d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z"
-                      fill="currentColor"
-                    />
+                    <path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z" fill="currentColor" />
                     <path d="M12 2h8v2h-8z" fill="currentColor" />
                   </svg>
                 </button>
@@ -323,17 +305,15 @@
           </div>
 
           <div class="mt-10 pb-10">
-            <button
-              @click="addIngrediant"
-              type="button"
-              class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
-            >+ Add Ingrediant</button>
-          </div>
+            <button @click="addIngrediant" type="button"
+              class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full">+
+              Add Ingrediant</button>
+          </div>-->
         </div>
       </transition>
 
       <transition name="slide" mode="out-in">
-        <div v-if="process === 3">
+        <div v-show="process === 3">
           <!-- ========================== STEPS ============================================ -->
           <!-- <hr mt-10 mb-10 />
           <div class="mt-5 mb-5">
@@ -383,35 +363,14 @@
             >+ Add Steps</button>
           </div>-->
 
-
-          
-
-          <FieldArray name="users" v-slot="{ fields, push, remove }">
-            <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
-              <legend>User #{{ idx }}</legend>
-              <label :for="`name_${idx}`">Name</label>
-              <Field :id="`name_${idx}`" :name="`users[${idx}].name`" />
-              <ErrorMessage :name="`users[${idx}].name`" />
-
-              <label :for="`email_${idx}`">Email</label>
-              <Field :id="`email_${idx}`" :name="`users[${idx}].email`" type="email" />
-              <ErrorMessage :name="`users[${idx}].email`" />
-              <button type="button" @click="remove(idx)">X</button>
-            </fieldset>
-
-            <button type="button" @click="push({ email: '', name: '' })">Add User +</button>
-          </FieldArray>
-
-
-
-
-
+          <h1>Steps</h1>
         </div>
       </transition>
 
       <transition name="slide" mode="out-in">
-        <div v-if="process === 4">
-          <upload />
+        <div v-show="process === 4">
+          <!-- <upload /> -->
+          <h1>Photo here</h1>
         </div>
       </transition>
 
@@ -437,20 +396,30 @@
           class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
         >Finish</button>
       </div>
-    </vee-form>
+      <h1>Vee Validate Info</h1>
+      <div>
+        <b>Vee Validate Values:</b>
+        <pre>{{ values }}</pre>
+      </div>
+      <div>
+        <b>Vee Validate Errors:</b>
+        <pre>{{ errors }}</pre>
+      </div>
+    </Form>
   </div>
 </template>
 
 
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 // import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
+
+import { configure, Form, Field, defineRule } from 'vee-validate';
 // import * as yup from "yup";
 
-import { configure, Form, Field } from 'vee-validate';
-
 import { useHead } from '@vueuse/head'
+import { email, required, min, integer, max } from '@vee-validate/rules';
 useHead({
   title: 'Recipe',
   style: [
@@ -463,19 +432,6 @@ useHead({
 
 
 // ========================================= VARIABLES ========================================
-const schema = {
-  Title: 'required|min:2|max:50',
-  category: 'required',
-  prep_time: 'required|integer',
-  calories: 'required|integer',
-  serving: 'required|integer',
-  ingrediant: 'required',
-  steps: 'required',
-  description: 'required|max:100',
-  images: 'required'
-}
-
-
 
 const process = ref(1)
 const title = ref('')
@@ -485,11 +441,28 @@ const prep_time = ref('')
 const calories = ref('')
 const servings = ref('')
 const description = ref('')
-const ingrediant = ref([{ ing: '' }])
-const steps = ref([{ step: '' }])
+
 
 // ======================================= FUNCTIONS  ===========================================
 
+
+onMounted(() => {
+  configure({
+    validateOnInput: true,
+  })
+
+  // rules
+
+  defineRule("required", required);
+  defineRule("min", min);
+  defineRule("max", max);
+  defineRule("email", email);
+})
+
+const handleSubmit = (values) => {
+  alert(JSON.stringify(values, null, 2))
+  console.log(values);
+}
 
 const processor = (val) => {
   if (val == '+') {
