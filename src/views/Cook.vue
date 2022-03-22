@@ -20,7 +20,7 @@
       <!-- ================================== PROCESSES ================================================== -->
       <div class="w-full py-6">
         <div class="flex justify-center">
-          <div class="w-1/3">
+          <div class="w-1/4">
             <div class="relative mb-2">
               <div
                 class="w-10 h-10 mx-auto bg-green-500 rounded-full text-lg text-white flex items-center"
@@ -44,7 +44,7 @@
             <div class="text-xs text-center md:text-base">Add Recipes Description</div>
           </div>
 
-          <div class="w-1/3">
+          <div class="w-1/4">
             <div class="relative mb-2">
               <div
                 class="absolute flex align-center items-center align-middle content-center"
@@ -87,7 +87,7 @@
             <div class="text-xs text-center md:text-base">Add Ingredients</div>
           </div>
 
-          <div class="w-1/3">
+          <div class="w-1/4">
             <div class="relative mb-2">
               <div
                 class="absolute flex align-center items-center align-middle content-center"
@@ -96,13 +96,58 @@
                 <div
                   class="w-0 py-1 rounded"
                   style="width: 100%;"
-                  :class="[process === 3 ? 'bg-green-300' : 'bg-gray-300']"
+                  :class="[process >= 3 ? 'bg-green-300' : 'bg-gray-300']"
                 ></div>
               </div>
 
               <div
                 class="w-10 h-10 mx-auto border-2 border-gray-200 rounded-full text-lg text-white flex items-center"
                 :class="[process >= 3 ? 'bg-green-500' : 'bg-gray-300']"
+              >
+                <span class="text-center text-green-600 w-full flex justify-center items-center">
+                  <svg
+                    width="30px"
+                    height="30px"
+                    viewBox="0 0 30 30"
+                    id="icons"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.842 21.168c-1.325 0 -2.402 -0.479 -3.21 -1.429S3.293 17.378 2.984 15.326c-0.455 -3.024 -0.004 -5.573 1.27 -7.177 0.75 -0.945 1.734 -1.491 2.846 -1.579 0.952 -0.076 2.375 0.31 3.75 2.578 0.861 1.42 1.515 3.307 1.796 5.176h0c0.339 2.256 0.087 3.918 -0.772 5.077 -0.682 0.921 -1.731 1.492 -3.118 1.699A6.238 6.238 0 0 1 7.842 21.168Z"
+                    />
+                    <path
+                      d="M10.137 29.063c-0.774 0 -1.559 -0.248 -2.265 -0.724a4.675 4.675 0 0 1 -1.964 -2.965c-0.167 -0.859 -0.067 -1.542 0.306 -2.088 0.605 -0.888 1.692 -1.087 2.841 -1.3 0.121 -0.022 0.244 -0.045 0.369 -0.069 0.265 -0.05 0.536 -0.117 0.798 -0.182 0.983 -0.243 2 -0.494 2.84 0.103 0.562 0.398 0.879 1.076 0.974 2.07h0c0.108 1.147 -0.138 2.291 -0.693 3.223 -0.597 1.003 -1.492 1.665 -2.52 1.867A3.574 3.574 0 0 1 10.137 29.063Z"
+                    />
+                    <path
+                      d="M22.158 15.543a6.251 6.251 0 0 1 -0.914 -0.07c-1.386 -0.205 -2.435 -0.776 -3.117 -1.699 -0.859 -1.16 -1.113 -2.82 -0.772 -5.077 0.281 -1.871 0.933 -3.756 1.79 -5.171 1.368 -2.26 2.793 -2.652 3.75 -2.583 1.109 0.081 2.091 0.619 2.842 1.559 1.283 1.604 1.737 4.16 1.281 7.198 -0.309 2.051 -0.832 3.454 -1.647 4.413S23.483 15.543 22.158 15.543Z"
+                    />
+                    <path
+                      d="M19.863 23.438a3.574 3.574 0 0 1 -0.684 -0.066c-1.029 -0.202 -1.924 -0.864 -2.52 -1.867 -0.555 -0.932 -0.801 -2.076 -0.693 -3.223h0c0.094 -0.996 0.41 -1.671 0.974 -2.07 0.84 -0.596 1.857 -0.345 2.84 -0.102 0.263 0.064 0.533 0.131 0.798 0.182l0.369 0.069c1.15 0.212 2.237 0.41 2.842 1.299 0.373 0.547 0.473 1.23 0.306 2.088a4.675 4.675 0 0 1 -1.964 2.965C21.42 23.19 20.635 23.438 19.863 23.438Z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="text-xs text-center md:text-base">Add Steps</div>
+          </div>
+
+          <div class="w-1/4">
+            <div class="relative mb-2">
+              <div
+                class="absolute flex align-center items-center align-middle content-center"
+                style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)"
+              >
+                <div
+                  class="w-0 py-1 rounded"
+                  style="width: 100%;"
+                  :class="[process === 4 ? 'bg-green-300' : 'bg-gray-300']"
+                ></div>
+              </div>
+
+              <div
+                class="w-10 h-10 mx-auto border-2 border-gray-200 rounded-full text-lg text-white flex items-center"
+                :class="[process >= 4 ? 'bg-green-500' : 'bg-gray-300']"
               >
                 <span class="text-center text-green-600 w-full flex justify-center items-center">
                   <svg
@@ -127,7 +172,7 @@
               </div>
             </div>
 
-            <div class="text-xs text-center md:text-base">Finished</div>
+            <div class="text-xs text-center md:text-base">Add Photo</div>
           </div>
         </div>
       </div>
@@ -227,7 +272,6 @@
         </div>
       </transition>
 
-
       <transition name="slide" mode="out-in">
         <div v-if="process === 2">
           <!-- ================================= INGREDIANTS ==================================== -->
@@ -237,14 +281,21 @@
             <div class="mb-5" v-for="(food, index) in ingrediant" :key="index">
               <div class="flex w-full">
                 <label class="w-2/12">Ingredient</label>
-                <vee-field
-                  :name="`ingrediant[${index}]`"
-                  v-model="food.ing"
+                <input
+                  v-model="food.grediant"
+                  :name="`ingrediant[${index}][grediant]`"
                   type="text"
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Ingredient Name"
                 />
-                <ErrorMessage class="text-red-600 ml-5" name="ingrediant[1]" />
+
+                <label class="pl-12 w-2/12">Amount</label>
+                <input
+                  v-model="food.amount"
+                  :name="`ingrediant[${index}][title]`"
+                  type="number"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder
+                />
 
                 <button
                   class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
@@ -278,9 +329,13 @@
               class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
             >+ Add Ingrediant</button>
           </div>
+        </div>
+      </transition>
 
+      <transition name="slide" mode="out-in">
+        <div v-if="process === 3">
           <!-- ========================== STEPS ============================================ -->
-          <hr mt-10 mb-10 />
+          <!-- <hr mt-10 mb-10 />
           <div class="mt-5 mb-5">
             <div class="mb-5" v-for="(foodStep, index) in steps" :key="index">
               <div class="flex w-full">
@@ -291,8 +346,7 @@
                   v-model="foodStep.step"
                   type="text"
                   rows="5"
-                  cols="60"
-                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  class="shadow appearance-none border rounded w-3/12 sm:w-6/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Steps..."
                 ></vee-field>
                 <ErrorMessage class="text-red-600 ml-5" name="steps[1]" />
@@ -327,14 +381,37 @@
               type="button"
               class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
             >+ Add Steps</button>
-          </div>
+          </div>-->
+
+
+          
+
+          <FieldArray name="users" v-slot="{ fields, push, remove }">
+            <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
+              <legend>User #{{ idx }}</legend>
+              <label :for="`name_${idx}`">Name</label>
+              <Field :id="`name_${idx}`" :name="`users[${idx}].name`" />
+              <ErrorMessage :name="`users[${idx}].name`" />
+
+              <label :for="`email_${idx}`">Email</label>
+              <Field :id="`email_${idx}`" :name="`users[${idx}].email`" type="email" />
+              <ErrorMessage :name="`users[${idx}].email`" />
+              <button type="button" @click="remove(idx)">X</button>
+            </fieldset>
+
+            <button type="button" @click="push({ email: '', name: '' })">Add User +</button>
+          </FieldArray>
+
+
+
+
+
         </div>
       </transition>
 
-
       <transition name="slide" mode="out-in">
-        <div v-if="process === 3">
-          <upload/>
+        <div v-if="process === 4">
+          <upload />
         </div>
       </transition>
 
@@ -344,18 +421,18 @@
           type="button"
           class="bg-blue hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
           @click="processor('-')"
-        >Back</button>
+        >&#60; Back</button>
         <div></div>
 
         <button
-          v-if="process !== 3"
+          v-if="process < 4"
           type="button"
           class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
           @click="processor('+')"
         >Next</button>
 
         <button
-          v-if="process === 3"
+          v-if="process === 4"
           type="submit"
           class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
         >Finish</button>
@@ -364,8 +441,15 @@
   </div>
 </template>
 
+
+
 <script setup>
 import { ref } from 'vue'
+// import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
+// import * as yup from "yup";
+
+import { configure, Form, Field } from 'vee-validate';
+
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Recipe',
@@ -392,6 +476,7 @@ const schema = {
 }
 
 
+
 const process = ref(1)
 const title = ref('')
 const imageArray = ref([])
@@ -402,6 +487,21 @@ const servings = ref('')
 const description = ref('')
 const ingrediant = ref([{ ing: '' }])
 const steps = ref([{ step: '' }])
+
+// ======================================= FUNCTIONS  ===========================================
+
+
+const processor = (val) => {
+  if (val == '+') {
+    if (process.value <= 4) {
+      process.value++
+    }
+  } else if (val == '-') {
+    if (process.value > 1) {
+      process.value--
+    }
+  }
+}
 
 const addIngrediant = () => {
   ingrediant.value.push({ ing: '' })
@@ -419,20 +519,6 @@ const addStep = () => {
 const removeStep = (index) => {
   if (steps.value.length > 1) {
     steps.value.splice(index, 1)
-  }
-}
-// ======================================= FUNCTIONS  ===========================================
-
-
-const processor = (val) => {
-  if (val == '+') {
-    if (process.value < 3) {
-      process.value++
-    }
-  } else if (val == '-') {
-    if (process.value > 1) {
-      process.value--
-    }
   }
 }
 
