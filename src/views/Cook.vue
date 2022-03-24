@@ -187,11 +187,11 @@
               as="input"
               name="Title"
               type="text"
-              v-model="title"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Title"
               rules="required|max:20"
             />
+            <ErrorMessage class="text-red ml-4" name="Title" />
           </div>
           <!-- =========================== CATEGORY ======================= -->
           <hr mt-10 mb-10 />
@@ -200,7 +200,6 @@
             <Field
               as="select"
               name="category"
-              v-model="category"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               rules="required"
             >
@@ -211,6 +210,7 @@
               <option value="Fruits_and_Vegetables">Fruits and Vegetables</option>
               <option value="Breads_and_Sweets">Breads and Sweets</option>
             </Field>
+            <ErrorMessage class="text-red ml-4" name="category" />
           </div>
           <!-- ================================== PREPARATION TIME ====================================  -->
           <hr mt-10 mb-10 />
@@ -220,10 +220,10 @@
               as="input"
               name="prep_time"
               type="number"
-              v-model="prep_time"
               rules="required|integer"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
+            <ErrorMessage class="text-red ml-4" name="prep_time" />
           </div>
           <!-- ============================= CALORIES   ===================================== -->
           <hr mt-10 mb-10 />
@@ -233,10 +233,10 @@
               as="input"
               name="calories"
               type="number"
-              v-model="calories"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               rules="required|integer"
             />
+            <ErrorMessage class="text-red ml-4" name="calories" />
           </div>
           <!-- ============================= SERVING   ===================================== -->
           <hr mt-10 mb-10 />
@@ -246,10 +246,10 @@
               as="input"
               name="serving"
               type="number"
-              v-model="servings"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               rules="required|integer"
             />
+            <ErrorMessage class="text-red ml-4" name="serving" />
           </div>
 
           <!-- ============================= DESCRIPTION   ===================================== -->
@@ -259,7 +259,6 @@
             <Field
               as="textarea"
               name="description"
-              v-model="description"
               type="text"
               rows="5"
               cols="60"
@@ -267,6 +266,7 @@
               rules="required|max:80"
               placeholder="Description..."
             ></Field>
+            <ErrorMessage class="text-red ml-4" name="description" />
           </div>
         </div>
       </transition>
@@ -277,63 +277,49 @@
 
           <hr mt-10 mb-10 />
 
-          <!-- <div class="mt-5 mb-5">
-            <div class="mb-5" v-for="(food, index) in ingrediant" :key="index">
-              <div class="flex w-full">
-                <label class="w-2/12">Ingredient</label>
-                <Field v-model="food.grediant" :name="`ingrediant[${index}][grediant]`" type="text"
-                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <div class="w-full mt-10 mb-10 items-center">
+            <Field
+              as="input"
+              name="ingredients[0].ingredient"
+              type="text"
+              class="hidden"
+              rules="required"
+            />
 
-                <label class="pl-12 w-2/12">Amount</label>
-                <Field v-model="food.amount" :name="`ingrediant[${index}][title]`" type="number"
-                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder />
-
-                <button
-                  class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
-                  @click="removeIngrediant(index)" type="button">
-                  <svg width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"
-                    style="transform: rotate(360deg)">
-                    <path d="M12 12h2v12h-2z" fill="currentColor" />
-                    <path d="M18 12h2v12h-2z" fill="currentColor" />
-                    <path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z" fill="currentColor" />
-                    <path d="M12 2h8v2h-8z" fill="currentColor" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-10 pb-10">
-            <button @click="addIngrediant" type="button"
-              class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full">+
-              Add Ingrediant</button>
-          </div>-->
-        </div>
-      </transition>
-
-      <transition name="slide" mode="out-in">
-        <div v-show="process === 3">
-          <!-- ========================== STEPS ============================================ -->
-          <!-- <hr mt-10 mb-10 />
-          <div class="mt-5 mb-5">
-            <div class="mb-5" v-for="(foodStep, index) in steps" :key="index">
-              <div class="flex w-full">
-                <label class="w-2/12">Step {{ index + 1 }}</label>
-                <vee-field
-                  as="textarea"
-                  :name="`steps[${index}]`"
-                  v-model="foodStep.step"
+            <Field
+              as="input"
+              name="ingredients[0].amount"
+              type="text"
+              class="hidden"
+              rules="required"
+            />
+            <div v-for="(m, index) in values.ingredients" :key="index">
+              <div class="w-full flex mb-10 items-center">
+                <label class="w-1/12">Ingredient</label>
+                <Field
+                  as="input"
+                  :name="`ingredients[${index}].ingredient`"
                   type="text"
-                  rows="5"
-                  class="shadow appearance-none border rounded w-3/12 sm:w-6/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Steps..."
-                ></vee-field>
-                <ErrorMessage class="text-red-600 ml-5" name="steps[1]" />
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
+                  rules="required"
+                />
+                <ErrorMessage class="text-red" :name="`ingredients[${index}].ingredient`" />
+
+                <label class="w-1/12 ml-20">Amount</label>
+
+                <Field
+                  as="input"
+                  :name="`ingredients[${index}].amount`"
+                  type="text"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-3"
+                  rules="required"
+                />
+                <ErrorMessage class="text-red ml-4" :name="`ingredients[${index}].amount`" />
+
                 <button
                   class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
-                  @click="removeStep(index)"
                   type="button"
+                  @click="removeIng(index, values)"
                 >
                   <svg
                     width="32"
@@ -354,23 +340,164 @@
               </div>
             </div>
           </div>
-
-          <div class="mt-10 pb-10">
-            <button
-              @click="addStep"
-              type="button"
-              class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
-            >+ Add Steps</button>
-          </div>-->
-
-          <h1>Steps</h1>
+          <button
+            class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full mb-5"
+            @click="addIngredient(values)"
+          >+ Add Ingredient</button>
         </div>
       </transition>
 
       <transition name="slide" mode="out-in">
-        <div v-show="process === 4">
-          <!-- <upload /> -->
-          <h1>Photo here</h1>
+        <div v-show="process === 3">
+          <!-- ========================== STEPS ============================================ -->
+          <hr mt-10 mb-10 />
+
+          <div class="w-full mt-10 mb-10 items-center">
+            <Field
+              as="textarea"
+              name="steps[0].step"
+              type="text"
+              class="hidden absolute"
+              rules="required"
+            ></Field>
+            <div v-for="(step, index) in values.steps" :key="index">
+              <div class="w-full flex mb-10 items-center">
+                <label class="w-1/12">Step {{ index + 1 }}</label>
+                <Field
+                  as="textarea"
+                  :name="`steps[${index}].step`"
+                  type="text"
+                  rows="5"
+                  cols="60"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  rules="required"
+                ></Field>
+                <ErrorMessage class="text-red ml-3" :name="`steps[${index}].step`" />
+                <button
+                  class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
+                  type="button"
+                  @click="removeStep(index, values)"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 32 32"
+                    style="transform: rotate(360deg)"
+                  >
+                    <path d="M12 12h2v12h-2z" fill="currentColor" />
+                    <path d="M18 12h2v12h-2z" fill="currentColor" />
+                    <path
+                      d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z"
+                      fill="currentColor"
+                    />
+                    <path d="M12 2h8v2h-8z" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full mb-5"
+            @click="addSteps(values)"
+          >+ Add Step</button>
+        </div>
+      </transition>
+
+      <transition name="slide" mode="out-in">
+        <div v-show="process === 4" class="w-full grid grid-cols-2">
+          <div class="rounded-lg hover:shadow-xl bg-gray-50 mb-6">
+            <div class="m-4">
+              <label class="inline-block mb-2 text-gray-500 mb-4">Upload Thumbnail</label>
+              <div class="flex items-center justify-center w-full">
+                <label
+                  class="mb-4 flex flex-col w-full h-32 border-4 border-green-200 border-dashed hover:bg-green-100 hover:border-green-300 cursor-pointer"
+                  :class="{ 'bg-green-100 border-green-400': is_dragover }"
+                  @drag.prevent.stop
+                  @dragstart.prevent.stop
+                  @dragend.prevent.stop="is_dragover = false"
+                  @dragover.prevent.stop="is_dragover = true"
+                  @dragenter.prevent.stop="is_dragover = true"
+                  @dragleave.prevent.stop="is_dragover = false"
+                  @drop.prevent.stop="upload($event)"
+                >
+                  <div class="flex flex-col items-center justify-center pt-7">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-8 h-8 text-gray-400 group-hover:text-gray-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <p
+                      class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600"
+                    >Attach a Photo</p>
+                  </div>
+                  <vee-field
+                    name="photo"
+                    class="hidden"
+                    type="file"
+                    accept="image/*"
+                    @change="upload($event)"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-lg hover:shadow-xl bg-gray-50 mb-6 ml-7">
+            <div class="m-4">
+              <label class="inline-block mb-2 text-gray-500 mb-4">Upload Images</label>
+              <div class="flex items-center justify-center w-full">
+                <label
+                  class="mb-4 flex flex-col w-full h-32 border-4 border-green-200 border-dashed hover:bg-green-100 hover:border-green-300 cursor-pointer"
+                  :class="{ 'bg-green-100 border-green-400': is_dragover }"
+                  @drag.prevent.stop
+                  @dragstart.prevent.stop
+                  @dragend.prevent.stop="is_dragover = false"
+                  @dragover.prevent.stop="is_dragover = true"
+                  @dragenter.prevent.stop="is_dragover = true"
+                  @dragleave.prevent.stop="is_dragover = false"
+                  @drop.prevent.stop="upload($event)"
+                >
+                  <div class="flex flex-col items-center justify-center pt-7">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-8 h-8 text-gray-400 group-hover:text-gray-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <p
+                      class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600"
+                    >Attach a Photo</p>
+                  </div>
+                  <vee-field
+                    name="photo"
+                    class="hidden"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    @change="upload($event)"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </transition>
 
@@ -396,13 +523,8 @@
           class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
         >Finish</button>
       </div>
-      <h1>Vee Validate Info</h1>
-      <div>
-        <b>Vee Validate Values:</b>
-        <pre>{{ values }}</pre>
-      </div>
-      <div>
-        <b>Vee Validate Errors:</b>
+      <div v-if="Object.keys(errors).length !== 0">
+        <b>You have to feel this fields:</b>
         <pre>{{ errors }}</pre>
       </div>
     </Form>
@@ -413,13 +535,9 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-// import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
-
-import { configure, Form, Field, defineRule } from 'vee-validate';
-// import * as yup from "yup";
-
-import { useHead } from '@vueuse/head'
+import { configure, Form, Field, defineRule, ErrorMessage } from 'vee-validate';
 import { email, required, min, integer, max } from '@vee-validate/rules';
+import { useHead } from '@vueuse/head'
 useHead({
   title: 'Recipe',
   style: [
@@ -434,13 +552,7 @@ useHead({
 // ========================================= VARIABLES ========================================
 
 const process = ref(1)
-const title = ref('')
-const imageArray = ref([])
-const category = ref()
-const prep_time = ref('')
-const calories = ref('')
-const servings = ref('')
-const description = ref('')
+const is_dragover = ref(false)
 
 
 // ======================================= FUNCTIONS  ===========================================
@@ -459,6 +571,61 @@ onMounted(() => {
   defineRule("email", email);
 })
 
+const addIngredient = (values) => {
+  values.ingredients = (values.ingredients || []).concat([{}])
+}
+
+const removeIng = (i, values) => {
+  const v = values.ingredients.filter((_, index) => {
+    return i !== index
+  })
+
+  values.ingredients = v
+}
+
+const addSteps = (values) => {
+  values.steps = (values.steps || []).concat([{}])
+}
+
+const removeStep = (i, values) => {
+  const v = values.steps.filter((_, index) => {
+    return i !== index
+  })
+  values.steps = v
+}
+
+
+const upload = ($event) => {
+  is_dragover.value = false
+  // const files  = $event.dataTransfer.files
+  // console.log($event.target.files);
+  const files = $event.dataTransfer
+    ? [...$event.dataTransfer.files]
+    : [...$event.target.files];
+
+  if (files[0].type !== 'image/jpeg' && files[0].type !== 'image/png') {
+    console.log("not correct file type")
+    showAlert()
+    return
+  } else {
+
+    const reader = new FileReader()
+    // reader.readAsBinaryString(files[0])
+    reader.readAsDataURL(files[0])
+    reader.onloadend = () => {
+      let base64str = reader.result
+      // console.log(atob(base64str), 'this is decoded file')
+      console.log(base64str,'hello');
+    }
+
+  }
+
+}
+
+const showAlert = () => {
+    alert("not an image")
+}
+
 const handleSubmit = (values) => {
   alert(JSON.stringify(values, null, 2))
   console.log(values);
@@ -476,24 +643,6 @@ const processor = (val) => {
   }
 }
 
-const addIngrediant = () => {
-  ingrediant.value.push({ ing: '' })
-}
-
-const removeIngrediant = (index) => {
-  if (ingrediant.value.length > 1) {
-    ingrediant.value.splice(index, 1)
-  }
-}
-
-const addStep = () => {
-  steps.value.push({ step: '' })
-}
-const removeStep = (index) => {
-  if (steps.value.length > 1) {
-    steps.value.splice(index, 1)
-  }
-}
 
 
 
