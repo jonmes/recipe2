@@ -185,13 +185,13 @@
             <label class="w-2/12">Name</label>
             <Field
               as="input"
-              name="Title"
+              name="title"
               type="text"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Title"
+              placeholder="title"
               rules="required|max:20"
             />
-            <ErrorMessage class="text-red ml-4" name="Title" />
+            <ErrorMessage class="text-red ml-4" name="title" />
           </div>
           <!-- =========================== CATEGORY ======================= -->
           <hr mt-10 mb-10 />
@@ -280,7 +280,7 @@
           <div class="w-full mt-10 mb-10 items-center">
             <Field
               as="input"
-              name="ingredients[0].ingredient"
+              name="ingredients[0].name"
               type="text"
               class="hidden"
               rules="required"
@@ -298,12 +298,12 @@
                 <label class="w-1/12">Ingredient</label>
                 <Field
                   as="input"
-                  :name="`ingredients[${index}].ingredient`"
+                  :name="`ingredients[${index}].name`"
                   type="text"
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
                   rules="required"
                 />
-                <ErrorMessage class="text-red" :name="`ingredients[${index}].ingredient`" />
+                <ErrorMessage class="text-red" :name="`ingredients[${index}].name`" />
 
                 <label class="w-1/12 ml-20">Amount</label>
 
@@ -368,8 +368,8 @@
                   :name="`steps[${index}].step`"
                   type="text"
                   rows="5"
-                  cols="60"
-                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  cols="6"
+                  class="shadow appearance-none border rounded w-6/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   rules="required"
                 ></Field>
                 <ErrorMessage class="text-red ml-3" :name="`steps[${index}].step`" />
@@ -405,99 +405,10 @@
       </transition>
 
       <transition name="slide" mode="out-in">
-        <div v-show="process === 4" class="w-full grid grid-cols-2">
-          <div class="rounded-lg hover:shadow-xl bg-gray-50 mb-6">
-            <div class="m-4">
-              <label class="inline-block mb-2 text-gray-500 mb-4">Upload Thumbnail</label>
-              <div class="flex items-center justify-center w-full">
-                <label
-                  class="mb-4 flex flex-col w-full h-32 border-4 border-green-200 border-dashed hover:bg-green-100 hover:border-green-300 cursor-pointer"
-                  :class="{ 'bg-green-100 border-green-400': is_dragover }"
-                  @drag.prevent.stop
-                  @dragstart.prevent.stop
-                  @dragend.prevent.stop="is_dragover = false"
-                  @dragover.prevent.stop="is_dragover = true"
-                  @dragenter.prevent.stop="is_dragover = true"
-                  @dragleave.prevent.stop="is_dragover = false"
-                  @drop.prevent.stop="upload($event)"
-                >
-                  <div class="flex flex-col items-center justify-center pt-7">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-8 h-8 text-gray-400 group-hover:text-gray-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                      />
-                    </svg>
-                    <p
-                      class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600"
-                    >Attach a Photo</p>
-                  </div>
-                  <vee-field
-                    name="photo"
-                    class="hidden"
-                    type="file"
-                    accept="image/*"
-                    @change="upload($event)"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div class="rounded-lg hover:shadow-xl bg-gray-50 mb-6 ml-7">
-            <div class="m-4">
-              <label class="inline-block mb-2 text-gray-500 mb-4">Upload Images</label>
-              <div class="flex items-center justify-center w-full">
-                <label
-                  class="mb-4 flex flex-col w-full h-32 border-4 border-green-200 border-dashed hover:bg-green-100 hover:border-green-300 cursor-pointer"
-                  :class="{ 'bg-green-100 border-green-400': is_dragover }"
-                  @drag.prevent.stop
-                  @dragstart.prevent.stop
-                  @dragend.prevent.stop="is_dragover = false"
-                  @dragover.prevent.stop="is_dragover = true"
-                  @dragenter.prevent.stop="is_dragover = true"
-                  @dragleave.prevent.stop="is_dragover = false"
-                  @drop.prevent.stop="upload($event)"
-                >
-                  <div class="flex flex-col items-center justify-center pt-7">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-8 h-8 text-gray-400 group-hover:text-gray-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                      />
-                    </svg>
-                    <p
-                      class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600"
-                    >Attach a Photo</p>
-                  </div>
-                  <vee-field
-                    name="photo"
-                    class="hidden"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    @change="upload($event)"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
+        <div v-show="process === 4" class="w-full">
+          <!-- <SingleUpload class="col-span-2"/>
+          <div></div>-->
+          <MulUpload class="col-span-3" @imgFiles="imgFiles" />
         </div>
       </transition>
 
@@ -535,6 +446,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import fetch from 'isomorphic-fetch';
 import { configure, Form, Field, defineRule, ErrorMessage } from 'vee-validate';
 import { email, required, min, integer, max } from '@vee-validate/rules';
 import { useHead } from '@vueuse/head'
@@ -550,10 +462,11 @@ useHead({
 
 
 // ========================================= VARIABLES ========================================
-
+const userId = localStorage.getItem('user')
+const token = localStorage.getItem('token')
 const process = ref(1)
-const is_dragover = ref(false)
-
+const base64str = ref(null)
+let imgs = []
 
 // ======================================= FUNCTIONS  ===========================================
 
@@ -594,41 +507,76 @@ const removeStep = (i, values) => {
   values.steps = v
 }
 
-
-const upload = ($event) => {
-  is_dragover.value = false
-  // const files  = $event.dataTransfer.files
-  // console.log($event.target.files);
-  const files = $event.dataTransfer
-    ? [...$event.dataTransfer.files]
-    : [...$event.target.files];
-
-  if (files[0].type !== 'image/jpeg' && files[0].type !== 'image/png') {
-    console.log("not correct file type")
-    showAlert()
-    return
-  } else {
-
+const imgFiles = (datas) => {
+  datas.forEach(ele => {
     const reader = new FileReader()
-    // reader.readAsBinaryString(files[0])
-    reader.readAsDataURL(files[0])
+    reader.readAsDataURL(ele)
     reader.onloadend = () => {
-      let base64str = reader.result
-      // console.log(atob(base64str), 'this is decoded file')
-      console.log(base64str,'hello');
+      imgs.push(reader.result)
     }
-
-  }
-
+    reader.onerror = (err) => {
+      console.log(err, 'something NEW went wrong');
+      return
+    }
+  });
+  // console.log(imgs, 'hoooooooooooooooo');
 }
 
-const showAlert = () => {
-    alert("not an image")
-}
 
 const handleSubmit = (values) => {
+
+  const temp = {
+    image: '{' + imgs.join(',') + '}',
+    user_id: userId
+  }
+  Object.assign(values, temp)
   alert(JSON.stringify(values, null, 2))
   console.log(values);
+
+  const variables = values
+  const url = 'http://localhost:8080/v1/graphql'
+  const PROFILE_UPLOAD_MUTATION = `
+  mutation ($title: String!, 
+  $image: _text!, 
+  $category: String!, 
+  $prep_time: Int!, 
+  $calories: Int!, 
+  $serving: Int!, 
+  $description: String!, 
+  $user_id: String!, 
+  $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, 
+  $ingredients: [InsertRecipeOneDerivedIngredientInsertInput!]!) {
+
+  InsertRecipeOneDerived(calories: $calories, category: $category, description: $description, image: $image, ingredients: $ingredients, prep_time: $prep_time, serving: $serving, steps: $steps, title: $title, user_id: $user_id){
+    title
+    category 
+    image
+  }
+}`
+
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({
+      query: PROFILE_UPLOAD_MUTATION,
+      variables: variables
+    })
+  }
+
+  fetch(url, options)
+    .then(res => res.json())
+    .then(res => {
+      if (res.errors) {
+        console.log(res.errors, 'something went wrong from front end');
+      } else {
+        console.log('recipe uploaded successfully!');
+      }
+    })
+
 }
 
 const processor = (val) => {

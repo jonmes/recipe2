@@ -6,7 +6,6 @@ export const get_all_recipe = {
             recipe {
                 id
                 title
-                image
             }
         }
     `,

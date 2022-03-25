@@ -18,6 +18,7 @@
     "@vueuse/head": "^0.7.5",
     "apollo-link-ws": "^1.0.20",
     "autoprefixer": "^10.4.2",
+    "axios": "^0.26.1",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-vue": "^8.5.0",
@@ -25,6 +26,7 @@
     "graphql-subscriptions": "^2.0.0",
     "graphql-tag": "^2.12.6",
     "isomorphic-fetch": "^3.0.0",
+    "lodash": "^4.17.21",
     "postcss": "^8.4.8",
     "prettier": "^2.5.1",
     "sass": "^1.49.9",
@@ -37,8 +39,7 @@
     "vue-router": "4",
     "vue3-popper": "^1.4.2",
     "vue3-star-ratings": "^1.1.0",
-    "vuex": "^4.0.2",
-    "yup": "^0.32.11"
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",
