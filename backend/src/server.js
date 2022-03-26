@@ -78,9 +78,9 @@ const uploadRecipe = async (req, res, next) => {
     console.log(req.body.input, 'req body')
 
     // get request input
-    const {
+    let {
         title,
-        image,
+        // images,
         category,
         prep_time,
         calories,
@@ -91,54 +91,54 @@ const uploadRecipe = async (req, res, next) => {
         ingredients,
     } = req.body.input
 
-    console.log(image,'looop');
-    // image.forEach(element => {
-    //     console.log(element, 'loooooping');    
-    // });
-
-    // const uploadedResponse = await cloudinary.uploader.upload(base64str, {
-    //     upload_preset: 'recipe',
+    // const images = req.body.input.images.map(async (image) => {
+    //       const cloudRes = await cloudinary.uploader.upload(image.url, {
+    //             upload_preset: 'recipe',
+    //         })
+    //         return image.url = cloudRes.url
     // })
 
+    const images = req.body.input.images.map(async (image) => {
+          const cloudRes = await cloudinary.uploader.upload(image.url, {
+                upload_preset: 'recipe',
+            })
+            return image.url = cloudRes.url 
+    })
+
+
+    
     const HASURA_OPERATION = `
-mutation ($title: String!, $image: _text!, $category: String!, $prep_time: Int!, $calories: Int!, $serving: Int!, $description: String!, $user_id: String!, $steps: [steps_insert_input!]!, $ingredients: [ingredient_insert_input!]!) {
-  insert_recipe_one(object:
-    {
-      title: $title, 
-      image: $image, 
-      category: $category, 
-      prep_time: $prep_time, 
-      calories: $calories, 
-      serving: $serving, 
-      description: $description, 
-      user_id: $user_id, 
-      steps: {
-        data: $steps
-      }, 
-      ingredients: {
-        data: $ingredients
+    mutation ($title: String!, $images: [images_insert_input!]!, $category: String!, $prep_time:Int!, $calories:Int!, $serving: Int!, $description: String!, $user_id: String!, $steps:[steps_insert_input!]!, $ingredients: [ingredient_insert_input!]!){
+        insert_recipe_one(object: {
+          title:$title,
+          category:$category,
+          prep_time:$prep_time,
+          calories:$calories,
+          serving:$serving,
+          description: $description,
+          user_id:$user_id,
+          images: {
+            data: $images
+          },
+          steps: {
+            data: $steps
+          },
+          ingredients: {
+            data: $ingredients
+          } 
+        }){
+          title
+          images{
+            url
+          }
+          steps{
+            step
+          }
+          ingredients{
+            name
+          }
+        }
       }
-    },
-  ) 
-  {
-    id
-    title
-    image
-    category
-    prep_time
-    calories
-    serving
-    description
-    user_id
-    steps{
-      step
-    }
-    ingredients{
-      name
-      amount
-    }
-  }
-}
 `
 
     const execute = async (variables) => {
@@ -156,7 +156,7 @@ mutation ($title: String!, $image: _text!, $category: String!, $prep_time: Int!,
 
     const { data, errors } = await execute({
         title,
-        image,
+        images,
         category,
         prep_time,
         calories,

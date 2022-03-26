@@ -510,23 +510,22 @@ const removeStep = (i, values) => {
 const imgFiles = (datas) => {
   datas.forEach(ele => {
     const reader = new FileReader()
-    reader.readAsDataURL(ele)
+    reader.readAsDataURL(ele.url)
     reader.onloadend = () => {
-      imgs.push(reader.result)
+      imgs.push({url: reader.result})
     }
     reader.onerror = (err) => {
       console.log(err, 'something NEW went wrong');
       return
     }
   });
-  // console.log(imgs, 'hoooooooooooooooo');
 }
 
 
 const handleSubmit = (values) => {
 
   const temp = {
-    image: '{' + imgs.join(',') + '}',
+    images: imgs,
     user_id: userId
   }
   Object.assign(values, temp)
@@ -535,22 +534,20 @@ const handleSubmit = (values) => {
 
   const variables = values
   const url = 'http://localhost:8080/v1/graphql'
-  const PROFILE_UPLOAD_MUTATION = `
-  mutation ($title: String!, 
-  $image: _text!, 
-  $category: String!, 
-  $prep_time: Int!, 
-  $calories: Int!, 
-  $serving: Int!, 
-  $description: String!, 
-  $user_id: String!, 
-  $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, 
-  $ingredients: [InsertRecipeOneDerivedIngredientInsertInput!]!) {
-
-  InsertRecipeOneDerived(calories: $calories, category: $category, description: $description, image: $image, ingredients: $ingredients, prep_time: $prep_time, serving: $serving, steps: $steps, title: $title, user_id: $user_id){
+  const RECIPE_UPLOAD_MUTATION = `
+  mutation($title: String!, $category: String!, $prep_time: Int!, $calories: Int!, $serving: Int!, $description: String!, $user_id: String!, $images: [InsertRecipeOneDerivedImagesInsertInput!]!, $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, $ingredients:[InsertRecipeOneDerivedIngredientInsertInput!]!){
+  InsertRecipeOneDerived(title:$title, 
+    category: $category, 
+    prep_time:$prep_time,
+    calories:$calories,
+    serving:$serving,
+    description: $description,
+    user_id:$user_id,
+    images: $images,
+    steps: $steps,
+    ingredients: $ingredients
+  ){
     title
-    category 
-    image
   }
 }`
 
@@ -562,7 +559,7 @@ const handleSubmit = (values) => {
       'Authorization': 'Bearer ' + token
     },
     body: JSON.stringify({
-      query: PROFILE_UPLOAD_MUTATION,
+      query: RECIPE_UPLOAD_MUTATION,
       variables: variables
     })
   }

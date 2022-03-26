@@ -140,7 +140,7 @@ const sendFile = async () => {
     let imgData = []
     _.forEach(toBeSent.value, file => {
         if (validate(file) === "") {
-            imgData.push(file)
+            imgData.push({url: file})
         }
     })
     console.log(imgData, 'image data');
