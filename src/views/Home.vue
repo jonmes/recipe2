@@ -96,16 +96,10 @@
             <div class="text-gray-600 leading-relaxed">Boost Your Nutrition 🚀</div>
           </div>
         </div>
-        <div class="hidden md:flex justify-end align-center space-x-1 font-bold">
-          <span>Powered by</span>
-          <Minab class="w-8 h-8 text-green-900 fill-current" />
-          <span>Minab</span>
-        </div>
       </div>
     </section>
     <!-- <marquee-vue /> -->
     <!-- <FooterVue /> -->
-    <Hello-page />
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="rounded-lg hover:shadow-xl bg-gray-50 mb-6">
         <div class="m-4">
-            <label class="inline-block mb-2 text-gray-500 mb-4">Upload Profile</label>
+            <label class="inline-block mb-2 text-gray-500 mb-4">Upload Thumbnail</label>
             <div class="flex items-center justify-center w-full">
                 <label
                     class="mb-4 flex flex-col w-full h-32 border-4 border-green-200 border-dashed hover:bg-green-100 hover:border-green-300 cursor-pointer"
@@ -48,35 +48,22 @@
 
 <script setup>
 import { ref } from 'vue';
-import fetch from 'isomorphic-fetch';
-import { profile_upload } from "../graphql/mutation"
 
 // ================== Variables ====================
-const userId = localStorage.getItem('user') 
-const token = localStorage.getItem('token')
 const is_dragover = ref(false)
-// const props = defineProps({showAlert: Boolean})
 const emits = defineEmits(["alert"])
-
-
 
 // ============== Functions ==================
 
 const showAlert = () => {
-    emits("alert")
+    alert("not an image")
 }
-
 
 const upload = ($event) => {
     is_dragover.value = false
-    // const files  = $event.dataTransfer.files
-    // console.log($event.target.files);
     const files = $event.dataTransfer
         ? [...$event.dataTransfer.files]
         : [...$event.target.files];
-    // console.log(files[0].name, 'file name');
-    // console.log(files[0].type, 'file type');
-
 
     if (files[0].type !== 'image/jpeg' && files[0].type !== 'image/png') {
         console.log("not correct file type")
@@ -85,43 +72,13 @@ const upload = ($event) => {
     } else {
 
         const reader = new FileReader()
-        // reader.readAsBinaryString(files[0])
         reader.readAsDataURL(files[0])
         reader.onloadend = () => {
             var base64str = reader.result
-            const variables = { name: files[0].name, type: files[0].type, base64str: base64str, user: userId}
-            const url = 'http://localhost:8080/v1/graphql'
-            const FILE_UPLOAD_MUTATION = `
-            mutation ($name: String!, $type: String!, $base64str: String!, $user: String!) {
-            profile_upload(name: $name, type: $type, base64str: $base64str, user: $user) {
-                imageUrl
-                    }
-                }
-            `;
-            const options = {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': 'Bearer '+ token
-                },
-                body: JSON.stringify({
-                    query: FILE_UPLOAD_MUTATION,
-                    variables: variables
-                })
-            };
-            fetch(url, options)
-                .then(res => res.json())
-                .then(res => {
-                    if (res.errors) {
-                        console.log(res.errors, "Something went wrong");
-                    } else {
-                        // console.log('res.data.fileUpload.file_path')
-                        console.log('file uploaded successfully');
-                    }
-                });
+            console.log(base64str,'this is basestr');
         }
         reader.onerror = (err) => {
-            console.log(err, 'something NEW went wrong');
+            console.log(err, 'something wrong went wrong');
         }
 
     }

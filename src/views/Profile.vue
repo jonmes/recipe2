@@ -8,6 +8,8 @@
             :validation-schema="schema"
             @submit="updater"
         >
+            
+
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
                 <vee-field
@@ -44,7 +46,15 @@
                 />
                 <ErrorMessage class="text-red-600 ml-5" name="bio" />
             </div>
-            <upload />
+            <div role="alert" v-if="showAlert">
+                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">Not supported file</div>
+                <div
+                    class="border border-t-0 border-red-400 rounded-b bg-red-100 px-2 py-3 text-red-700"
+                >
+                    <p>only supports image files.</p>
+                </div>
+            </div>
+            <upload @alert="alert" />
             <div class="flex items-center justify-between">
                 <button
                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -71,7 +81,7 @@
             <div class="w-full grid grid-cols-3 gap-10">
                 <div class="bg-white p-3 border-t-4 border-green-400 col-span-3 md:col-span-1">
                     <div class="image overflow-hidden">
-                        <div class="relative"></div>
+                        <!-- <div class="relative"></div> -->
                         <img class="h-auto w-full mx-auto" :src="user.avatar" alt="profilePicture" />
                     </div>
                     <p class="flex justify-between items-center pt-5">
@@ -107,9 +117,8 @@
                             <span>Create Recipe</span>
                         </router-link>
                     </div>
-                    <upload />
-                    
-            <!-- <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+
+                    <!-- <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                     <div class="inline-block min-w-full shadow rounded-lg overflow-y-scrool">
                         <table class="min-w-full leading-normal">
                             <thead>
@@ -221,7 +230,7 @@ useHead({
 // ==================== Variables ==========================
 const userId = ref(localStorage.getItem('user'))
 const newName = ref('')
-// const newAvatar = ref('')
+const showAlert = ref(false)
 const newEmail = ref('')
 const newBio = ref('')
 const updateCard = ref(true)
@@ -235,13 +244,11 @@ const schema = {
 }
 // ============ Functions ====================
 
-const cancelUpdate = () => {
-    updateCard.value = true
-}
+const cancelUpdate = () => updateCard.value = true
 
-const showUpdate = () => {
-    updateCard.value = false
-}
+
+const showUpdate = () => updateCard.value = false
+
 
 const updater = (values) => {
     updatePro()
@@ -249,11 +256,10 @@ const updater = (values) => {
     updateCard.value = true
 }
 
-const pickImage = (values) => {
-    
-    console.log(document.getElementById('fileInputValue').value, 'this are values');
+const alert = () => {
+    showAlert.value = true
+    setTimeout(() => { showAlert.value = false }, 5000);
 }
-
 
 const {
     result: userResult,
@@ -284,8 +290,6 @@ const user = useResult(userResult, null, data => data.user_by_pk)
 // })
 
 
-
-
 watchEffect(() => {
     if (user.value) {
         console.log('user is available now')
@@ -294,6 +298,7 @@ watchEffect(() => {
         newBio.value = user.value.bio
     }
 })
+
 const {
     mutate: updatePro,
     loading: loadingPro,
