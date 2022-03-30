@@ -447,6 +447,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import fetch from 'isomorphic-fetch';
+import { useRouter } from 'vue-router'
 import { configure, Form, Field, defineRule, ErrorMessage } from 'vee-validate';
 import { email, required, min, integer, max } from '@vee-validate/rules';
 import { useHead } from '@vueuse/head'
@@ -462,14 +463,13 @@ useHead({
 
 
 // ========================================= VARIABLES ========================================
+const router = useRouter()
 const userId = localStorage.getItem('user')
 const token = localStorage.getItem('token')
 const process = ref(1)
 const base64str = ref(null)
 let imgs = []
-
 // ======================================= FUNCTIONS  ===========================================
-
 
 onMounted(() => {
   configure({
@@ -477,7 +477,6 @@ onMounted(() => {
   })
 
   // rules
-
   defineRule("required", required);
   defineRule("min", min);
   defineRule("max", max);
@@ -512,7 +511,7 @@ const imgFiles = (datas) => {
     const reader = new FileReader()
     reader.readAsDataURL(ele.url)
     reader.onloadend = () => {
-      imgs.push({url: reader.result})
+      imgs.push({ url: reader.result })
     }
     reader.onerror = (err) => {
       console.log(err, 'something NEW went wrong');
@@ -520,7 +519,6 @@ const imgFiles = (datas) => {
     }
   });
 }
-
 
 const handleSubmit = (values) => {
 
@@ -570,10 +568,11 @@ const handleSubmit = (values) => {
       if (res.errors) {
         console.log(res.errors, 'something went wrong from front end');
       } else {
+        alert('Recipe Uploaded Successfully!')
         console.log('recipe uploaded successfully!');
+        router.push({ name: 'Browse' })
       }
     })
-
 }
 
 const processor = (val) => {

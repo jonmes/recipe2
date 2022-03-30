@@ -1833,6 +1833,15 @@ postcss@^8.1.10, postcss@^8.4.6, postcss@^8.4.8:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+postcss@^8.2.1:
+  version "8.4.12"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.12.tgz#1e7de78733b28970fa4743f7da6f3763648b1905"
+  integrity sha512-lg6eITwYe9v6Hr5CncVbK70SoioNQIq81nsaG86ev5hAidQvmOeETBqs7jm43K2F5/Ley3ytDtriImV6TpNiSg==
+  dependencies:
+    nanoid "^3.3.1"
+    picocolors "^1.0.0"
+    source-map-js "^1.0.2"
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -2280,6 +2289,13 @@ vue-router@4:
   integrity sha512-LmXrC+BkDRLak+d5xTMgUYraT3Nj0H/vCbP+7usGvIl9Viqd1UP6AsP0i69pSbn9O0dXK/xCdp4yPw21HqV9Jw==
   dependencies:
     "@vue/devtools-api" "^6.0.0"
+
+vue-star-rater@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/vue-star-rater/-/vue-star-rater-0.0.10.tgz#ddd2f254acb6d4ef75780491185cd6a28ff5735d"
+  integrity sha512-gXiVMmQp36ENkLfUx20DLpIMRCECv6B+pYV557OgYAWzv/iwZLG3Z2srWZ60e+wDzKi0gfOzwNLQCBeGgAVxlw==
+  dependencies:
+    postcss "^8.2.1"
 
 vue3-popper@^1.4.2:
   version "1.4.2"

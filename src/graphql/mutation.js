@@ -30,3 +30,30 @@ export const profile_upload = {
         }
     `,
 }
+
+export const rating_mutation = {
+    mutations: gql`
+        mutation upsert_rating(
+            $rating: Float!
+            $recipe_id: Int!
+            $user_id: String!
+        ) {
+            insert_rating_one(
+                object: {
+                    rating_val: $rating
+                    recipe_id: $recipe_id
+                    user_id: $user_id
+                }
+                on_conflict: {
+                    constraint: rat_recipe_id_user_id_key
+                    update_columns: [rating_val]
+                }
+            ) {
+                id
+                rating_val
+                recipe_id
+                user_id
+            }
+        }
+    `,
+}

@@ -290,8 +290,6 @@ const user = useResult(userResult, null, data => data.user_by_pk)
 // })
 
 
-
-
 watchEffect(() => {
     if (user.value) {
         console.log('user is available now')
@@ -300,6 +298,7 @@ watchEffect(() => {
         newBio.value = user.value.bio
     }
 })
+
 const {
     mutate: updatePro,
     loading: loadingPro,

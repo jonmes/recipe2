@@ -37,6 +37,7 @@
     "vite-svg-loader": "^3.1.2",
     "vue": "^3.2.25",
     "vue-router": "4",
+    "vue-star-rater": "^0.0.10",
     "vue3-popper": "^1.4.2",
     "vue3-star-ratings": "^1.1.0",
     "vuex": "^4.0.2"

@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <button type="submit">Send</button>
+        <button type="submit">Upload</button>
     </form>
 </template>
 
@@ -133,7 +133,7 @@ const selectFile = ($event) => {
     ]
 }
 
-
+console.log('before sending');
 
 
 const sendFile = async () => {
