@@ -409,6 +409,15 @@
           <!-- <SingleUpload class="col-span-2"/>
           <div></div>-->
           <MulUpload class="col-span-3" @imgFiles="imgFiles" />
+          <Field
+            as="input"
+            name="image"
+            v-model="imgTxt"
+            type="text"
+            class="hidden"
+            rules="required"
+          />
+          <ErrorMessage class="text-red ml-4" name="image" />
         </div>
       </transition>
 
@@ -469,6 +478,7 @@ const token = localStorage.getItem('token')
 const process = ref(1)
 const base64str = ref(null)
 let imgs = []
+const imgTxt = ref('')
 // ======================================= FUNCTIONS  ===========================================
 
 onMounted(() => {
@@ -508,6 +518,7 @@ const removeStep = (i, values) => {
 
 const imgFiles = (datas) => {
   datas.forEach(ele => {
+    imgTxt.value = datas
     const reader = new FileReader()
     reader.readAsDataURL(ele.url)
     reader.onloadend = () => {
@@ -529,6 +540,7 @@ const handleSubmit = (values) => {
   Object.assign(values, temp)
   alert(JSON.stringify(values, null, 2))
   console.log(values);
+  delete values.image
 
   const variables = values
   const url = 'http://localhost:8080/v1/graphql'
@@ -554,7 +566,8 @@ const handleSubmit = (values) => {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'authorization': 'Bearer ' + token,
+      "x-hasura-use-backend-only-permissions": "true",
     },
     body: JSON.stringify({
       query: RECIPE_UPLOAD_MUTATION,

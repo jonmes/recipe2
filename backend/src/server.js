@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8000
 const POSTGRES_CONNECTION_STRING =
     'postgres://postgres:postgrespassword@localhost:5432/postgres'
 
-app.use(express.json())
+// app.use(express.json())
 app.use(express.static('public'))
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
@@ -76,7 +76,7 @@ const profileUpload = async (req, res, next) => {
 }
 
 const uploadRecipe = async (req, res, next) => {
-    console.log(req.body.input, 'req body')
+    console.log(req, 'req body authorization')
 
     // get request input
     let {
@@ -93,7 +93,7 @@ const uploadRecipe = async (req, res, next) => {
     } = req.body.input
 
     const HASURA_OPERATION = `
-    mutation ($title: String!, $images: [images_insert_input!]!, $category: String!, $prep_time:String!, $calories:Int!, $serving: Int!, $description: String!, $user_id: String!, $steps:[steps_insert_input!]!, $ingredients: [ingredient_insert_input!]!){
+    mutation ($title: String!, $images: [images_insert_input!]!, $category: String!, $prep_time:Int!, $calories:Int!, $serving: Int!, $description: String!, $user_id: String!, $steps:[steps_insert_input!]!, $ingredients: [ingredient_insert_input!]!){
         insert_recipe_one(object: {
           title:$title,
           category:$category,
@@ -127,7 +127,7 @@ const uploadRecipe = async (req, res, next) => {
 `
 
     const execute = async (variables) => {
-        console.log(variables, 'inside exe async')
+        // console.log(variables, 'inside exe async')
         // variables.images = [{"url": "hello guys"}]
         const fetchResponse = await fetch('http://localhost:8080/v1/graphql', {
             method: 'POST',
@@ -157,7 +157,7 @@ const uploadRecipe = async (req, res, next) => {
                 })
         })
     ).then(async (response) => {
-        console.log(response, 'images after promise resolve')
+        console.log(' ==================BEFORE ============================= ')
         prep_time = prep_time.toString()
         const { data, errors } = await execute({
             title,

@@ -57,3 +57,19 @@ export const rating_mutation = {
         }
     `,
 }
+
+export const comment_mutation = {
+    mutations: gql`
+        mutation ($user_id: String!, $recipe_id: Int!, $comment: String!) {
+            insert_comment_one(
+                object: {
+                    comment: $comment
+                    recipe_id: $recipe_id
+                    user_id: $user_id
+                }
+            ) {
+                comment
+            }
+        }
+    `,
+}

@@ -132,3 +132,17 @@ export const rating_query = {
         }
     `,
 }
+
+export const comment_query = {
+    query: gql`
+        query comment_query($recipe_id: Int!) {
+            comment(where: { recipe_id: { _eq: $recipe_id } }) {
+                comment
+                user {
+                    name
+                    avatar
+                }
+            }
+        }
+    `,
+}

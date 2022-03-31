@@ -224,17 +224,63 @@
                 </div>
 
                 <!-- ============== Comments ====================== -->
+                <h2 class="w-full font-black font-great text-4xl mb-5">Comments</h2>
+
+                <form @submit="addComment">
+                    <div>
+                        <Field
+                            as="input"
+                            type="text"
+                            name="comment"
+                            rules="required"
+                            class="w-full shadow-inner shadow-green-200 p-4 mb-4 rounded-lg focus:outline-none focus:border-green focus:ring-green focus:ring-1 text-2xl"
+                            placeholder="Comment..."
+                        />
+                        <ErrorMessage class="text-red ml-4" name="comment" />
+                        <button
+                            class="font-bold mb-10 py-2 px-4 w-full bg-green text-lg text-white shadow-md rounded-lg"
+                            type="submit"
+                        >Comment</button>
+                    </div>
+                    <!-- <h1>Errors: {{ errors }}, values: {{ values }}</h1> -->
+                </form>
+
+                <div
+                    class="bg-white rounded-lg p-3 flex flex-col justify-center items-center md:items-start shadow-lg mb-4"
+                    v-for="comment in comments"
+                    :key="comment"
+                >
+                    <div class="flex flex-row justify-center mr-2">
+                        <img
+                            alt="avatar"
+                            width="48"
+                            height="48"
+                            class="rounded-full w-10 h-10 mr-4 shadow-lg mb-4 border border-green-400"
+                            :src="comment.user.avatar"
+                        />
+                        <h3
+                            class="text-green-600 font-semibold text-lg text-center md:text-left"
+                        >{{ comment.user.name }}</h3>
+                    </div>
+
+                    <p
+                        style="width: 90%"
+                        class="text-gray-600 text-lg text-center md:text-left"
+                    >{{ comment.comment }}</p>
+                </div>
             </div>
         </template>
     </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuery, useResult, useMutation } from '@vue/apollo-composable'
-import { query_all, rating_query } from '../graphql/query'
-import { rating_mutation } from '../graphql/mutation'
+import { query_all, rating_query, comment_query } from '../graphql/query'
+import { rating_mutation, comment_mutation } from '../graphql/mutation'
+import { configure, Form, Field, defineRule, ErrorMessage, useForm } from 'vee-validate';
+import { required } from '@vee-validate/rules';
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import vue3starRatings from 'vue3-star-ratings'
 import StarRate from 'vue-star-rater';
@@ -255,9 +301,27 @@ const step = ref(0.2)
 const imgToShow = ref(0)
 const currentRating = ref(4)
 const userId = ref(localStorage.getItem('user'))
+const comment = ref('')
+const { handleSubmit } = useForm();
 // ============================== FUNCTIONS ======================
 
+onMounted(() => {
+    configure({
+        validateOnInput: true,
+    })
+    // rules
+    defineRule("required", required);
+})
 
+
+const showImage = (index) => {
+    imgToShow.value = index
+}
+const convertTime = (apiTime) => {
+    const date = new Date(apiTime)
+    return date.toDateString()
+}
+// ============================ APOLLO =======================
 const {
     result: detailResult,
     loading: detailLoading,
@@ -278,25 +342,54 @@ const {
 
 const ratings = useResult(ratingResult, null, data => data.rating)
 
+const {
+    result: commentResult,
+    loading: commentLoading,
+    error: commentError,
+    refetch: commentRefetch
+} = useQuery(comment_query.query,
+    () => ({ recipe_id: parseInt(id.value) }))
+
+const comments = useResult(commentResult, null, data => data.comment)
 
 
+// ===================== REFETCHES ======================
+detailRefetch()
+ratingRefetch()
+commentRefetch()
+
+
+
+// ===================== MUTATIONS ===========================
 const {
     mutate: rate,
     loading: rateLoading,
     error: rateError,
-} =  useMutation(rating_mutation.mutations, 
-    () => ({variables: 
-    {rating: currentRating.value, recipe_id: id.value, user_id: userId.value},
-    update: async(cache, {data: {newData}}) => {
-        ratingRefetch()
-    }
+} = useMutation(rating_mutation.mutations,
+    () => ({
+        variables:
+            { rating: currentRating.value, recipe_id: id.value, user_id: userId.value },
+        update: async (cache, { data: { newData } }) => {
+            ratingRefetch()
+        }
+    }))
+
+const {
+    mutate: comt,
+    loading: comtLoading,
+    error: comtError,
+} = useMutation(comment_mutation.mutations,
+    () => ({
+        variables:
+            { comment: comment.value, recipe_id: id.value, user_id: userId.value },
+        update: async (cache, { data: { newData } }) => {
+            commentRefetch()
+        }
     }))
 
 
 watchEffect(() => {
-    console.log(ratings.value, 'detail recipe result')
     if (ratings.value) {
-        console.log(ratings.value.length, 'ratinv ga');
         if (ratings.value.length > 0) {
             currentRating.value = ratings.value[0].rating_val
         } else {
@@ -307,13 +400,14 @@ watchEffect(() => {
 const addrateRecipe = () => {
     rate()
 }
-const showImage = (index) => {
-    imgToShow.value = index
-}
-const convertTime = (apiTime) => {
-    const date = new Date(apiTime)
-    return date.toDateString()
-}
+
+const addComment = handleSubmit((values, { resetForm }) => {
+    console.log(values)
+    comment.value = values.comment
+    comt()
+    resetForm();
+
+})
 
 
 </script>
