@@ -1,11 +1,11 @@
 <template>
     <div class="bg-gradient-to-br from-transparent to-green-100">
-        <!-- <h2>{{ id }}</h2>
-        <h2>{{ recipe }}</h2>-->
-        <p v-if="detailError">Something Went Wrong</p>
-        <p v-if="detailLoading">
+        <!-- <h2>{{ recipe }}</h2>
+        <h2>{{ id }}</h2> -->
+        <template v-if="detailError"><p>Something Went Wrong</p></template>
+        <template v-if="detailLoading">
             <RotateSquare2 />
-        </p>
+        </template>
         <template v-else>
             <div class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24">
                 <div class="py-6 w-full">
@@ -61,21 +61,31 @@
                     </div>
                 </div>
                 <h1 class="w-full font-black font-great text-6xl mb-5">{{ recipe.title }}</h1>
-                <div class="mb-10 flex inline-block">
-                    <StarRate
+                <div class="mb-10 grid grid-cols-6 items-center">
+                    <!-- <StarRate
                         v-model="recipe.avg_rating"
                         :colours="{
                             activeColour: 'darkgreen',
-                            hoverColour: '#DCDCDC',
-                            inactiveColour: '#DCDCDC'
+                            inactiveColour: '#DCDCDC',
                         }"
+                    /> -->
+                    <vue3starRatings
+                        class="stars"
+                        id="stars"
+                        v-model="recipe.avg_rating"
+                        starSize="25"
+                        starColor="#10B981"
+                        inactiveColor="#e6ebdf"
+                        controlBg="transparent"
+                        :showControl="false"
+                        :disableClick="true"
+                        controlSize="0"
                     />
-                    <div class="ml-5 inline-block">
-                        <div class="mr-10 inline-block">
-                            {{ recipe.avg_rating }}
-                            Ratings
-                        </div>
-                        <Popper arrow class="inline-block">
+                    <div class="mr-10 inline-block">
+                        {{ recipe.ratings.length }} Ratings
+                    </div>
+                    <div class="inline-block col-span-4">
+                        <Popper arrow>
                             <button
                                 class="bg-green sm:w-auto h-8 px-8 font-large text-white rounded-xl whitespace-nowrap hover:shadow-xl transition-shadow duration-300"
                             >Rate</button>
@@ -143,8 +153,8 @@
                     >
                         <div class="px-4">
                             <h2
-                                class="mb-2 leading-tight tracking-tight font-bold text-gray-800 text-2xl md:text-3xl"
-                            >{{ recipe.description }}</h2>
+                                class="mb-2 leading-tight tracking-tight font-bold text-gray-800 text-2xl md:text-3xl h-full"
+                            ><span>{{ recipe.description }}</span></h2>
                             <p class="text-gray-500 text-sm mt-5">
                                 By
                                 <a
@@ -278,13 +288,15 @@ import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuery, useResult, useMutation } from '@vue/apollo-composable'
 import { query_all, rating_query, comment_query } from '../graphql/query'
-import { rating_mutation, comment_mutation } from '../graphql/mutation'
+import { rating_mutation, comment_mutation, fav_mutation } from '../graphql/mutation'
 import { configure, Form, Field, defineRule, ErrorMessage, useForm } from 'vee-validate';
 import { required } from '@vee-validate/rules';
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import vue3starRatings from 'vue3-star-ratings'
 import StarRate from 'vue-star-rater';
+import StarRating from 'vue-star-rating'
 import Popper from 'vue3-popper'
+import { authPlug } from '../auth/index.js'
 import { useHead } from '@vueuse/head'
 useHead({
     title: 'Detail',
@@ -313,7 +325,6 @@ onMounted(() => {
     defineRule("required", required);
 })
 
-
 const showImage = (index) => {
     imgToShow.value = index
 }
@@ -321,6 +332,7 @@ const convertTime = (apiTime) => {
     const date = new Date(apiTime)
     return date.toDateString()
 }
+
 // ============================ APOLLO =======================
 const {
     result: detailResult,
@@ -331,6 +343,7 @@ const {
     () => ({ id: id.value }))
 
 const recipe = useResult(detailResult, null, data => data.recipe_by_pk)
+console.log('recipe result new', recipe);
 
 const {
     result: ratingResult,
@@ -387,6 +400,23 @@ const {
         }
     }))
 
+const {
+    mutate: fav,
+    loading: favLoading,
+    error: favError
+} = useMutation(fav_mutation.mutations, 
+    () => ({ 
+        variables: {recipe_id: id.value, user_id: userId.value}
+    }))
+
+const addFavorite = () => {
+    if(localStorage.getItem('user')){
+        fav()
+        alert('Recipe added to your favorite list!')
+    }else{
+    authPlug.loginWithRedirect();
+    }
+}
 
 watchEffect(() => {
     if (ratings.value) {
@@ -398,15 +428,24 @@ watchEffect(() => {
     }
 })
 const addrateRecipe = () => {
+    if(localStorage.getItem('user')){    
     rate()
+    alert('Your rate is submitted successfully!')
+    }else{
+    authPlug.loginWithRedirect();
+    }
+
 }
 
 const addComment = handleSubmit((values, { resetForm }) => {
-    console.log(values)
-    comment.value = values.comment
-    comt()
-    resetForm();
-
+    if(localStorage.getItem('user')){
+        comment.value = values.comment
+        console.log(values)
+        comt()
+        resetForm();
+    }else{
+    authPlug.loginWithRedirect();
+    }
 })
 
 
@@ -438,5 +477,9 @@ const addComment = handleSubmit((values, { resetForm }) => {
 .slide-leave-to {
     opacity: 0;
     transform: translateX(-10%);
+}
+
+.spinner {
+    background-color: transparent !important;
 }
 </style>

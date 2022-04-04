@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import { setupLayouts } from 'virtual:generated-layouts'
 import generatedRoutes from 'virtual:generated-pages'
-import { authPlug, storeState } from '../auth/index.js'
+import { authPlug, storeState, routeGuard } from '../auth/index.js'
 import store from '../store'
 
 
@@ -11,6 +11,10 @@ const routes = setupLayouts(generatedRoutes)
 
 const root = { path: '/', redirect: '/home' }
 routes.push(root)
+
+
+const PageNotFound = {path: '/:pathMatch(.*)*', name: 'NotFound', component: ()=> import('../views/NotFound.vue')}
+routes.push(PageNotFound)
 
 console.log('routes: ', routes)
 

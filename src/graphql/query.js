@@ -90,7 +90,6 @@ export const query_all = {
                 description
                 serving
                 prep_time
-                ratings
                 avg_rating
                 created_at
                 images {
@@ -142,6 +141,80 @@ export const comment_query = {
                     name
                     avatar
                 }
+            }
+        }
+    `,
+}
+
+export const fav_query = {
+    query: gql`
+        query ($user_id: String!) {
+            favorite(where: { user_id: { _eq: $user_id } }) {
+                id
+                recipe_id
+                recipe {
+                    id
+                    title
+                    description
+                    images {
+                        url
+                    }
+                    avg_rating
+                    user {
+                        name
+                    }
+                }
+            }
+        }
+    `,
+}
+
+export const all_recipe = {
+    query: gql`
+        query {
+            recipe(limit: 40, offset: 1) {
+                id
+                title
+                description
+                images {
+                    url
+                }
+                avg_rating
+                user {
+                    name
+                }
+            }
+        }
+    `,
+}
+
+export const recipe_by_user = {
+    query: gql`
+        query ($user_id: String!) {
+            recipe(where: { user_id: { _eq: $user_id } }) {
+                id
+                title
+                images {
+                    url
+                }
+                avg_rating
+                created_at
+            }
+        }
+    `,
+}
+
+export const sort_user_recipe = {
+    query: gql`
+        query ($user_id: String!, $order: [recipe_order_by!]!) {
+            recipe(where: { user_id: { _eq: $user_id } }, order_by: $order) {
+                id
+                title
+                images {
+                    url
+                }
+                avg_rating
+                created_at
             }
         }
     `,

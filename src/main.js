@@ -10,6 +10,7 @@ import { createHead } from '@vueuse/head'
 import authConfig from '../auth_config.json'
 import { setupAuth, apolloclient } from './auth'
 
+
 const app = createApp({
     setup() {
         provide(DefaultApolloClient, apolloclient)
@@ -23,8 +24,10 @@ app.use(store)
 app.use(head)
 app.use(VeeValidate)
 
-function callbackRedirect(appState) {
-    router.push(appState && appState.targetUrl ? appState.targetUrl : '/')
+async function callbackRedirect(appState) {
+    console.log('window location', window.location.pathname, appState);
+    console.log('from callback redirect', appState);
+    router.push(appState &&  appState.targetUrl ?  appState.targetUrl : window.location.pathname)
 }
 
 setupAuth(authConfig, callbackRedirect).then((auth) => {

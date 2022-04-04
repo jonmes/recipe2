@@ -129,7 +129,7 @@ import { useQuery, useResult } from '@vue/apollo-composable'
 import { get_user_data, get_all_recipe } from '../graphql/query'
 import HamburgerIcon from '../assets/icons/hamburger.svg'
 import Popper from 'vue3-popper'
-import { authPlug, storeState } from '../auth/index.js'
+import { authPlug } from '../auth/index.js'
 
 
 
@@ -139,17 +139,11 @@ const name = ref('')
 const avatar = ref('')
 const enabled = ref(false)
 
-
-// console.log(storeState.isAuthenticated, 'store state value');
 const login = async () => {
     authPlug.loginWithRedirect();
-    console.log('login pressed', await authPlug.getTokenSilently())
 }
 
-// console.log(storeState.isAuthenticated, 'store state value');
-
 const logout = () => {
-    // console.log('logout pressed')
     authPlug.logout({
         returnTo: window.location.origin
     });
@@ -176,7 +170,7 @@ onResult(queryResult => {
         avatar.value = queryResult.data.user_by_pk.avatar
         name.value = queryResult.data.user_by_pk.name
     }
-    // console.log(queryResult.error, 'error here');
+    console.log(queryResult.error, 'error here');
 })
 
 </script>

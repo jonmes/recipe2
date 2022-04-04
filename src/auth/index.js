@@ -1,8 +1,6 @@
 import createAuth0Client from '@auth0/auth0-spa-js'
 import { computed, reactive, watchEffect } from 'vue'
 
-
-
 let client
 const state = reactive({
     loading: true,
@@ -11,7 +9,6 @@ const state = reactive({
     popupOpen: false,
     error: null,
 })
-
 
 export const storeState = state
 
@@ -34,7 +31,8 @@ async function handleRedirectCallback() {
     state.loading = true
 
     try {
-        await client.handleRedirectCallback()
+        const a = await client.handleRedirectCallback()
+        console.log('handelRedirectCallback from me', a)
         state.user = await client.getUser()
         state.isAuthenticated = true
     } catch (e) {
@@ -91,6 +89,7 @@ export const routeGuard = (to, from, next) => {
         }
 
         // Otherwise, log in
+        console.log('this is to path', to)
         loginWithRedirect({ appState: { targetUrl: to.fullPath } })
     }
 
@@ -110,6 +109,7 @@ export const routeGuard = (to, from, next) => {
 export const setupAuth = async (options, callbackRedirect) => {
     client = await createAuth0Client({
         ...options,
+        redirect_uri: window.location.origin,
     })
 
     try {
@@ -124,6 +124,7 @@ export const setupAuth = async (options, callbackRedirect) => {
 
             // Notify subscribers that the redirect callback has happened, passing the appState
             // (useful for retrieving any pre-authentication state)
+            console.log('appState redirectCallBack', appState)
             callbackRedirect(appState)
         }
     } catch (e) {
@@ -169,7 +170,7 @@ const getHeaders = async () => {
     if (localStorage.token) {
         if (localStorage.token) {
             headers.Authorization = `Bearer ${localStorage.token}`
-            console.log('header is setting ...');
+            console.log('header is setting ...')
         }
         return headers
     } else {

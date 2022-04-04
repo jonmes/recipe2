@@ -1,6 +1,6 @@
 <template>
     <section
-        class="w-full h-full absolute flex justify-center items-center bg-black bg-opacity-50"
+        class="w-full absolute flex justify-center items-center bg-black bg-opacity-50"
         :class="{ hidden: updateCard }"
     >
         <vee-form
@@ -8,8 +8,6 @@
             :validation-schema="schema"
             @submit="updater"
         >
-            
-
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
                 <vee-field
@@ -68,159 +66,268 @@
             </div>
         </vee-form>
     </section>
-    <div
-        class="flex max-w-screen-xl justify-between items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24"
-    >
-        <p v-if="userError">Something went wrong ...</p>
-        <template v-if="userLoading">
-            <div class="flex justify-center items-center w-full h-screen pb-96">
-                <RotateSquare2 />
-            </div>
-        </template>
-        <template v-else>
-            <div class="w-full grid grid-cols-3 gap-10">
-                <div class="bg-white p-3 border-t-4 border-green-400 col-span-3 md:col-span-1">
-                    <div class="image overflow-hidden">
-                        <!-- <div class="relative"></div> -->
-                        <img class="h-auto w-full mx-auto" :src="user.avatar" alt="profilePicture" />
-                    </div>
-                    <p class="flex justify-between items-center pt-5">
-                        <span
-                            class="text-gray-600 inline-block font-bold text-2xl leading-6"
-                        >{{ user.name }}</span>
-                        &nbsp;
-                        <button
-                            class="bg-green text-white text-xl px-4 py-1 rounded-md flex justify-between items-center shadow hover:shadow-xl"
-                            @click="showUpdate()"
-                        >Edit Profile</button>
-                    </p>
-                    <h3 class="text-gray-600 font-bold text-2xl leading-6 pt-5">Bio</h3>
-
-                    <p class="text-sm text-gray-500 hover:text-gray-600 leading-6">{{ user.bio }}</p>
+    <section>
+        <div
+            class="flex max-w-screen-xl h-auto justify-between items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24"
+        >
+            <p v-if="userError">Something went wrong ...</p>
+            <template v-if="userLoading">
+                <div class="flex justify-center items-center w-full h-screen pb-96">
+                    <RotateSquare2 />
                 </div>
-                <div class="col-span-3 md:col-span-2">
-                    <div class="flex justify-between font-bold items-center">
-                        <h2 class="text-2xl leading-tight inline-block">Posts</h2>
-                        <router-link
-                            class="flex items-center justify-center bg-green px-4 py-2 space-x-3 text-white text-xl rounded-lg lg:w-auto hover:shadow-xl focus:outline-none"
-                            :to="{ name: 'Cook' }"
+            </template>
+            <template v-else>
+                <div class="w-full grid grid-cols-3 gap-10">
+                    <div class="p-3 border-t-4 border-green-400 col-span-3 md:col-span-1 mt-10">
+                        <div
+                            class="image overflow-hidden bg-white shadow shadow-2xl rounded-b-lg p-5"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                style="fill: rgb(255, 255, 255)"
-                            >
-                                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                            </svg>
-                            <span>Create Recipe</span>
-                        </router-link>
-                    </div>
+                            <img
+                                class="h-auto w-full mx-auto"
+                                :src="user.avatar"
+                                alt="profilePicture"
+                            />
+                            <p class="flex justify-between items-center pt-5">
+                                <span
+                                    class="text-gray-600 inline-block font-bold text-2xl leading-6"
+                                >{{ user.name }}</span>
+                                &nbsp;
+                                <button
+                                    class="bg-green text-white text-xl px-4 py-1 rounded-md flex justify-between items-center shadow hover:shadow-xl"
+                                    @click="showUpdate()"
+                                >Edit Profile</button>
+                            </p>
+                            <h3 class="text-gray-600 font-bold text-2xl leading-6 pt-5">Bio</h3>
 
-                    <!-- <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-                    <div class="inline-block min-w-full shadow rounded-lg overflow-y-scrool">
-                        <table class="min-w-full leading-normal">
-                            <thead>
-                                <tr>
-                                    <th
-                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                                    >Recipe</th>
-                                    <th
-                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                                    >Rating</th>
-                                    <th
-                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                                    >Created at</th>
-                                    <th
-                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                                    >Edit</th>
-                                    <th
-                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                                    >Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <p v-if="recipesError">Something went wrong...</p>
-                                <p v-if="recipesLoading">Loading...</p>
-                                <template v-else v-for="(post, index) in recipe" :key="index">
-                                    <tr>
-                                        <td
-                                            class="px-5 py-5 border-b border-gray-200 bg-white text-sm"
+                            <p
+                                class="text-sm text-gray-500 hover:text-gray-600 leading-6"
+                            >{{ user.bio }}</p>
+                        </div>
+                    </div>
+                    <div class="col-span-3 md:col-span-2">
+                        <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+                            <div
+                                class="inline-block min-w-full shadow rounded-lg overflow-y-auto h-128"
+                            >
+                                <table class="min-w-full leading-normal">
+                                    <thead class="sticky top-0">
+                                        <tr>
+                                            <th
+                                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                                                @click="filter = { 'title': 'asc' }"
+                                            >Recipe</th>
+                                            <th
+                                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                                                @click="filter = { 'avg_rating': 'desc' }"
+                                            >Rating</th>
+                                            <th
+                                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                                                @click="filter = { 'created_at': 'desc' }"
+                                            >Created at</th>
+                                            <th
+                                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                            >Edit</th>
+                                            <th
+                                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                            >Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="shadow shadow-2xl rounded">
+                                        <p v-if="recipesError">Something went wrong...</p>
+                                        <p v-if="recipesLoading">Loading...</p>
+                                        <template
+                                            v-else
+                                            v-for="(post, index) in sortRecipe"
+                                            :key="index"
                                         >
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 w-20 h-20">
-                                                    <img
-                                                        class="w-full h-full rounded-md"
-                                                        :src="post.image[0]"
-                                                        alt="image"
-                                                    />
-                                                </div>
-                                                <div class="ml-3">
+                                            <tr
+                                                class="hover:bg-gray-300"
+                                                :class="[index % 2 == 0 ? 'bg-white' : 'bg-gray-200']"
+                                            >
+                                                <td
+                                                    class="px-5 py-5 border-b border-gray-200 text-lg"
+                                                >
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 w-20 h-20">
+                                                            <img
+                                                                class="w-full h-full rounded-md"
+                                                                :src="post.images[0].url"
+                                                                alt="image"
+                                                            />
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <p
+                                                                class="text-gray-900 whitespace-no-wrap"
+                                                            >{{ post.title }}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td
+                                                    class="px-5 py-5 border-b border-gray-200 text-lg"
+                                                >
                                                     <p
                                                         class="text-gray-900 whitespace-no-wrap"
-                                                    >{{ post.title }}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td
-                                            class="px-5 py-5 border-b border-gray-200 bg-white text-sm"
-                                        >
+                                                    >{{ post.avg_rating }}</p>
+                                                </td>
+                                                <td
+                                                    class="px-5 py-5 border-b border-gray-200 text-lg"
+                                                >
+                                                    <p class="text-gray-900 whitespace-no-wrap">
+                                                        {{
+                                                            convertTime(
+                                                                post.created_at
+                                                            )
+                                                        }}
+                                                    </p>
+                                                </td>
+                                                <td
+                                                    class="px-5 py-5 border-b border-gray-200 text-lg"
+                                                >
+                                                    <box-icon
+                                                        name="pencil"
+                                                        type="solid"
+                                                        animation="fade-right-hover"
+                                                        color="green"
+                                                    ></box-icon>
+                                                </td>
+                                                <td
+                                                    class="px-7 py-5 border-b border-gray-200 text-lg"
+                                                >
+                                                    <box-icon
+                                                        class="cursor-pointer"
+                                                        type="solid"
+                                                        name="trash-alt"
+                                                        animation="tada-hover"
+                                                        color="green"
+                                                        @click="deleteAndUpdateCache(post.id)"
+                                                    ></box-icon>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </section>
+    <section class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24">
+        <div class="flex justify-between font-bold items-center">
+            <h2 class="text-2xl leading-tight inline-block">Posts</h2>
+            <router-link
+                class="flex items-center justify-center bg-green px-4 py-2 space-x-3 text-white text-xl rounded-lg lg:w-auto hover:shadow-xl focus:outline-none"
+                :to="{ name: 'Cook' }"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: rgb(255, 255, 255)"
+                >
+                    <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
+                </svg>
+                <span>Create Recipe</span>
+            </router-link>
+        </div>
+        <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+            <div class="inline-block min-w-full shadow rounded-lg overflow-y-auto h-128">
+                <table class="min-w-full leading-normal">
+                    <thead class="sticky top-0">
+                        <tr>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                                @click="filter = { 'title': 'asc' }"
+                            >Recipe</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                                @click="filter = { 'avg_rating': 'desc' }"
+                            >Rating</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                                @click="filter = { 'created_at': 'desc' }"
+                            >Created at</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider"
+                            >Edit</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider"
+                            >Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody class="shadow shadow-2xl rounded">
+                        <p v-if="recipesError">Something went wrong...</p>
+                        <p v-if="recipesLoading">Loading...</p>
+                        <template v-else v-for="(post, index) in sortRecipe" :key="index">
+                            <tr
+                                class="text-md hover:bg-gray-300"
+                                :class="[index % 2 == 0 ? 'bg-white' : 'bg-gray-200']"
+                            >
+                                <td class="px-5 py-5 border-b border-gray-200 text-xl">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 w-20 h-20">
+                                            <img
+                                                class="w-full h-full rounded-md"
+                                                :src="post.images[0].url"
+                                                alt="image"
+                                            />
+                                        </div>
+                                        <div class="ml-3">
                                             <p
                                                 class="text-gray-900 whitespace-no-wrap"
-                                            >{{ post.avg_rating }}</p>
-                                        </td>
-                                        <td
-                                            class="px-5 py-5 border-b border-gray-200 bg-white text-sm"
-                                        >
-                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                {{
-                                                    convertTime(
-                                                        post.created_at
-                                                    )
-                                                }}
-                                            </p>
-                                        </td>
-                                        <td
-                                            class="px-5 py-5 border-b border-gray-200 bg-white text-sm"
-                                        >
-                                            <box-icon
-                                                name="pencil"
-                                                type="solid"
-                                                animation="fade-right-hover"
-                                                color="green"
-                                            ></box-icon>
-                                        </td>
-                                        <td
-                                            class="px-7 py-5 border-b border-gray-200 bg-white text-sm"
-                                        >
-                                            <box-icon
-                                                class="cursor-pointer"
-                                                type="solid"
-                                                name="trash-alt"
-                                                animation="tada-hover"
-                                                color="green"
-                                                @click="deleteAndUpdateCache(post.id)"
-                                            ></box-icon>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
-                    </div>-->
-                </div>
+                                            >{{ post.title }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-200 text-xl">
+                                    <p
+                                        class="text-gray-900 whitespace-no-wrap"
+                                    >{{ post.avg_rating }}</p>
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-200 text-xl">
+                                    <p class="text-gray-900 whitespace-no-wrap">
+                                        {{
+                                            convertTime(
+                                                post.created_at
+                                            )
+                                        }}
+                                    </p>
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-200 text-lg">
+                                    <box-icon
+                                        name="pencil"
+                                        type="solid"
+                                        animation="fade-right-hover"
+                                        color="green"
+                                    ></box-icon>
+                                </td>
+                                <td class="px-7 py-5 border-b border-gray-200 text-xl">
+                                    <box-icon
+                                        class="cursor-pointer"
+                                        type="solid"
+                                        name="trash-alt"
+                                        animation="tada-hover"
+                                        color="green"
+                                        @click="deleteAndUpdateCache(post.id)"
+                                    ></box-icon>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
             </div>
-        </template>
-    </div>
+        </div>
+    </section>
 </template>
 
 <script setup>
 import { ref, computed, watchEffect, onMounted, onUpdated } from 'vue'
 import { useStore } from 'vuex'
 import { useQuery, useResult, useMutation } from '@vue/apollo-composable'
-import { get_user_data } from '../graphql/query'
-import { update_profile } from "../graphql/mutation"
+import { get_user_data, recipe_by_user, sort_user_recipe } from '../graphql/query'
+import { update_profile, delete_recipe } from "../graphql/mutation"
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import { useHead } from '@vueuse/head'
 useHead({
@@ -242,6 +349,7 @@ const schema = {
     email: 'required',
     bio: 'max:200'
 }
+const filter = ref({ "title": "asc" })
 // ============ Functions ====================
 
 const cancelUpdate = () => updateCard.value = true
@@ -274,7 +382,28 @@ refetchUser()
 
 const user = useResult(userResult, null, data => data.user_by_pk)
 
+const {
+    result: recipeRes,
+    loading: loadingRes,
+    error: resErro,
+    refetch: resRefetch
+} = useQuery(recipe_by_user.query,
+    () => ({ user_id: userId.value }))
 
+const recipe = useResult(recipeRes, null, data => data.recipe);
+
+const {
+    result: sortR,
+    loading: sortL,
+    error: sortE,
+    refetch: sortRef
+} = useQuery(sort_user_recipe.query,
+    () => ({ user_id: userId.value, order: filter.value }))
+
+const sortRecipe = useResult(sortR, null, data => data.recipe);
+console.log('sorted vaulue', sortRecipe);
+
+// console.log('recipe id', recipe.value);
 // onResult(queryResult => {
 //     console.log(queryResult.data, 'this is queyr result from profile page')
 //     if (queryResult.data) {
@@ -317,9 +446,22 @@ const {
 }))
 
 
+const {
+    mutate: deletRes,
+    loading: delLoading,
+    error: delError,
+} = useMutation(delete_recipe.mutations)
 
 
-
+// function deleteAndUpdate(id){
+//     deletRes({id},{
+//         update: (cache: {}) => {
+//             const data = cache.readQuery({query: recipe_by_user, variables: {user_id: userId.value}})
+//             const updateData = data.recipe.filter(rec => rec.id !== id)
+//             cache.writeQuery({query: recipe_by_user, variables: {user_id: userId.value}, data: {recipe: updateData }})
+//         }
+//     })
+// }
 
 // ================== RECIPE =====================
 
@@ -342,15 +484,15 @@ const {
 //     error: deleteError,
 // } = useMutation(delete_recipe.mutation)
 
-// function deleteAndUpdateCache(id) {
-//     deleteRecipe({ id }, {
-//         update: (cache, { }) => {
-//             const data = cache.readQuery({ query: get_user_recipe.query, variables: { user_id: userData.value.sub } })
-//             const updateData = data.recipes.filter(rec => rec.id !== id)
-//             cache.writeQuery({ query: get_user_recipe.query, variables: { user_id: userData.value.sub }, data: { recipes: updateData } })
-//         }
-//     })
-// }
+function deleteAndUpdateCache(id) {
+    deletRes({ recipe_id: id }, {
+        update: (cache, { }) => {
+            const data = cache.readQuery({ query: recipe_by_user.query, variables: { user_id: userId.value } })
+            const updateData = data.recipe.filter(rec => rec.id !== id)
+            cache.writeQuery({ query: recipe_by_user.query, variables: { user_id: userId.value }, data: { recipe: updateData } })
+        }
+    })
+}
 
 
 const convertTime = (apiTime) => {

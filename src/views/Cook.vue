@@ -263,7 +263,7 @@
               rows="5"
               cols="60"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required|max:80"
+              rules="required|max:100"
               placeholder="Description..."
             ></Field>
             <ErrorMessage class="text-red ml-4" name="description" />
@@ -425,7 +425,9 @@
         <button
           v-if="process !== 1"
           type="button"
-          class="bg-blue hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+          class="text-white font-bold py-2 px-4 rounded-full"
+          :class="isDisabled ? 'bg-red-300': 'bg-red hover:bg-gradient-to-r from-red-400 to-green-500'"
+          :disabled="isDisabled"
           @click="processor('-')"
         >&#60; Back</button>
         <div></div>
@@ -437,10 +439,14 @@
           @click="processor('+')"
         >Next</button>
 
+        <p class="mr-52" v-if="isDisabled"><RotateSquare2/> Loading . . .</p>
+
         <button
           v-if="process === 4"
           type="submit"
-          class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full"
+          class="text-white font-bold py-2 px-4 rounded-full"
+          :class="isDisabled ? 'bg-green-300' : 'bg-green hover:bg-gradient-to-r from-green-400 to-blue-500'"
+          :disabled="isDisabled"
         >Finish</button>
       </div>
       <div v-if="Object.keys(errors).length !== 0">
@@ -454,11 +460,13 @@
 
 
 <script setup>
+import { routeGuard } from '../auth'
 import { onMounted, ref } from 'vue'
 import fetch from 'isomorphic-fetch';
 import { useRouter } from 'vue-router'
 import { configure, Form, Field, defineRule, ErrorMessage } from 'vee-validate';
 import { email, required, min, integer, max } from '@vee-validate/rules';
+import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Recipe',
@@ -479,6 +487,7 @@ const process = ref(1)
 const base64str = ref(null)
 let imgs = []
 const imgTxt = ref('')
+const isDisabled = ref(false)
 // ======================================= FUNCTIONS  ===========================================
 
 onMounted(() => {
@@ -586,6 +595,7 @@ const handleSubmit = (values) => {
         router.push({ name: 'Browse' })
       }
     })
+    isDisabled.value = true
 }
 
 const processor = (val) => {
@@ -600,6 +610,10 @@ const processor = (val) => {
   }
 }
 
+
+// beforeEnter: (to, from, next) => {
+//   // ...
+// }
 
 
 
@@ -623,5 +637,8 @@ const processor = (val) => {
 .slide-leave-to {
   opacity: 0;
   transform: translateX(-10%);
+}
+.spinner {
+    background-color: transparent !important;
 }
 </style>

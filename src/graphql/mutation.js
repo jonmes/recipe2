@@ -73,3 +73,26 @@ export const comment_mutation = {
         }
     `,
 }
+
+export const fav_mutation = {
+    mutations: gql`
+        mutation ($recipe_id: Int!, $user_id: String!) {
+            insert_favorite_one(
+                object: { recipe_id: $recipe_id, user_id: $user_id }
+            ) {
+                id
+                recipe_id
+            }
+        }
+    `,
+}
+
+export const delete_recipe = {
+    mutations: gql`
+        mutation ($recipe_id: Int!) {
+            delete_recipe_by_pk(id: $recipe_id) {
+                title
+            }
+        }
+    `,
+}

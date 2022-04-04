@@ -1,13 +1,14 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-transparent to-green-100">
-        <div
-            class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24"
-        >
-            <section class="container mx-auto pt-12">
+        <div class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24">
+            <div class="container mx-auto pt-12">
                 <!-- title -->
                 <div class="relative flex items-center font-bold">
                     <h2 class="text-2xl">Browse by Category</h2>
-                    <router-link :to="{name: 'Browse'}" class="ml-10 flex items-center text-gray-400">
+                    <router-link
+                        :to="{ name: 'Browse' }"
+                        class="ml-10 flex items-center text-gray-400"
+                    >
                         <span class="text-sm mr-4">All Categories</span>
                         <svg
                             class="svg-inline--fa fa-chevron-right fa-w-8 fa-9x"
@@ -97,7 +98,7 @@
                 </section>
 
                 <section class="mb-10">
-                    <div class="w-full mt-16 mb-5 my-2 flex sm:flex-row items-center flex-col">
+                    <!-- <div class="w-full mt-16 mb-5 my-2 flex sm:flex-row items-center flex-col">
                         <div class="w-full relative">
                             <span
                                 class="h-full absolute inset-y-0 left-0 flex items-center -mt-5 sm:mt-0 pl-2"
@@ -116,7 +117,7 @@
                                     placeholder="Search by recipe name or by ingrediant"
                                     v-model="search"
                                     @keypress.enter="setSearch()"
-                                    class="inline-block lg:w-9/12 xl:w-10/12 appearance-none rounded border border-gray-400 border-b block pl-8 pr-6 py-2 bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                                    class="shadow-inner shadow-green-200 focus:outline-none focus:border-green focus:ring-green focus:ring-1 inline-block lg:w-9/12 xl:w-10/12 appearance-none rounded border border-green-300 border-b block pl-8 pr-6 py-2 bg-white text-sm placeholder-gray-400 text-gray-700 focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
                                 />
                                 <button
                                     class="bg-green sm:w-auto ml-4 h-10 py-2 h-8 px-10 font-large text-white rounded-md whitespace-nowrap hover:shadow-xl transition-shadow duration-300"
@@ -124,7 +125,42 @@
                                 >Search</button>
                             </span>
                         </div>
+                    </div>-->
+
+                    <div
+                        class="relative flex p-1 rounded-full bg-white border border-yellow-200 shadow-md md:p-2 mb-7"
+                    >
+                        <input
+                            placeholder="Your favorite food"
+                            class="w-full p-4 rounded-full shadow-inner shadow-green-200 focus:outline-none focus:border-green-300 focus:ring-green-300 focus:ring-1 mr-2"
+                            type="text"
+                            v-model="search"
+                            @keypress.enter="setSearch()"
+                        />
+                        <button
+                            type="button"
+                            title="Start buying"
+                            class="ml-auto py-1 px-6 rounded-full text-center transition bg-gradient-to-b from-yellow-200 to-yellow-300 hover:to-red-300 active:from-yellow-400 focus:from-red-400 md:px-12"
+                            @click="setSearch()"
+                        >
+                            <span class="hidden text-yellow-900 font-semibold md:block">Search</span>
+                            <span class="inline-block">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="bi bi-search"
+                                fill="currentColor"
+                                height="20"
+                                width="20"
+                                viewBox="0 0 16 16"    
+                            >
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                                />
+                            </svg>
+                            </span>
+                        </button>
                     </div>
+
                     <div class="flex flex-row sm:mb-0 mb-5">
                         <div class="relative">
                             <button
@@ -221,7 +257,7 @@
                                 :to="{
                                     name: 'Details',
                                     params: { id: rec.id },
-                                    query: { name: rec.title, id: rec.id  }
+                                    query: { name: rec.title, id: rec.id }
                                 }"
                                 class="font-semibold text-gray-800"
                             >
@@ -231,9 +267,17 @@
                                 <div class="py-4 px-4 bg-white h-full">
                                     <h3 class="text-2xl font-great font-black text-gray-600">
                                         {{ rec.title }}
-                                        <br />by &quot; {{rec.user.name}}
+                                        <br />
+                                        by &quot; {{ rec.user.name }}
                                     </h3>
-                                    <p class="mt-4 text-lg h-20 font-thin">{{ rec.description }}</p>
+                                    <!-- <p class="mt-4 text-lg font-thin text-ellipsis  overflow-hidden"><span class="text-clip overflow-hidden" v-if="rec.description.length <= 30">{{rec.description}}</span> <span v-else class="text-clip overflow-hidden">{{ rec.description.substring(0, rec.description.indexOf(' ', 20)) }}<span v-if="rec.description.split(/\s+/).length > 3">...</span></span> </p> -->
+                                    <p class="mt-4 text-lg font-thin text-ellipsis overflow-hidden">
+                                        <span>
+                                            {{ rec.description.trim().substring(0, 30) }}
+                                            <span v-if="rec.description.length > 30">...</span>
+                                        </span>
+                                    </p>
+
                                     <vue3starRatings
                                         class="stars"
                                         id="stars"
@@ -247,7 +291,7 @@
                                         controlSize="0"
                                     />
 
-                                    <span
+                                    <!-- <span
                                         class="flex items-center justify-center space-x-4 mt-4 w-full text-white bg-green hover:bg-green-500 py-1 rounded"
                                     >
                                         <svg
@@ -262,13 +306,13 @@
                                             />
                                         </svg>
                                         <span>View Recipe</span>
-                                    </span>
+                                    </span>-->
                                 </div>
                             </router-link>
                         </div>
                     </div>
                 </template>
-            </section>
+            </div>
         </div>
     </div>
 </template>
@@ -276,7 +320,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { useQuery, useResult } from '@vue/apollo-composable'
-import { search_recipe } from '../graphql/query'
+import { search_recipe, all_recipe } from '../graphql/query'
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import vue3starRatings from 'vue3-star-ratings'
 import { useHead } from '@vueuse/head'
@@ -295,7 +339,10 @@ const sorter = ref(0)
 const timeFilter = ref(80)
 const time_lte = ref(100000)
 const time_gt = ref(0)
+const enableFilter = ref(false)
 // ========================== FUNCTIONS =============================
+
+
 
 const setSearch = () => {
     searchVal.value = search.value.toString()
@@ -315,6 +362,18 @@ const filterTime = (val) => {
         time_lte.value = 10000
     }
 }
+
+const {
+    result: allRecipe,
+    loading: loadingRecipe,
+    error: errorRecipe,
+    refetch: allRefetch
+} = useQuery(all_recipe.query)
+
+const allRec = useResult(allRecipe, null, data => data.recipe)
+
+allRefetch()
+
 const {
     result: searchResult,
     loading: searchLoading,
@@ -333,6 +392,7 @@ const {
 const recipe = useResult(searchResult, null, data => data.recipe)
 recipeRefetch()
 
+const showRecipe = ref(allRec)
 
 watchEffect(() => {
     console.log(search.value.toString(), 'search value');
