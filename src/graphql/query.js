@@ -30,9 +30,9 @@ export const search_recipe = {
         query searchQuery(
             $search: String!
             $limit: Int!
-            $cursor: Int!
+            $offset: Int!
+            $timeFilter: [recipe_bool_exp!]!,
             $sort: [recipe_order_by!]!
-            $timeFilter: [recipe_bool_exp!]!
         ) {
             recipe(
                 where: {
@@ -44,11 +44,11 @@ export const search_recipe = {
                             ]
                         }
                         { _and: $timeFilter }
-                        { id: { _gt: $cursor } }
                     ]
                 }
+                offset: $offset
+                limit: $limit,
                 order_by: $sort
-                limit: $limit
             ) {
                 id
                 title

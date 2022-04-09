@@ -177,7 +177,7 @@
                             >Over 30 minutes</button>
                             <button
                                 class="block hover:font-bold"
-                                @click="time_gt = 0; time_lte = 10000; open = false"
+                                @click="time_gt = 0; time_lte = 10000; open = false; page = 0"
                             >Cancel Filter</button>
                         </div>
                         <div class="space-y-2">
@@ -186,17 +186,17 @@
                             <button
                                 class="block hover:font-bold"
                                 :class="{ 'font-bold': sorter == 2 }"
-                                @click="sorter = 2; open = false"
+                                @click="sorter = 2; open = false; page = 0"
                             >Rating</button>
                             <button
                                 class="block hover:font-bold"
                                 :class="{ 'font-bold': sorter == 1 }"
-                                @click="sorter = 1; open = false"
+                                @click="sorter = 1; open = false; page = 0"
                             >Calories</button>
                             <button
                                 class="block hover:font-bold"
                                 :class="{ 'font-bold': sorter == 0 }"
-                                @click="sorter = 0; open = false"
+                                @click="sorter = 0; open = false; page = 0"
                             >Upload date</button>
                         </div>
                     </div>
@@ -327,10 +327,9 @@ const setSearch = () => {
     searchVal.value = search.value.toString()
     time_lte.value = 100000
     time_gt.value = 0
-    cursor.value = 0
+    page.value = 0
 }
 const filterTime = (val) => {
-    recipeRefetch()
     if (val === 1) {
         time_gt.value = 0
         time_lte.value = 15
@@ -341,22 +340,24 @@ const filterTime = (val) => {
         time_gt.value = 30
         time_lte.value = 10000
     }
+    page.value = 0
 }
 
-// onMounted(() => {
-//     window.addEventListener("scroll", handleScroll)
-// })
+onMounted(() => {
+    window.addEventListener("scroll", handleScroll)
+})
 
-// const handleScroll = (e) => {
-//     let element = scrollComponent.value
-//     if(element !== null){
-//         if( element.getBoundingClientRect().bottom < window.innerHeight) {
-//             next()
-//         }
-//     }
-// }
+const handleScroll = (e) => {
+    let element = scrollComponent.value
+    if (element !== null) {
+        if (element.getBoundingClientRect().bottom < window.innerHeight) {
+            next()
+        }
+    }
+}
 
 // ================================= QUERY ========================================== 
+
 const {
     result: searchResult,
     loading: searchLoading,
@@ -366,12 +367,16 @@ const {
 } = useQuery(search_recipe.query,
     () => ({
         search: "%" + searchVal.value + "%",
-        // sort: sortingArray.value[sorter.value],
-        sort: { "id": "asc" },
         timeFilter: [{ "prep_time": { "_gt": time_gt.value } }, { "prep_time": { "_lte": time_lte.value } }],
         limit: limit.value,
-        cursor: cursor.value
+        offset: offset.value,
+        sort: sortingArray.value[sorter.value]
     }),
+    {
+        fetchPolicy: 'cache-first',
+        pollInterval: 1000,
+    }
+
 )
 
 const searchRecipe = useResult(searchResult, null, data => data.recipe)
@@ -380,10 +385,10 @@ recipeRefetch()
 const next = () => {
     console.log('value', searchRecipe.value.length);
     if (searchRecipe.value.length !== 0) {
-        cursor.value = searchRecipe.value[2].id
+        page.value++
         fetchMore({
             variables: {
-                cursor: cursor.value
+                offset: (page.value * limit.value)
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
                 console.log('prev', previousResult)
@@ -401,45 +406,7 @@ const next = () => {
         })
     }
 
-    fetchMore({
-        variables: {
-            cursor: cursor.value
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-            console.log('passed out ', previousResult);
-            return previousResult
-        }
-    })
-
-
 }
-
-const previous = () => {
-        console.log('value', searchRecipe.value.length);
-        sort.value = { "id": "desc" }
-    if (searchRecipe.value.length !== 0) {
-        cursor.value = searchRecipe.value[2].id
-        fetchMore({
-            variables: {
-                cursor: cursor.value
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                console.log('prev', previousResult)
-                console.log('fetchmore', fetchMoreResult.recipe.length)
-                if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
-
-                return {
-                    ...previousResult,
-                    recipe: [
-                        ...previousResult.recipe,
-                        ...fetchMoreResult.recipe
-                    ]
-                }
-            }
-        })
-    }
-}
-
 
 // ============================= WATCHEFFECT ================================
 
@@ -447,7 +414,59 @@ watchEffect(() => {
 
 })
 
+// ================================= CURSOR BASED PAGIN ================================
+// const next = () => {
+//     console.log('value', searchRecipe.value.length);
+//     if (searchRecipe.value.length !== 0) {
+//         cursor.value = searchRecipe.value[2].id
+//         page.value++
+//         fetchMore({
+//             variables: {
+//                 offset: (page.value * limit.value)
+//             },
+//             updateQuery: (previousResult, { fetchMoreResult }) => {
+//                 console.log('prev', previousResult)
+//                 console.log('fetchmore', fetchMoreResult.recipe.length)
+//                 if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
 
+//                 return {
+//                     ...previousResult,
+//                     recipe: [
+//                         ...previousResult.recipe,
+//                         ...fetchMoreResult.recipe
+//                     ]
+//                 }
+//             }
+//         })
+//     }
+
+// }
+
+// const previous = () => {
+//         console.log('value', searchRecipe.value.length);
+//         sort.value = { "id": "desc" }
+//     if (searchRecipe.value.length !== 0) {
+//         cursor.value = searchRecipe.value[2].id
+//         fetchMore({
+//             variables: {
+//                 cursor: cursor.value
+//             },
+//             updateQuery: (previousResult, { fetchMoreResult }) => {
+//                 console.log('prev', previousResult)
+//                 console.log('fetchmore', fetchMoreResult.recipe.length)
+//                 if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
+
+//                 return {
+//                     ...previousResult,
+//                     recipe: [
+//                         ...previousResult.recipe,
+//                         ...fetchMoreResult.recipe
+//                     ]
+//                 }
+//             }
+//         })
+//     }
+// }
 </script>
 
 
