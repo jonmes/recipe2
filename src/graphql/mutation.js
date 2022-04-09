@@ -96,3 +96,13 @@ export const delete_recipe = {
         }
     `,
 }
+
+export const delete_fav = {
+    mutations: gql`
+        mutation ($favId: bigint!) {
+            delete_favorite_by_pk(id: $favId) {
+                id
+            }
+        }
+    `,
+}

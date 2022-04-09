@@ -282,10 +282,6 @@
                     </div>
                 </template>
             </div>
-            <div>
-                <button @click="previous()">previous</button>
-                <button @click="next()">Next</button>
-            </div>
         </div>
     </div>
 </template>

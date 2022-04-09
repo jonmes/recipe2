@@ -245,7 +245,9 @@
                     </tbody>
                 </table>
 
-                <button class="bg-green p-2 flex justify-center" @click="loadMore()">Load More!</button>
+            </div>
+            <div class="w-full flex justify-center">
+                <button class="bg-green py-2 px-10" @click="loadMore()">Load More!</button>
             </div>
         </div>
     </section>
