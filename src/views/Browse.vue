@@ -98,35 +98,6 @@
                 </section>
 
                 <section class="mb-10">
-                    <!-- <div class="w-full mt-16 mb-5 my-2 flex sm:flex-row items-center flex-col">
-                        <div class="w-full relative">
-                            <span
-                                class="h-full absolute inset-y-0 left-0 flex items-center -mt-5 sm:mt-0 pl-2"
-                            >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    class="h-4 w-4 fill-current text-gray-500"
-                                >
-                                    <path
-                                        d="M10 4a6 6 0 100 12 6 6 0 000-12zm-8 6a8 8 0 1114.32 4.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 012 10z"
-                                    />
-                                </svg>
-                            </span>
-                            <span class="w-full">
-                                <input
-                                    placeholder="Search by recipe name or by ingrediant"
-                                    v-model="search"
-                                    @keypress.enter="setSearch()"
-                                    class="shadow-inner shadow-green-200 focus:outline-none focus:border-green focus:ring-green focus:ring-1 inline-block lg:w-9/12 xl:w-10/12 appearance-none rounded border border-green-300 border-b block pl-8 pr-6 py-2 bg-white text-sm placeholder-gray-400 text-gray-700 focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
-                                />
-                                <button
-                                    class="bg-green sm:w-auto ml-4 h-10 py-2 h-8 px-10 font-large text-white rounded-md whitespace-nowrap hover:shadow-xl transition-shadow duration-300"
-                                    @click="setSearch()"
-                                >Search</button>
-                            </span>
-                        </div>
-                    </div>-->
-
                     <div
                         class="relative flex p-1 rounded-full bg-white border border-yellow-200 shadow-md md:p-2 mb-7"
                     >
@@ -145,18 +116,18 @@
                         >
                             <span class="hidden text-yellow-900 font-semibold md:block">Search</span>
                             <span class="inline-block">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="bi bi-search"
-                                fill="currentColor"
-                                height="20"
-                                width="20"
-                                viewBox="0 0 16 16"    
-                            >
-                                <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                                />
-                            </svg>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="bi bi-search"
+                                    fill="currentColor"
+                                    height="20"
+                                    width="20"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                                    />
+                                </svg>
                             </span>
                         </button>
                     </div>
@@ -241,15 +212,16 @@
                 <template v-else>
                     <div
                         class="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-7 gap-y-4"
+                        ref="scrollComponent"
                     >
-                        <div class="text-center col-span-3" v-if="recipe.length == 0">
+                        <div class="text-center col-span-3" v-if="searchRecipe.length == 0">
                             <h1 class="text-4xl mb-4">No Result Found</h1>
                             <h2 class="text-xl">Try different keywords or remove search filters</h2>
                         </div>
                         <div
                             class="max-w-xs mb-5 rounded-md overflow-hidden hover:scale-101 hover:shadow-2xl transition duration-100 cursor-pointer"
                             v-else
-                            v-for="(rec, index) in recipe"
+                            v-for="(rec, index) in searchRecipe"
                             :key="index"
                         >
                             <router-link
@@ -262,7 +234,11 @@
                                 class="font-semibold text-gray-800"
                             >
                                 <div>
-                                    <img class="w-80 h-80" :src="rec.images[0].url" alt="pic" />
+                                    <img
+                                        class="w-80 h-80 bg-clip-content"
+                                        :src="rec.images[0].url"
+                                        alt="pic"
+                                    />
                                 </div>
                                 <div class="py-4 px-4 bg-white h-full">
                                     <h3 class="text-2xl font-great font-black text-gray-600">
@@ -274,55 +250,53 @@
                                     <p class="mt-4 text-lg font-thin text-ellipsis overflow-hidden">
                                         <span>
                                             {{ rec.description.trim().substring(0, 30) }}
-                                            <span v-if="rec.description.length > 30">...</span>
+                                            <span
+                                                v-if="rec.description.length > 30"
+                                            >...</span>
                                         </span>
                                     </p>
 
-                                    <vue3starRatings
-                                        class="stars"
-                                        id="stars"
-                                        v-model="rec.avg_rating"
-                                        starSize="25"
-                                        starColor="#10B981"
-                                        inactiveColor="#e6ebdf"
-                                        controlBg="transparent"
-                                        :showControl="false"
-                                        :disableClick="true"
-                                        controlSize="0"
-                                    />
-
-                                    <!-- <span
-                                        class="flex items-center justify-center space-x-4 mt-4 w-full text-white bg-green hover:bg-green-500 py-1 rounded"
-                                    >
-                                        <svg
-                                            width="20px"
-                                            height="20px"
-                                            fill="white"
-                                            viewBox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M10 4.4C3.439 4.4 0 9.232 0 10c0 .766 3.439 5.6 10 5.6 6.56 0 10-4.834 10-5.6 0-.768-3.44-5.6-10-5.6zm0 9.907c-2.455 0-4.445-1.928-4.445-4.307S7.545 5.691 10 5.691s4.444 1.93 4.444 4.309-1.989 4.307-4.444 4.307zM10 10c-.407-.447.663-2.154 0-2.154-1.228 0-2.223.965-2.223 2.154s.995 2.154 2.223 2.154c1.227 0 2.223-.965 2.223-2.154 0-.547-1.877.379-2.223 0z"
-                                            />
-                                        </svg>
-                                        <span>View Recipe</span>
-                                    </span>-->
+                                    <div class="flex items-center mt-2.5 mb-5">
+                                        <vue3starRatings
+                                            class="stars"
+                                            id="stars"
+                                            v-model="rec.avg_rating"
+                                            starSize="25"
+                                            starColor="#10B981"
+                                            inactiveColor="#e6ebdf"
+                                            controlBg="transparent"
+                                            :showControl="false"
+                                            :disableClick="true"
+                                            controlSize="0"
+                                        />
+                                        <span
+                                            class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 mr-12"
+                                        >{{ rec.avg_rating }}</span>
+                                        <button
+                                            class="text-white bg-green hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                        >View</button>
+                                    </div>
                                 </div>
                             </router-link>
                         </div>
                     </div>
                 </template>
             </div>
+            <div>
+                <button @click="previous()">previous</button>
+                <button @click="next()">Next</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, onMounted, onBeforeUpdate } from 'vue'
 import { useQuery, useResult } from '@vue/apollo-composable'
 import { search_recipe, all_recipe } from '../graphql/query'
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import vue3starRatings from 'vue3-star-ratings'
+import scrollMonitor from 'scrollmonitor';
 import { useHead } from '@vueuse/head'
 useHead({
     title: 'Browse Recipe',
@@ -340,17 +314,23 @@ const timeFilter = ref(80)
 const time_lte = ref(100000)
 const time_gt = ref(0)
 const enableFilter = ref(false)
+const offset = ref(0)
+const scrollComponent = ref(null)
+const limit = ref(3)
+const page = ref(0)
+const cursor = ref(0)
+const sort = ref({ "id": "asc" })
 // ========================== FUNCTIONS =============================
-
 
 
 const setSearch = () => {
     searchVal.value = search.value.toString()
-    console.log(typeof (searchVal.value), 'type of search val');
     time_lte.value = 100000
     time_gt.value = 0
+    cursor.value = 0
 }
 const filterTime = (val) => {
+    recipeRefetch()
     if (val === 1) {
         time_gt.value = 0
         time_lte.value = 15
@@ -363,40 +343,108 @@ const filterTime = (val) => {
     }
 }
 
-const {
-    result: allRecipe,
-    loading: loadingRecipe,
-    error: errorRecipe,
-    refetch: allRefetch
-} = useQuery(all_recipe.query)
+// onMounted(() => {
+//     window.addEventListener("scroll", handleScroll)
+// })
 
-const allRec = useResult(allRecipe, null, data => data.recipe)
+// const handleScroll = (e) => {
+//     let element = scrollComponent.value
+//     if(element !== null){
+//         if( element.getBoundingClientRect().bottom < window.innerHeight) {
+//             next()
+//         }
+//     }
+// }
 
-allRefetch()
-
+// ================================= QUERY ========================================== 
 const {
     result: searchResult,
     loading: searchLoading,
     error: searchError,
-    refetch: recipeRefetch
+    refetch: recipeRefetch,
+    fetchMore
 } = useQuery(search_recipe.query,
     () => ({
         search: "%" + searchVal.value + "%",
-        sort: sortingArray.value[sorter.value],
+        // sort: sortingArray.value[sorter.value],
+        sort: { "id": "asc" },
         timeFilter: [{ "prep_time": { "_gt": time_gt.value } }, { "prep_time": { "_lte": time_lte.value } }],
-        // pageLimit: 2,
-        // offset: 2
+        limit: limit.value,
+        cursor: cursor.value
     }),
 )
 
-const recipe = useResult(searchResult, null, data => data.recipe)
+const searchRecipe = useResult(searchResult, null, data => data.recipe)
 recipeRefetch()
 
-const showRecipe = ref(allRec)
+const next = () => {
+    console.log('value', searchRecipe.value.length);
+    if (searchRecipe.value.length !== 0) {
+        cursor.value = searchRecipe.value[2].id
+        fetchMore({
+            variables: {
+                cursor: cursor.value
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                console.log('prev', previousResult)
+                console.log('fetchmore', fetchMoreResult.recipe.length)
+                if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
+
+                return {
+                    ...previousResult,
+                    recipe: [
+                        ...previousResult.recipe,
+                        ...fetchMoreResult.recipe
+                    ]
+                }
+            }
+        })
+    }
+
+    fetchMore({
+        variables: {
+            cursor: cursor.value
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+            console.log('passed out ', previousResult);
+            return previousResult
+        }
+    })
+
+
+}
+
+const previous = () => {
+        console.log('value', searchRecipe.value.length);
+        sort.value = { "id": "desc" }
+    if (searchRecipe.value.length !== 0) {
+        cursor.value = searchRecipe.value[2].id
+        fetchMore({
+            variables: {
+                cursor: cursor.value
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                console.log('prev', previousResult)
+                console.log('fetchmore', fetchMoreResult.recipe.length)
+                if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
+
+                return {
+                    ...previousResult,
+                    recipe: [
+                        ...previousResult.recipe,
+                        ...fetchMoreResult.recipe
+                    ]
+                }
+            }
+        })
+    }
+}
+
+
+// ============================= WATCHEFFECT ================================
 
 watchEffect(() => {
-    console.log(search.value.toString(), 'search value');
-    console.log(recipe.value, 'hey this is search recipe')
+
 })
 
 
@@ -406,5 +454,11 @@ watchEffect(() => {
 <style scoped>
 .spinner {
     background-color: transparent !important;
+}
+.vue3-star-ratings__wrapper[data-v-76dea496] {
+    display: block;
+    margin: 2px auto;
+    text-align: center;
+    padding: 0px !important;
 }
 </style>

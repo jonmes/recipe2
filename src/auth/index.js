@@ -10,6 +10,8 @@ const state = reactive({
     error: null,
 })
 
+export const userState = state
+
 export const storeState = state
 
 async function loginWithPopup() {

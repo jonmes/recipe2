@@ -1955,6 +1955,11 @@ sass@^1.49.9:
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
 
+scrollmonitor@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/scrollmonitor/-/scrollmonitor-1.2.9.tgz#c9b4d079fadf47785edb378ab245ffbacefbcfe0"
+  integrity sha512-pgviMf1xa3nfKvVxH/MhA3o96UVHHWyjUPKfKSfGmRjWpLJLM/IMRlNpqWtgsV9Av2WyI2JmyiSeVJVkt/AV3w==
+
 semver@^7.3.5:
   version "7.3.5"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"

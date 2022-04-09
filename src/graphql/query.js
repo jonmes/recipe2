@@ -29,8 +29,8 @@ export const search_recipe = {
     query: gql`
         query searchQuery(
             $search: String!
-            # $pageLimit: Int!
-            # $offset: Int!
+            $limit: Int!
+            $cursor: Int!
             $sort: [recipe_order_by!]!
             $timeFilter: [recipe_bool_exp!]!
         ) {
@@ -44,32 +44,23 @@ export const search_recipe = {
                             ]
                         }
                         { _and: $timeFilter }
+                        { id: { _gt: $cursor } }
                     ]
                 }
-                order_by: $sort # limit: $pageLimit # offset: $offset
+                order_by: $sort
+                limit: $limit
             ) {
                 id
                 title
                 category
                 prep_time
-                calories
-                serving
                 description
                 avg_rating
                 ratings {
                     rating_val
                 }
-                user_id
-                created_at
                 images {
                     url
-                }
-                ingredients {
-                    name
-                    amount
-                }
-                steps {
-                    step
                 }
                 user {
                     name
@@ -171,8 +162,8 @@ export const fav_query = {
 
 export const all_recipe = {
     query: gql`
-        query {
-            recipe(limit: 40, offset: 1) {
+        query ($where: recipe_bool_exp!, $order: order_by!) {
+            recipe(limit: 6, where: $where, order_by: { id: $order }) {
                 id
                 title
                 description
@@ -206,8 +197,13 @@ export const recipe_by_user = {
 
 export const sort_user_recipe = {
     query: gql`
-        query ($user_id: String!, $order: [recipe_order_by!]!) {
-            recipe(where: { user_id: { _eq: $user_id } }, order_by: $order) {
+        query ($user_id: String!, $order: [recipe_order_by!]!, $offset: Int!) {
+            recipe(
+                where: { user_id: { _eq: $user_id } }
+                limit: 2
+                offset: $offset
+                order_by: $order
+            ) {
                 id
                 title
                 images {

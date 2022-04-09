@@ -1,8 +1,10 @@
 <template>
     <div class="bg-gradient-to-br from-transparent to-green-100">
         <!-- <h2>{{ recipe }}</h2>
-        <h2>{{ id }}</h2> -->
-        <template v-if="detailError"><p>Something Went Wrong</p></template>
+        <h2>{{ id }}</h2>-->
+        <template v-if="detailError">
+            <p>Something Went Wrong</p>
+        </template>
         <template v-if="detailLoading">
             <RotateSquare2 />
         </template>
@@ -68,7 +70,7 @@
                             activeColour: 'darkgreen',
                             inactiveColour: '#DCDCDC',
                         }"
-                    /> -->
+                    />-->
                     <vue3starRatings
                         class="stars"
                         id="stars"
@@ -81,9 +83,7 @@
                         :disableClick="true"
                         controlSize="0"
                     />
-                    <div class="mr-10 inline-block">
-                        {{ recipe.ratings.length }} Ratings
-                    </div>
+                    <div class="mr-10 inline-block">{{ recipe.ratings.length }} Ratings</div>
                     <div class="inline-block col-span-4">
                         <Popper arrow>
                             <button
@@ -154,7 +154,9 @@
                         <div class="px-4">
                             <h2
                                 class="mb-2 leading-tight tracking-tight font-bold text-gray-800 text-2xl md:text-3xl h-full"
-                            ><span>{{ recipe.description }}</span></h2>
+                            >
+                                <span>{{ recipe.description }}</span>
+                            </h2>
                             <p class="text-gray-500 text-sm mt-5">
                                 By
                                 <a
@@ -181,14 +183,59 @@
                                 }}
                             </h4>
 
-                            <div class="flex xl:mt-20 lg:pt-10 space-x-4">
+                            <div class="flex justify-center xl:mt-20 lg:pt-10 space-x-4">
+                                <button class="mr-10 rounded-full hover:shadow-2xl">
+                                    <svg
+                                        width="32px"
+                                        height="32px"
+                                        viewBox="0 0 32 32"
+                                        enable-background="new 0 0 32 32"
+                                        id="Stock_cut"
+                                        version="1.1"
+                                        xml:space="preserve"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    >
+                                        <desc />
+                                        <path
+                                            d="M28.343,17.48L16,29  L3.657,17.48C1.962,15.898,1,13.684,1,11.365v0C1,6.745,4.745,3,9.365,3h0.17c2.219,0,4.346,0.881,5.915,2.45L16,6l0.55-0.55  C18.119,3.881,20.246,3,22.465,3h0.17C27.255,3,31,6.745,31,11.365v0C31,13.684,30.038,15.898,28.343,17.48z"
+                                            fill="none"
+                                            stroke="#000000"
+                                            stroke-linejoin="round"
+                                            stroke-miterlimit="10"
+                                            stroke-width="2"
+                                        />
+                                    </svg>
+                                </button>
+                                <button
+                                    class="py-2 px-2 font-semibold flex rounded-xl bg-green hover:bg-gradient-to-r from-green-500 to-pink-500 hover:shadow-2xl text-white items-center"
+                                ></button>
                                 <button
                                     type="button"
-                                    class="h-14 px-20 py-2 font-semibold flex rounded-xl bg-green hover:bg-gradient-to-r from-green-500 to-pink-500 hover:shadow-2xl text-white items-center"
+                                    class="py-2 px-2 font-semibold flex rounded-xl bg-green hover:bg-gradient-to-r from-green-500 to-pink-500 hover:shadow-2xl text-white items-center"
                                     @click="addFavorite()"
                                 >
-                                    <i class="bx bxs-heart bx-md"></i>
-                                    <span>add to favorite</span>
+                                    <svg
+                                        width="32px"
+                                        height="32px"
+                                        viewBox="0 0 32 32"
+                                        enable-background="new 0 0 32 32"
+                                        id="Stock_cut"
+                                        version="1.1"
+                                        xml:space="preserve"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    >
+                                        <desc />
+                                        <path
+                                            d="M28.343,17.48L16,29  L3.657,17.48C1.962,15.898,1,13.684,1,11.365v0C1,6.745,4.745,3,9.365,3h0.17c2.219,0,4.346,0.881,5.915,2.45L16,6l0.55-0.55  C18.119,3.881,20.246,3,22.465,3h0.17C27.255,3,31,6.745,31,11.365v0C31,13.684,30.038,15.898,28.343,17.48z"
+                                            fill="none"
+                                            stroke="yellow"
+                                            stroke-linejoin="round"
+                                            stroke-miterlimit="10"
+                                            stroke-width="2"
+                                        />
+                                    </svg> Favorite
                                 </button>
                             </div>
                         </div>
@@ -315,6 +362,7 @@ const currentRating = ref(4)
 const userId = ref(localStorage.getItem('user'))
 const comment = ref('')
 const { handleSubmit } = useForm();
+const liked = ref(true)
 // ============================== FUNCTIONS ======================
 
 onMounted(() => {
@@ -404,17 +452,17 @@ const {
     mutate: fav,
     loading: favLoading,
     error: favError
-} = useMutation(fav_mutation.mutations, 
-    () => ({ 
-        variables: {recipe_id: id.value, user_id: userId.value}
+} = useMutation(fav_mutation.mutations,
+    () => ({
+        variables: { recipe_id: id.value, user_id: userId.value }
     }))
 
 const addFavorite = () => {
-    if(localStorage.getItem('user')){
+    if (localStorage.getItem('user')) {
         fav()
         alert('Recipe added to your favorite list!')
-    }else{
-    authPlug.loginWithRedirect();
+    } else {
+        authPlug.loginWithRedirect();
     }
 }
 
@@ -428,25 +476,26 @@ watchEffect(() => {
     }
 })
 const addrateRecipe = () => {
-    if(localStorage.getItem('user')){    
-    rate()
-    alert('Your rate is submitted successfully!')
-    }else{
-    authPlug.loginWithRedirect();
+    if (localStorage.getItem('user')) {
+        rate()
+        alert('Your rate is submitted successfully!')
+    } else {
+        authPlug.loginWithRedirect();
     }
 
 }
 
 const addComment = handleSubmit((values, { resetForm }) => {
-    if(localStorage.getItem('user')){
+    if (localStorage.getItem('user')) {
         comment.value = values.comment
         console.log(values)
         comt()
         resetForm();
-    }else{
-    authPlug.loginWithRedirect();
+    } else {
+        authPlug.loginWithRedirect();
     }
 })
+
 
 
 </script>

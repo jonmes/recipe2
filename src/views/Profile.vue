@@ -1,10 +1,10 @@
 <template>
-    <section
-        class="w-full absolute flex justify-center items-center bg-black bg-opacity-50"
+    <div
+        class="w-full h-full absolute flex justify-center items-center z-50"
         :class="{ hidden: updateCard }"
     >
         <vee-form
-            class="w-96 bg-white shadow-md rounded px-8 pt-6 pb-8 rounded-md"
+            class="w-96 bg-white shadow-2xl rounded px-8 pt-6 pb-8 rounded-md"
             :validation-schema="schema"
             @submit="updater"
         >
@@ -33,7 +33,7 @@
                 <ErrorMessage class="text-red-600 ml-5" name="email" />
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="bio">Bio</label>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="bio">About</label>
                 <vee-field
                     v-model="newBio"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -65,51 +65,55 @@
                 >Cancel</button>
             </div>
         </vee-form>
-    </section>
-    <section>
-        <div
-            class="flex max-w-screen-xl h-auto justify-between items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24"
-        >
-            <p v-if="userError">Something went wrong ...</p>
-            <template v-if="userLoading">
-                <div class="flex justify-center items-center w-full h-screen pb-96">
-                    <RotateSquare2 />
-                </div>
-            </template>
-            <template v-else>
-                <div class="w-full grid grid-cols-3 gap-10">
-                    <div class="p-3 border-t-4 border-green-400 col-span-3 md:col-span-1 mt-10">
-                        <div
-                            class="image overflow-hidden bg-white shadow shadow-2xl rounded-b-lg p-5"
-                        >
-                            <img
-                                class="h-auto w-full mx-auto"
-                                :src="user.avatar"
-                                alt="profilePicture"
-                            />
-                            <p class="flex justify-between items-center pt-5">
-                                <span
-                                    class="text-gray-600 inline-block font-bold text-2xl leading-6"
-                                >{{ user.name }}</span>
-                                &nbsp;
-                                <button
-                                    class="bg-green text-white text-xl px-4 py-1 rounded-md flex justify-between items-center shadow hover:shadow-xl"
-                                    @click="showUpdate()"
-                                >Edit Profile</button>
-                            </p>
-                            <h3 class="text-gray-600 font-bold text-2xl leading-6 pt-5">Bio</h3>
+    </div>
 
-                            <p
-                                class="text-sm text-gray-500 hover:text-gray-600 leading-6"
-                            >{{ user.bio }}</p>
-                        </div>
+    <section
+        class="flex max-w-screen-xl h-auto justify-between items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24"
+        :class="{ blur: !updateCard }"
+    >
+        <p v-if="userError">Something went wrong ...</p>
+        <template v-if="userLoading">
+            <div class="flex justify-center items-center w-full h-screen pb-96">
+                <RotateSquare2 />
+            </div>
+        </template>
+        <template v-else>
+            <div class="w-full grid grid-cols-3 gap-10">
+                <div class="border-t-4 border-green-400 col-span-3 md:col-span-1 mt-1">
+                    <div
+                        class="image overflow-hidden bg-white shadow shadow-2xl rounded-b-lg p-5 w-full h-full"
+                    >
+                        <img class="h-auto w-full mx-auto" :src="user.avatar" alt="profilePicture" />
+                        <p class="flex justify-between items-center pt-5">
+                            <span
+                                class="text-gray-600 inline-block font-bold text-2xl leading-6"
+                            >{{ user.name }}</span>
+                            &nbsp;
+                            <button
+                                class="bg-green text-white text-xl px-4 py-1 rounded-md flex justify-between items-center shadow hover:shadow-xl"
+                                @click="showUpdate()"
+                            >Edit Profile</button>
+                        </p>
+                        <h3 class="text-gray-600 font-bold text-2xl leading-6 pt-5">About</h3>
+
+                        <p
+                            class="text-sm text-gray-500 hover:text-gray-600 leading-6"
+                        >{{ user.bio }}</p>
                     </div>
-
                 </div>
-            </template>
-        </div>
+                <!-- ============================FAVORITE ======================================= -->
+                <div class="w-full card col-span-2">
+                    <div class="z-50">
+                        <span>hello world</span>
+                    </div>
+                </div>
+            </div>
+        </template>
     </section>
-    <section class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24">
+    <section
+        class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24"
+        :class="{ blur: !updateCard }"
+    >
         <div class="flex justify-between font-bold items-center">
             <h2 class="text-2xl leading-tight inline-block">Posts</h2>
             <router-link
@@ -129,21 +133,21 @@
             </router-link>
         </div>
         <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-            <div class="inline-block min-w-full shadow rounded-lg overflow-y-auto h-128">
+            <div class="inline-block min-w-full shadow rounded-lg overflow-y-auto">
                 <table class="min-w-full leading-normal">
                     <thead class="sticky top-0">
                         <tr>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'title': 'asc' }"
+                                @click="filter = { 'title': 'asc' }; "
                             >Recipe</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'avg_rating': 'desc' }"
+                                @click="filter = { 'avg_rating': 'desc' };  sortRef()"
                             >Rating</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'created_at': 'desc' }"
+                                @click="filter = { 'created_at': 'desc' }; sortRef()"
                             >Created at</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider"
@@ -154,8 +158,8 @@
                         </tr>
                     </thead>
                     <tbody class="shadow shadow-2xl rounded">
-                        <p v-if="recipesError">Something went wrong...</p>
-                        <p v-if="recipesLoading">Loading...</p>
+                        <p v-if="sortE">Something went wrong...</p>
+                        <p v-if="sortL">Loading...</p>
                         <template v-else v-for="(post, index) in sortRecipe" :key="index">
                             <tr
                                 class="text-md hover:bg-gray-300"
@@ -192,27 +196,56 @@
                                     </p>
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-200 text-lg">
-                                    <box-icon
+                                    <!-- <box-icon
                                         name="pencil"
                                         type="solid"
                                         animation="fade-right-hover"
                                         color="green"
-                                    ></box-icon>
+                                    ></box-icon>-->
+                                    <svg
+                                        width="20px"
+                                        height="20px"
+                                        fill="green"
+                                        viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M12.3 3.7l4 4L4 20H0v-4L12.3 3.7zm1.4-1.4L16 0l4 4-2.3 2.3-4-4z"
+                                        />
+                                    </svg>
                                 </td>
                                 <td class="px-7 py-5 border-b border-gray-200 text-xl">
-                                    <box-icon
+                                    <button @click="deleteAndUpdateCache(post.id)">
+                                        <svg
+                                            width="24px"
+                                            height="24px"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <g>
+                                                <path fill="none" d="M0 0h24v24H0z" />
+                                                <path
+                                                    fill="green"
+                                                    d="M20 7v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7H2V5h20v2h-2zm-9 2v2h2V9h-2zm0 3v2h2v-2h-2zm0 3v2h2v-2h-2zM7 2h10v2H7V2z"
+                                                />
+                                            </g>
+                                        </svg>
+                                    </button>
+                                    <!-- <box-icon
                                         class="cursor-pointer"
                                         type="solid"
                                         name="trash-alt"
                                         animation="tada-hover"
                                         color="green"
                                         @click="deleteAndUpdateCache(post.id)"
-                                    ></box-icon>
+                                    ></box-icon>-->
                                 </td>
                             </tr>
                         </template>
                     </tbody>
                 </table>
+
+                <button class="bg-green p-2 flex justify-center" @click="loadMore()">Load More!</button>
             </div>
         </div>
     </section>
@@ -220,12 +253,14 @@
 
 <script setup>
 import { ref, computed, watchEffect, onMounted, onUpdated } from 'vue'
-import { useStore } from 'vuex'
 import { useQuery, useResult, useMutation } from '@vue/apollo-composable'
 import { get_user_data, recipe_by_user, sort_user_recipe } from '../graphql/query'
 import { update_profile, delete_recipe } from "../graphql/mutation"
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
+import vue3starRatings from 'vue3-star-ratings'
+import { userState } from '../auth/index'
 import { useHead } from '@vueuse/head'
+import { buildExecutionContext } from 'graphql/execution/execute'
 useHead({
     title: 'Profile',
 });
@@ -246,11 +281,11 @@ const schema = {
     bio: 'max:200'
 }
 const filter = ref({ "title": "asc" })
+const offset = ref(0)
+const page = ref(0)
 // ============ Functions ====================
 
 const cancelUpdate = () => updateCard.value = true
-
-
 const showUpdate = () => updateCard.value = false
 
 
@@ -279,41 +314,37 @@ refetchUser()
 const user = useResult(userResult, null, data => data.user_by_pk)
 
 const {
-    result: recipeRes,
-    loading: loadingRes,
-    error: resErro,
-    refetch: resRefetch
-} = useQuery(recipe_by_user.query,
-    () => ({ user_id: userId.value }))
-
-const recipe = useResult(recipeRes, null, data => data.recipe);
-
-const {
     result: sortR,
     loading: sortL,
     error: sortE,
-    refetch: sortRef
+    refetch: sortRef,
+    fetchMore
 } = useQuery(sort_user_recipe.query,
-    () => ({ user_id: userId.value, order: filter.value }))
+    () => ({ user_id: userId.value, order: filter.value, offset: offset.value }))
 
-const sortRecipe = useResult(sortR, null, data => data.recipe);
-console.log('sorted vaulue', sortRecipe);
+const sortRecipe = useResult(sortR, []);
 
-// console.log('recipe id', recipe.value);
-// onResult(queryResult => {
-//     console.log(queryResult.data, 'this is queyr result from profile page')
-//     if (queryResult.data) {
-//         oldAvatar.value = queryResult.data.user_by_pk.avatar
-//         oldName.value = queryResult.data.user_by_pk.name
-//         oldBio.value = queryResult.data.user_by_pk.bio
-//         oldEmail.value = queryResult.data.user_by_pk.email
-
-//         newName.value = oldName.value
-//         newEmail.value = oldEmail.value
-//         newBio.value = oldBio.value
-//     }
-// })
-
+function loadMore() {
+    console.log('button presed');
+    page.value++
+    fetchMore({
+        variables: {
+            offset: (page.value * 2)
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+            if (!fetchMoreResult) return previousResult
+            console.log('previous cach', previousResult);
+            console.log('more: ', fetchMoreResult);
+            return {
+                ...previousResult,
+                recipe: [
+                    ...previousResult.recipe,
+                    ...fetchMoreResult.recipe
+                ]
+            }
+        }
+    })
+}
 
 watchEffect(() => {
     if (user.value) {
@@ -336,8 +367,10 @@ const {
         email: newEmail.value,
         bio: newBio.value
     },
-    update: async (cache, { data: { newData } }) => {
-        refetchUser()
+    update: async (cache, { data: { update_user_by_pk } }) => {
+        let data = cache.readQuery({ query: get_user_data.query, variables: { user_id: userId.value } })
+        data = { 'user_by_pk': { ...update_user_by_pk, 'id': data.user_by_pk.id } }
+        cache.writeQuery({ query: get_user_data.query, variables: { user_id: userId.value }, data })
     },
 }))
 
@@ -349,52 +382,21 @@ const {
 } = useMutation(delete_recipe.mutations)
 
 
-// function deleteAndUpdate(id){
-//     deletRes({id},{
-//         update: (cache: {}) => {
-//             const data = cache.readQuery({query: recipe_by_user, variables: {user_id: userId.value}})
-//             const updateData = data.recipe.filter(rec => rec.id !== id)
-//             cache.writeQuery({query: recipe_by_user, variables: {user_id: userId.value}, data: {recipe: updateData }})
-//         }
-//     })
-// }
-
-// ================== RECIPE =====================
-
-
-
-// const {
-//     result: userRecipe,
-//     loading: recipesLoading,
-//     error: recipesError,
-//     refetch: recipeFetch
-// } = useQuery(get_user_recipe.query, { user_id: userData.value.sub })
-
-// const recipe = useResult(userRecipe, null, data => data.recipes)
-// recipeFetch()
-
-
-// const {
-//     mutate: deleteRecipe,
-//     loading: deleteLoading,
-//     error: deleteError,
-// } = useMutation(delete_recipe.mutation)
-
 function deleteAndUpdateCache(id) {
     deletRes({ recipe_id: id }, {
         update: (cache, { }) => {
-            const data = cache.readQuery({ query: recipe_by_user.query, variables: { user_id: userId.value } })
+            const data = cache.readQuery({ query: sort_user_recipe.query, variables: { user_id: userId.value, order: filter.value } })
             const updateData = data.recipe.filter(rec => rec.id !== id)
-            cache.writeQuery({ query: recipe_by_user.query, variables: { user_id: userId.value }, data: { recipe: updateData } })
+            cache.writeQuery({ query: sort_user_recipe.query, variables: { user_id: userId.value, order: filter.value }, data: { recipe: updateData } })
         }
     })
 }
-
 
 const convertTime = (apiTime) => {
     const date = new Date(apiTime)
     return date.toDateString()
 }
+
 </script>
 
 
@@ -408,7 +410,74 @@ const convertTime = (apiTime) => {
 </route>
 
 <style scoped>
+.vue3-star-ratings__wrapper[data-v-76dea496] {
+    display: block;
+    margin: 2px auto;
+    text-align: center;
+    padding: 0px !important;
+}
 .spinner {
     background-color: transparent !important;
+}
+
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 132deg;
+    inherits: false;
+}
+.card {
+    padding: 3px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    font-size: 1.5em;
+    color: rgb(37, 37, 37);
+    cursor: pointer;
+    font-family: cursive;
+}
+@keyframes spin {
+    0% {
+        --rotate: 0deg;
+    }
+    100% {
+        --rotate: 360deg;
+    }
+}
+
+.card::before {
+    content: "";
+    width: 104%;
+    height: 102%;
+    border-radius: 8px;
+    background-image: linear-gradient(
+        var(--rotate),
+        #4dfa6a,
+        #3c67e3 43%,
+        #4e00c2
+    );
+    position: absolute;
+    z-index: -1;
+    top: -1%;
+    left: -2%;
+    animation: spin 2.5s linear infinite;
+}
+.card::after {
+    left: 0;
+    right: 0;
+    z-index: -1;
+    margin: 0 auto;
+    transform: scale(0.8);
+    filter: blur(calc(var(--card-height) / 6));
+    background-image: linear-gradient(
+        var(--rotate),
+        #5ddcff,
+        #3c67e3 43%,
+        #4e00c2
+    );
+    opacity: 1;
+    transition: opacity 0.5s;
+    animation: spin 2.5s linear infinite;
 }
 </style>
