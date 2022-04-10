@@ -188,7 +188,7 @@
                                     type="button"
                                     class="flex justify-center items-center w-full sm:w-auto h-13 px-8 font-medium text-gray-900 border border-gray-900 rounded-xl hover:shadow-xl transition-shadow duration-300 transition"
                                     :class="{ 'bg-green-300': liked }"
-                                    @click="addFavorite()"
+                                    @click="addFavorite(); refFavCheck(); refAgg()"
                                 >
                                     <svg
                                         width="32px"

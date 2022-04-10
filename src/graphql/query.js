@@ -195,14 +195,39 @@ export const recipe_by_user = {
     `,
 }
 
+// export const sort_user_recipe = {
+//     query: gql`
+//         query ($user_id: String!, $order: [recipe_order_by!]!, $offset: Int!) {
+//             recipe(
+//                 where: { user_id: { _eq: $user_id } }
+//                 limit: 2
+//                 offset: $offset
+//                 order_by: $order
+//             ) {
+//                 id
+//                 title
+//                 images {
+//                     url
+//                 }
+//                 avg_rating
+//                 created_at
+//             }
+//         }
+//     `,
+// }
+
 export const sort_user_recipe = {
     query: gql`
-        query ($user_id: String!, $order: [recipe_order_by!]!, $offset: Int!) {
+        query ($user_id: String!, $recipe_id: Int!) {
             recipe(
-                where: { user_id: { _eq: $user_id } }
+                where: {
+                    _and: {
+                        user_id: { _eq: $user_id }
+                        id: { _gt: $recipe_id }
+                    }
+                }
                 limit: 2
-                offset: $offset
-                order_by: $order
+                order_by: { id: asc }
             ) {
                 id
                 title

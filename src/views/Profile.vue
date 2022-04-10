@@ -86,7 +86,11 @@
                 <div class="mx-auto w-full">
                     <div class="rounded-lg w-full flex flex-row flex-wrap items-center">
                         <div class="md:w-1/3 w-full">
-                            <img class="rounded-lg blur-none" style="filter: blur(0) !important;" :src="user.avatar" />
+                            <img
+                                class="rounded-lg blur-none"
+                                style="filter: blur(0) !important;"
+                                :src="user.avatar"
+                            />
                         </div>
                         <div class="md:w-2/3 w-full px-3 flex flex-row flex-wrap">
                             <div
@@ -96,7 +100,9 @@
                                     class="text-6xl text-green-300 leading-loose flex justify-start ml-10 uppercase"
                                 >{{ user.name }}</div>
                                 <div class="text-normal">
-                                    <span class="pb-1 text-2xl flex justify-start ml-10 text-green-400">About</span>
+                                    <span
+                                        class="pb-1 text-2xl flex justify-start ml-10 text-green-400"
+                                    >About</span>
                                     <p
                                         class="text-md text-left text-green-400 hover:text-green-200 leading-loose ml-10 mr-60 duration-500 transition"
                                     >{{ user.bio }}</p>
@@ -114,39 +120,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- =========================================================================== -->
-            <!-- 
-            <div class="w-full grid grid-cols-3 gap-10">
-                <div class="border-t-4 border-green-400 col-span-3 md:col-span-1 mt-1">
-                    <div
-                        class="image overflow-hidden bg-white shadow shadow-2xl rounded-b-lg p-5 w-full h-full"
-                    >
-                        <img class="h-auto w-full mx-auto" :src="user.avatar" alt="profilePicture" />
-                        <p class="flex justify-between items-center pt-5">
-                            <span
-                                class="text-gray-600 inline-block font-bold text-2xl leading-6"
-                            >{{ user.name }}</span>
-                            &nbsp;
-                            <button
-                                class="bg-green text-white text-xl px-4 py-1 rounded-md flex justify-between items-center shadow hover:shadow-xl"
-                                @click="showUpdate()"
-                            >Edit Profile</button>
-                        </p>
-                        <h3 class="text-gray-600 font-bold text-2xl leading-6 pt-5">About</h3>
-
-                        <p
-                            class="text-sm text-gray-500 hover:text-gray-600 leading-6"
-                        >{{ user.bio }}</p>
-                    </div>
-            </div>-->
-            <!-- ============================FAVORITE ======================================= -->
-            <!-- <div class="w-full card col-span-2">
-                    <div class="z-50">
-                        <span>hello world</span>
-                    </div>
-                </div>
-            </div>-->
         </template>
     </section>
     <section
@@ -321,8 +294,11 @@ const schema = {
     bio: 'max:200'
 }
 const filter = ref({ "title": "asc" })
-const offset = ref(0)
-const page = ref(0)
+// const offset = ref(0)
+// const page = ref(0)
+const recipe_id = ref(0)
+const sortRecipe = ref([])
+const cursorVal = ref(0)
 // ============ Functions ====================
 
 const cancelUpdate = () => updateCard.value = true
@@ -353,30 +329,41 @@ refetchUser()
 
 const user = useResult(userResult, null, data => data.user_by_pk)
 
+
+
+// ========================= USER RECIPE QUERY =========================================
 const {
     result: sortR,
     loading: sortL,
     error: sortE,
     refetch: sortRef,
+    onResult: sortOnResult,
     fetchMore
 } = useQuery(sort_user_recipe.query,
-    () => ({ user_id: userId.value, order: filter.value, offset: offset.value }))
+    () => ({ user_id: userId.value, recipe_id: recipe_id.value }))
 
-const sortRecipe = useResult(sortR, []);
+// const sortRecipe = useResult(sortR, []);
+sortOnResult(({ data }) => {
+    console.log('this is sort data', data);
+    if (data) {
+        sortRecipe.value = data.recipe
+    }
+})
+
 
 function loadMore() {
-    console.log('button presed');
-    page.value++
+
     fetchMore({
         variables: {
-            offset: (page.value * 2)
+            recipe_id : sortRecipe.value[sortRecipe.value.length - 1].id
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
             if (!fetchMoreResult) return previousResult
             console.log('previous cach', previousResult);
             console.log('more: ', fetchMoreResult);
+            console.log('updated recipe id', sortRecipe.value);
+            
             return {
-                ...previousResult,
                 recipe: [
                     ...previousResult.recipe,
                     ...fetchMoreResult.recipe
@@ -386,9 +373,10 @@ function loadMore() {
     })
 }
 
+
+// 
 watchEffect(() => {
     if (user.value) {
-        console.log('user is available now')
         newName.value = user.value.name
         newEmail.value = user.value.email
         newBio.value = user.value.bio
