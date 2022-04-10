@@ -271,7 +271,7 @@
                                         />
                                         <span
                                             class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 mr-12"
-                                        >{{ rec.avg_rating }}</span>
+                                        >{{ rec.ratings.length }}</span>
                                         <button
                                             class="text-white bg-green hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                         >View</button>
@@ -392,7 +392,6 @@ const next = () => {
                 if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
 
                 return {
-                    ...previousResult,
                     recipe: [
                         ...previousResult.recipe,
                         ...fetchMoreResult.recipe
