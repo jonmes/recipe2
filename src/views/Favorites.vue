@@ -87,7 +87,7 @@
                             </router-link>
                             <button
                                 class="text-white bg-green hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-between"
-                                @click="deleteFav_updateCache(rec.recipe.id)"
+                                @click="deleteFav_updateCache(rec.id)"
                             >
                                 <svg
                                     width="24px"
@@ -175,6 +175,7 @@ function deleteFav_updateCache(id){
             const data = cache.readQuery({query: fav_query.query, variables: { user_id: userId.value}})
             console.log('fav data showing', data);
             console.log('id', id);
+            data.favorite.forEach(fav => console.log('fav', fav.id))
             const updatedData = data.favorite.filter(fav => fav.id !== id)
             console.log('updatedData', updatedData);
             cache.writeQuery({query: fav_query.query, variables: { user_id: userId.value}, data: { favorite: updatedData }})

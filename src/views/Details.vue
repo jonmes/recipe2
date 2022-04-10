@@ -183,36 +183,11 @@
                                 }}
                             </h4>
 
-                            <div class="flex justify-center xl:mt-20 lg:pt-10 space-x-4">
-                                <button class="mr-10 rounded-full hover:shadow-2xl">
-                                    <svg
-                                        width="32px"
-                                        height="32px"
-                                        viewBox="0 0 32 32"
-                                        enable-background="new 0 0 32 32"
-                                        id="Stock_cut"
-                                        version="1.1"
-                                        xml:space="preserve"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    >
-                                        <desc />
-                                        <path
-                                            d="M28.343,17.48L16,29  L3.657,17.48C1.962,15.898,1,13.684,1,11.365v0C1,6.745,4.745,3,9.365,3h0.17c2.219,0,4.346,0.881,5.915,2.45L16,6l0.55-0.55  C18.119,3.881,20.246,3,22.465,3h0.17C27.255,3,31,6.745,31,11.365v0C31,13.684,30.038,15.898,28.343,17.48z"
-                                            fill="none"
-                                            stroke="#000000"
-                                            stroke-linejoin="round"
-                                            stroke-miterlimit="10"
-                                            stroke-width="2"
-                                        />
-                                    </svg>
-                                </button>
-                                <button
-                                    class="py-2 px-2 font-semibold flex rounded-xl bg-green hover:bg-gradient-to-r from-green-500 to-pink-500 hover:shadow-2xl text-white items-center"
-                                ></button>
+                            <div class="xl:mt-20 lg:pt-10 space-x-4">
                                 <button
                                     type="button"
-                                    class="py-2 px-2 font-semibold flex rounded-xl bg-green hover:bg-gradient-to-r from-green-500 to-pink-500 hover:shadow-2xl text-white items-center"
+                                    class="flex justify-center items-center w-full sm:w-auto h-13 px-8 font-medium text-gray-900 border border-gray-900 rounded-xl hover:shadow-xl transition-shadow duration-300 transition"
+                                    :class="{ 'bg-green-300': liked }"
                                     @click="addFavorite()"
                                 >
                                     <svg
@@ -230,12 +205,13 @@
                                         <path
                                             d="M28.343,17.48L16,29  L3.657,17.48C1.962,15.898,1,13.684,1,11.365v0C1,6.745,4.745,3,9.365,3h0.17c2.219,0,4.346,0.881,5.915,2.45L16,6l0.55-0.55  C18.119,3.881,20.246,3,22.465,3h0.17C27.255,3,31,6.745,31,11.365v0C31,13.684,30.038,15.898,28.343,17.48z"
                                             fill="none"
-                                            stroke="yellow"
+                                            stroke="black"
                                             stroke-linejoin="round"
                                             stroke-miterlimit="10"
                                             stroke-width="2"
                                         />
-                                    </svg> Favorite
+                                    </svg>
+                                    <span class="px-3">Favorite &nbsp;&nbsp;{{ favCount }}</span>
                                 </button>
                             </div>
                         </div>
@@ -334,7 +310,7 @@
 import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuery, useResult, useMutation } from '@vue/apollo-composable'
-import { query_all, rating_query, comment_query } from '../graphql/query'
+import { query_all, rating_query, comment_query, fav_check, fav_count } from '../graphql/query'
 import { rating_mutation, comment_mutation, fav_mutation } from '../graphql/mutation'
 import { configure, Form, Field, defineRule, ErrorMessage, useForm } from 'vee-validate';
 import { required } from '@vee-validate/rules';
@@ -362,7 +338,8 @@ const currentRating = ref(4)
 const userId = ref(localStorage.getItem('user'))
 const comment = ref('')
 const { handleSubmit } = useForm();
-const liked = ref(true)
+const liked = ref(false)
+const favCount = ref()
 // ============================== FUNCTIONS ======================
 
 onMounted(() => {
@@ -381,7 +358,7 @@ const convertTime = (apiTime) => {
     return date.toDateString()
 }
 
-// ============================ APOLLO =======================
+// ============================ QUERY =======================
 const {
     result: detailResult,
     loading: detailLoading,
@@ -414,11 +391,51 @@ const {
 const comments = useResult(commentResult, null, data => data.comment)
 
 
+const {
+    result: favCheck,
+    loading: favCheckL,
+    error: favCheckE,
+    onResult: checkR,
+    refetch: refFavCheck
+} = useQuery(fav_check.query, () => ({
+    user_id: userId.value,
+    recipeId: id.value
+}))
+
+checkR(({ data }) => {
+    if (userId.value) {
+        if (data.favorite.length > 0) {
+            liked.value = true
+        }
+    }
+})
+
+
+const {
+    result: favAgg,
+    loading: aggL,
+    error: aggE,
+    refetch: refAgg,
+    onResult: countOnRes
+} = useQuery(fav_count.query, () => ({
+    recipeId: id.value
+}))
+
+refAgg()
+
+countOnRes(({ data }) => {
+    console.log('fav count data', data);
+    if (data.favorite_aggregate.aggregate.count > 0) {
+        console.log('favCount result', data.favorite_aggregate.aggregate.count)
+        favCount.value = data.favorite_aggregate.aggregate.count
+    }
+})
+
 // ===================== REFETCHES ======================
 detailRefetch()
 ratingRefetch()
 commentRefetch()
-
+refFavCheck()
 
 
 // ===================== MUTATIONS ===========================
@@ -459,8 +476,13 @@ const {
 
 const addFavorite = () => {
     if (localStorage.getItem('user')) {
-        fav()
-        alert('Recipe added to your favorite list!')
+        console.log('favCheckerasdf', liked.value);
+        if (!liked.value) {
+            fav()
+            alert('Recipe added to your favorite list!')
+        } else {
+            alert('Already Favorited!')
+        }
     } else {
         authPlug.loginWithRedirect();
     }
@@ -474,6 +496,8 @@ watchEffect(() => {
             currentRating.value = 0
         }
     }
+    // console.log('fav count', favCount.value);
+
 })
 const addrateRecipe = () => {
     if (localStorage.getItem('user')) {

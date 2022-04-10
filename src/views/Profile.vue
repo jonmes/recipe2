@@ -78,6 +78,45 @@
             </div>
         </template>
         <template v-else>
+            <!-- Profile Card -->
+
+            <div
+                class="w-screen flex flex-row flex-wrap p-3 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-lg"
+            >
+                <div class="mx-auto w-full">
+                    <div class="rounded-lg w-full flex flex-row flex-wrap items-center">
+                        <div class="md:w-1/3 w-full">
+                            <img class="rounded-lg blur-none" style="filter: blur(0) !important;" :src="user.avatar" />
+                        </div>
+                        <div class="md:w-2/3 w-full px-3 flex flex-row flex-wrap">
+                            <div
+                                class="w-full text-right text-green-200 font-semibold relative pt-3 md:pt-0"
+                            >
+                                <div
+                                    class="text-6xl text-green-300 leading-loose flex justify-start ml-10 uppercase"
+                                >{{ user.name }}</div>
+                                <div class="text-normal">
+                                    <span class="pb-1 text-2xl flex justify-start ml-10 text-green-400">About</span>
+                                    <p
+                                        class="text-md text-left text-green-400 hover:text-green-200 leading-loose ml-10 mr-60 duration-500 transition"
+                                    >{{ user.bio }}</p>
+                                </div>
+                                <div
+                                    class="text-sm text-gray-300 hover:text-gray-400 cursor-pointer md:absolute pt-3 md:pt-0 bottom-0 right-0"
+                                >
+                                    <button
+                                        class="bg-green text-white text-xl px-4 py-1 rounded-md flex justify-between items-center shadow hover:shadow-xl"
+                                        @click="showUpdate()"
+                                    >Edit Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================================================================== -->
+            <!-- 
             <div class="w-full grid grid-cols-3 gap-10">
                 <div class="border-t-4 border-green-400 col-span-3 md:col-span-1 mt-1">
                     <div
@@ -100,14 +139,14 @@
                             class="text-sm text-gray-500 hover:text-gray-600 leading-6"
                         >{{ user.bio }}</p>
                     </div>
-                </div>
-                <!-- ============================FAVORITE ======================================= -->
-                <div class="w-full card col-span-2">
+            </div>-->
+            <!-- ============================FAVORITE ======================================= -->
+            <!-- <div class="w-full card col-span-2">
                     <div class="z-50">
                         <span>hello world</span>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </template>
     </section>
     <section
@@ -143,7 +182,7 @@
                             >Recipe</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'avg_rating': 'desc' };  sortRef()"
+                                @click="filter = { 'avg_rating': 'desc' }; sortRef()"
                             >Rating</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
@@ -244,7 +283,6 @@
                         </template>
                     </tbody>
                 </table>
-
             </div>
             <div class="w-full flex justify-center">
                 <button class="bg-green py-2 px-10" @click="loadMore()">Load More!</button>

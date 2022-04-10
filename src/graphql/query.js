@@ -31,7 +31,7 @@ export const search_recipe = {
             $search: String!
             $limit: Int!
             $offset: Int!
-            $timeFilter: [recipe_bool_exp!]!,
+            $timeFilter: [recipe_bool_exp!]!
             $sort: [recipe_order_by!]!
         ) {
             recipe(
@@ -47,7 +47,7 @@ export const search_recipe = {
                     ]
                 }
                 offset: $offset
-                limit: $limit,
+                limit: $limit
                 order_by: $sort
             ) {
                 id
@@ -211,6 +211,35 @@ export const sort_user_recipe = {
                 }
                 avg_rating
                 created_at
+            }
+        }
+    `,
+}
+
+export const fav_check = {
+    query: gql`
+        query ($user_id: String!, $recipeId: Int!) {
+            favorite(
+                where: {
+                    _and: {
+                        user_id: { _eq: $user_id }
+                        recipe_id: { _eq: $recipeId }
+                    }
+                }
+            ) {
+                recipe_id
+            }
+        }
+    `,
+}
+
+export const fav_count = {
+    query: gql`
+        query ($recipeId: Int!) {
+            favorite_aggregate(where: { recipe_id: { _eq: $recipeId } }) {
+                aggregate {
+                    count
+                }
             }
         }
     `,
