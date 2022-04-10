@@ -421,7 +421,7 @@ const {
     recipeId: id.value
 }))
 
-refAgg()
+
 
 countOnRes(({ data }) => {
     console.log('fav count data', data);
@@ -436,7 +436,7 @@ detailRefetch()
 ratingRefetch()
 commentRefetch()
 refFavCheck()
-
+refAgg()
 
 // ===================== MUTATIONS ===========================
 const {
@@ -473,6 +473,8 @@ const {
     () => ({
         variables: { recipe_id: id.value, user_id: userId.value }
     }))
+
+
 
 const addFavorite = () => {
     if (localStorage.getItem('user')) {
