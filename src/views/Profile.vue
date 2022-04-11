@@ -81,7 +81,7 @@
             <!-- Profile Card -->
 
             <div
-                class="w-screen flex flex-row flex-wrap p-3 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-lg"
+                class="w-screen flex flex-row flex-wrap p-3  card"
             >
                 <div class="mx-auto w-full">
                     <div class="rounded-lg w-full flex flex-row flex-wrap items-center">
@@ -104,7 +104,7 @@
                                         class="pb-1 text-2xl flex justify-start ml-10 text-green-400"
                                     >About</span>
                                     <p
-                                        class="text-md text-left text-green-400 hover:text-green-200 leading-loose ml-10 mr-60 duration-500 transition"
+                                        class="text-md text-left text-green-400 hover:text-white hover:scale-110 leading-loose ml-10 mr-60 duration-500 transition"
                                     >{{ user.bio }}</p>
                                 </div>
                                 <div
@@ -151,19 +151,19 @@
                         <tr>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'title': 'asc' }; "
+                                @click="filter = { 'title': 'asc' }"
                             >Recipe</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'avg_rating': 'desc' }; sortRef()"
+                                @click="filter = { 'avg_rating': 'desc' }"
                             >Rating</th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-                                @click="filter = { 'created_at': 'desc' }; sortRef()"
+                                @click="filter = { 'created_at': 'desc' }"
                             >Created at</th>
-                            <th
+                            <!-- <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider"
-                            >Edit</th>
+                            >Edit</th> -->
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider"
                             >Delete</th>
@@ -207,13 +207,13 @@
                                         }}
                                     </p>
                                 </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-lg">
-                                    <!-- <box-icon
+                                <!-- <td class="px-5 py-5 border-b border-gray-200 text-lg">
+                                    <box-icon
                                         name="pencil"
                                         type="solid"
                                         animation="fade-right-hover"
                                         color="green"
-                                    ></box-icon>-->
+                                    ></box-icon>
                                     <svg
                                         width="20px"
                                         height="20px"
@@ -225,7 +225,7 @@
                                             d="M12.3 3.7l4 4L4 20H0v-4L12.3 3.7zm1.4-1.4L16 0l4 4-2.3 2.3-4-4z"
                                         />
                                     </svg>
-                                </td>
+                                </td> -->
                                 <td class="px-7 py-5 border-b border-gray-200 text-xl">
                                     <button @click="deleteAndUpdateCache(post.id)">
                                         <svg
@@ -295,7 +295,7 @@ const schema = {
 }
 const filter = ref({ "title": "asc" })
 const recipe_id = ref(0)
-const sortRecipe = ref([])
+// const sortRecipe = ref([])
 const cursorVal = ref(0)
 // ============ Functions ====================
 
@@ -340,13 +340,7 @@ const {
 } = useQuery(sort_user_recipe.query,
     () => ({ user_id: userId.value, recipe_id: recipe_id.value, order: { "id": "asc"} }))
 
-sortOnResult(({ data }) => {
-    console.log('this is sort data', data);
-    if (data) {
-        sortRecipe.value = data.recipe
-    }
-})
-
+const sortRecipe = useResult(sortR, null, data => data.recipe)
 
 function loadMore() {
 
@@ -370,8 +364,12 @@ function loadMore() {
     })
 }
 
+// =============================== REFETCHES ================================
 
-// 
+sortRef()
+
+// =============================== MUTATIONS ================================
+
 watchEffect(() => {
     if (user.value) {
         newName.value = user.value.name
@@ -457,10 +455,7 @@ const convertTime = (apiTime) => {
     align-items: center;
     text-align: center;
     display: flex;
-    font-size: 1.5em;
     color: rgb(37, 37, 37);
-    cursor: pointer;
-    font-family: cursive;
 }
 @keyframes spin {
     0% {

@@ -25,6 +25,51 @@ export const get_user_data = {
     `,
 }
 
+// export const search_recipe = {
+//     query: gql`
+//         query searchQuery(
+//             $search: String!
+//             $limit: Int!
+//             $offset: Int!
+//             $timeFilter: [recipe_bool_exp!]!
+//             $sort: [recipe_order_by!]!
+//         ) {
+//             recipe(
+//                 where: {
+//                     _and: [
+//                         {
+//                             _or: [
+//                                 { title: { _ilike: $search } }
+//                                 { ingredients: { name: { _ilike: $search } } }
+//                             ]
+//                         }
+//                         { _and: $timeFilter }
+//                     ]
+//                 }
+//                 offset: $offset
+//                 limit: $limit
+//                 order_by: $sort
+//             ) {
+//                 id
+//                 title
+//                 category
+//                 prep_time
+//                 description
+//                 avg_rating
+//                 ratings {
+//                     rating_val
+//                 }
+//                 images {
+//                     url
+//                 }
+//                 user {
+//                     name
+//                 }
+//             }
+//         }
+//     `,
+// }
+
 export const search_recipe = {
     query: gql`
         query searchQuery(
@@ -49,7 +94,8 @@ export const search_recipe = {
                 offset: $offset
                 limit: $limit
                 order_by: $sort
-            ) {
+            ) # @connection(key: "recipe")
+            {
                 id
                 title
                 category
@@ -218,7 +264,11 @@ export const recipe_by_user = {
 
 export const sort_user_recipe = {
     query: gql`
-        query ($user_id: String!, $recipe_id: Int!, $order: [recipe_order_by]!) {
+        query (
+            $user_id: String!
+            $recipe_id: Int!
+            $order: [recipe_order_by]!
+        ) {
             recipe(
                 where: {
                     _and: {
@@ -228,7 +278,7 @@ export const sort_user_recipe = {
                 }
                 limit: 2
                 order_by: $order
-            ) @connection(key: "recipe"){
+            ) @connection(key: "recipe") {
                 id
                 title
                 images {
@@ -264,6 +314,30 @@ export const fav_count = {
             favorite_aggregate(where: { recipe_id: { _eq: $recipeId } }) {
                 aggregate {
                     count
+                }
+            }
+        }
+    `,
+}
+
+export const ctg_filter = {
+    query: gql`
+        query ($ctg: String!) {
+            recipe(where: { category: { _ilike: $ctg } }) {
+                id
+                title
+                category
+                prep_time
+                description
+                avg_rating
+                ratings {
+                    rating_val
+                }
+                images {
+                    url
+                }
+                user {
+                    name
                 }
             }
         }
