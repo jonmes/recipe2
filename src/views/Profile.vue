@@ -294,8 +294,6 @@ const schema = {
     bio: 'max:200'
 }
 const filter = ref({ "title": "asc" })
-// const offset = ref(0)
-// const page = ref(0)
 const recipe_id = ref(0)
 const sortRecipe = ref([])
 const cursorVal = ref(0)
@@ -340,9 +338,8 @@ const {
     onResult: sortOnResult,
     fetchMore
 } = useQuery(sort_user_recipe.query,
-    () => ({ user_id: userId.value, recipe_id: recipe_id.value }))
+    () => ({ user_id: userId.value, recipe_id: recipe_id.value, order: { "id": "asc"} }))
 
-// const sortRecipe = useResult(sortR, []);
 sortOnResult(({ data }) => {
     console.log('this is sort data', data);
     if (data) {

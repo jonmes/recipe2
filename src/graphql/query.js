@@ -218,7 +218,7 @@ export const recipe_by_user = {
 
 export const sort_user_recipe = {
     query: gql`
-        query ($user_id: String!, $recipe_id: Int!) {
+        query ($user_id: String!, $recipe_id: Int!, $order: [recipe_order_by]!) {
             recipe(
                 where: {
                     _and: {
@@ -227,8 +227,8 @@ export const sort_user_recipe = {
                     }
                 }
                 limit: 2
-                order_by: { id: asc }
-            ) {
+                order_by: $order
+            ) @connection(key: "recipe"){
                 id
                 title
                 images {
