@@ -339,7 +339,7 @@ const userId = ref(localStorage.getItem('user'))
 const comment = ref('')
 const { handleSubmit } = useForm();
 const liked = ref(false)
-const favCount = ref()
+// const favCount = ref()
 // ============================== FUNCTIONS ======================
 
 onMounted(() => {
@@ -402,13 +402,16 @@ const {
     recipeId: id.value
 }))
 
-checkR(({ data }) => {
-    if (userId.value) {
-        if (data.favorite.length > 0) {
-            liked.value = true
-        }
-    }
-})
+const checkLike = useResult(favCheck, null, data => data.favorite)
+console.log('fav lengisiadjfjasifjsiofj', checkLike.value);
+
+// checkR(({ data }) => {
+//     if (userId.value) {
+//         if (data.favorite.length > 0) {
+//             liked.value = true
+//         }
+//     }
+// })
 
 
 const {
@@ -421,15 +424,16 @@ const {
     recipeId: id.value
 }))
 
+const favCount = useResult(favAgg, null, data => data.favorite_aggregate.aggregate.count)
 
 
-countOnRes(({ data }) => {
-    console.log('fav count data', data);
-    if (data.favorite_aggregate.aggregate.count > 0) {
-        console.log('favCount result', data.favorite_aggregate.aggregate.count)
-        favCount.value = data.favorite_aggregate.aggregate.count
-    }
-})
+// countOnRes(({ data }) => {
+//     console.log('fav count data', data);
+//     if (data.favorite_aggregate.aggregate.count > 0) {
+//         console.log('favCount result', data.favorite_aggregate.aggregate.count)
+//         favCount.value = data.favorite_aggregate.aggregate.count
+//     }
+// })
 
 // ===================== REFETCHES ======================
 detailRefetch()
@@ -482,6 +486,7 @@ const addFavorite = () => {
         if (!liked.value) {
             fav()
             alert('Recipe added to your favorite list!')
+            liked.value = true
         } else {
             alert('Already Favorited!')
         }
@@ -498,7 +503,11 @@ watchEffect(() => {
             currentRating.value = 0
         }
     }
-    // console.log('fav count', favCount.value);
+    if(checkLike.value){
+        if(checkLike.value.length > 0){
+            liked.value = true
+        }
+    }
 
 })
 const addrateRecipe = () => {
