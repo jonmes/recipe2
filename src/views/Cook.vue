@@ -13,7 +13,7 @@
     class="flex flex-wrap justify-center px-6 mx-auto max-w-screen-xl sm:px-8 md:px-12 lg:px-16 xl:px-24 z-0 bg-gradient-to-br from-transparent to-green-100"
   >
     <Form
-      v-slot="{ errors, values }"
+      v-slot="{ values }"
       class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       @submit="handleSubmit"
     >
@@ -303,7 +303,9 @@
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
                   rules="required"
                 />
-                <ErrorMessage class="text-red" :name="`ingredients[${index}].name`" />
+                <ErrorMessage class="text-red" :name="`ingredients[${index}].name`">
+                <p class="text-red">Ingredient Required</p>
+                </ErrorMessage>
 
                 <label class="w-1/12 ml-20">Amount</label>
 
@@ -314,7 +316,9 @@
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-3"
                   rules="required"
                 />
-                <ErrorMessage class="text-red ml-4" :name="`ingredients[${index}].amount`" />
+                <ErrorMessage class="text-red ml-4" :name="`ingredients[${index}].amount`">
+                <p class="text-red ml-4">Amount Required</p>
+                </ErrorMessage>
 
                 <button
                   class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
@@ -372,7 +376,9 @@
                   class="shadow appearance-none border rounded w-6/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   rules="required"
                 ></Field>
-                <ErrorMessage class="text-red ml-3" :name="`steps[${index}].step`" />
+                <ErrorMessage class="text-red ml-3" :name="`steps[${index}].step`">
+                <P class="text-red ml-3">Step Required</P>
+                </ErrorMessage>
                 <button
                   class="uppercase ml-4 p-3 flex items-center border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 max-w-max shadow-sm hover:shadow-lg rounded-full w-12 h-12"
                   type="button"
@@ -449,10 +455,10 @@
           :disabled="isDisabled"
         >Finish</button>
       </div>
-      <div v-if="Object.keys(errors).length !== 0">
+      <!-- <div v-if="Object.keys(errors).length !== 0">
         <b>You have to feel this fields:</b>
         <pre>{{ errors }}</pre>
-      </div>
+      </div> -->
     </Form>
   </div>
 </template>
