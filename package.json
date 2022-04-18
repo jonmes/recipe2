@@ -43,7 +43,8 @@
     "vue-star-rating": "^1.7.0",
     "vue3-popper": "^1.4.2",
     "vue3-star-ratings": "^1.1.0",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",

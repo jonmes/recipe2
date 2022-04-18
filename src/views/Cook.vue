@@ -10,8 +10,8 @@
   </div>
   <div
     class="flex flex-wrap justify-center px-6 mx-auto max-w-screen-xl sm:px-8 md:px-12 lg:px-16 xl:px-24 z-0 bg-gradient-to-br from-transparent to-green-100">
-    <Form v-slot="{ values }" class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      @submit="handleSubmit">
+    <form class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      @submit.prevent="onSubmit">
       <!-- ================================== PROCESSES ================================================== -->
       <div class="w-full py-6">
         <div class="flex justify-center">
@@ -123,7 +123,7 @@
             <label class="w-2/12">Name</label>
             <Field as="input" name="title" type="text"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="title" rules="required|max:20" v-model="title" />
+              placeholder="title" rules="required|max:20" />
             <ErrorMessage class="text-red ml-4" name="title" />
           </div>
           <!-- =========================== CATEGORY ======================= -->
@@ -132,7 +132,7 @@
             <label class="w-2/12">Category</label>
             <Field as="select" name="category"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required" v-model="category">
+              rules="required">
               <option value="Soup">Soup</option>
               <option value="Juice">Juice and Coctail</option>
               <option value="Seafoods">Frozen Seafoods</option>
@@ -147,8 +147,7 @@
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Preparation Time</label>
             <Field as="input" name="prep_time" type="number" rules="required|integer"
-              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              v-model="prep_time" />
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
             <ErrorMessage class="text-red ml-4" name="prep_time" />
           </div>
           <!-- ============================= CALORIES   ===================================== -->
@@ -157,7 +156,7 @@
             <label class="w-2/12">Calories</label>
             <Field as="input" name="calories" type="number"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required|integer" v-model="calories" />
+              rules="required|integer" />
             <ErrorMessage class="text-red ml-4" name="calories" />
           </div>
           <!-- ============================= SERVING   ===================================== -->
@@ -166,7 +165,7 @@
             <label class="w-2/12">Serving</label>
             <Field as="input" name="serving" type="number"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required|integer" v-model="serving" />
+              rules="required|integer" />
             <ErrorMessage class="text-red ml-4" name="serving" />
           </div>
 
@@ -176,7 +175,7 @@
             <label class="w-2/12">Description</label>
             <Field as="textarea" name="description" type="text" rows="5" cols="60"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required|max:100" placeholder="Description..." v-model="description"></Field>
+              rules="required|max:100" placeholder="Description..."></Field>
             <ErrorMessage class="text-red ml-4" name="description" />
           </div>
         </div>
@@ -184,11 +183,49 @@
 
       <transition name="slide" mode="out-in">
         <div v-show="process === 2">
-          <!-- ================================= INGREDIANTS ==================================== -->
-
           <hr mt-10 mb-10 />
 
-          <div class="w-full mt-10 mb-10 items-center">
+          <!-- ================================= NEW INGREDIANTS ==================================== -->
+
+          <div v-for="(field, idx) in recipesField" :key="field.key">
+            <Field
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
+              rules="required" /> :name="`ingredients[${idx}]`" type="text"/>
+            <ErrorMessage :name="`ingredients[${idx}]`">
+              <span class="text-red ml-4">Required</span>
+            </ErrorMessage>
+            <Field
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
+              rules="required" /> :name="`amount[${idx}]`" type="text"/>
+            <ErrorMessage :name="`amount[${idx}]`">
+              <span class="text-red ml-4">Required</span>
+            </ErrorMessage>
+            <button v-if="idx > 0" type="button" @click="remove(idx)">Remove</button>
+          </div>
+
+          <button type="button" @click="push('')">Add</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <!-- ================================= INGREDIANTS ==================================== -->
+
+
+          <!-- <div class="w-full mt-10 mb-10 items-center">
             <Field as="input" name="ingredients[0].name" type="text" class="hidden" rules="required" />
 
             <Field as="input" name="ingredients[0].amount" type="text" class="hidden" rules="required" />
@@ -227,23 +264,32 @@
           </div>
           <button
             class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full mb-5"
-            @click="addIngredient(values)">+ Add Ingredient</button>
+            @click="addIngredient(values)">+ Add Ingredient</button> -->
         </div>
       </transition>
 
       <transition name="slide" mode="out-in">
         <div v-show="process === 3">
-          <!-- ========================== STEPS ============================================ -->
+          <!-- ========================== NEW STEPS ============================================ -->
           <hr mt-10 mb-10 />
 
-          <div class="w-full mt-10 mb-10 items-center">
+
+
+
+
+
+
+
+          <!-- ========================== STEPS ============================================ -->
+
+          <!-- <div class="w-full mt-10 mb-10 items-center">
             <Field as="textarea" name="steps[0].step" type="text" class="hidden absolute" rules="required"></Field>
             <div v-for="(step, index) in values.steps" :key="index">
               <div class="w-full flex mb-10 items-center">
                 <label class="w-1/12">Step {{ index + 1 }}</label>
                 <Field as="textarea" :name="`steps[${index}].step`" type="text" rows="5" cols="6"
                   class="shadow appearance-none border rounded w-6/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  rules="required" ></Field>
+                  rules="required"></Field>
                 <ErrorMessage class="text-red ml-3" :name="`steps[${index}].step`">
                   <P class="text-red ml-3">Step Required</P>
                 </ErrorMessage>
@@ -263,14 +309,12 @@
           </div>
           <button
             class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full mb-5"
-            @click="addSteps(values)">+ Add Step</button>
+            @click="addSteps(values)">+ Add Step</button> -->
         </div>
       </transition>
 
       <transition name="slide" mode="out-in">
         <div v-show="process === 4" class="w-full">
-          <!-- <SingleUpload class="col-span-2"/>
-          <div></div>-->
           <MulUpload class="col-span-3" @imgFiles="imgFiles" />
           <Field as="input" name="image" v-model="imgTxt" type="text" class="hidden" rules="required" />
           <ErrorMessage class="text-red ml-4" name="image" />
@@ -295,10 +339,6 @@
           :class="isDisabled ? 'bg-green-300' : 'bg-green hover:bg-gradient-to-r from-green-400 to-blue-500'"
           :disabled="isDisabled">Finish</button>
       </div>
-      <!-- <div v-if="Object.keys(errors).length !== 0">
-        <b>You have to feel this fields:</b>
-        <pre>{{ errors }}</pre>
-      </div> -->
     </Form>
   </div>
 </template>
@@ -310,8 +350,9 @@ import { routeGuard } from '../auth'
 import { onMounted, ref, watchEffect } from 'vue'
 import fetch from 'isomorphic-fetch';
 import { useRouter } from 'vue-router'
-import { configure, Form, Field, defineRule, ErrorMessage } from 'vee-validate';
-import { email, required, min, integer, max } from '@vee-validate/rules';
+import { configure, Form, Field, useForm, defineRule, ErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
+import { email, required, min, integer, max } from '@vee-validate/rules'
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import { useHead } from '@vueuse/head'
 import { useStore } from '../store/piniaStore'
@@ -339,31 +380,14 @@ const imgTxt = ref('')
 const isDisabled = ref(false)
 const recipeForm = useStore()
 
-
-
-const title = ref('')
-const category = ref('')
-const prep_time = ref()
-const calories = ref()
-const serving = ref()
-const description = ref('')
-const ingredients = ref([{ name: '', amount: '' }])
-const steps = ref([{ step: '' }])
-const images = ref([{ url: '' }])
-
 // ======================================= FUNCTIONS  ===========================================
 
 
 onMounted(() => {
-  title.value = recipeForm.recipeForm.title,
-  category.value = recipeForm.recipeForm.category,
-  prep_time.value = recipeForm.recipeForm.prep_time,
-  calories.value = recipeForm.recipeForm.calories,
-  serving.value = recipeForm.recipeForm.serving,
-  description.value = recipeForm.recipeForm.description,
-    configure({
-      validateOnInput: true,
-    })
+
+  configure({
+    validateOnInput: true,
+  })
 
   // rules
   defineRule("required", required);
@@ -372,33 +396,47 @@ onMounted(() => {
   defineRule("email", email);
 })
 
-watchEffect(() => {
-  console.log('inside', title.value)
-  console.log('cat inside', category.value)
+
+// const addIngredient = (values) => {
+//   values.ingredients = (values.ingredients || []).concat([{}])
+// }
+
+// const removeIng = (i, values) => {
+//   const v = values.ingredients.filter((_, index) => {
+//     return i !== index
+//   })
+
+//   values.ingredients = v
+// }
+
+// const addSteps = (values) => {
+//   values.steps = (values.steps || []).concat([{}])
+// }
+
+// const removeStep = (i, values) => {
+//   const v = values.steps.filter((_, index) => {
+//     return i !== index
+//   })
+//   values.steps = v
+// }
+
+
+
+// ======================= NEW CODE SEGMENT =======================================
+
+const { values, handleSubmit, errors, setValues } = useForm({
+  validationSchema: yup.object({
+    steps: yup.array().of(yup.string().required()).required().min(1),
+    amount: yup.array().of(yup.string().required()),
+    ingredients: yup.string().required(),
+  }),
 })
 
-const addIngredient = (values) => {
-  values.ingredients = (values.ingredients || []).concat([{}])
-}
 
-const removeIng = (i, values) => {
-  const v = values.ingredients.filter((_, index) => {
-    return i !== index
-  })
 
-  values.ingredients = v
-}
 
-const addSteps = (values) => {
-  values.steps = (values.steps || []).concat([{}])
-}
+// ======================= NEW CODE SEGMENT =======================================
 
-const removeStep = (i, values) => {
-  const v = values.steps.filter((_, index) => {
-    return i !== index
-  })
-  values.steps = v
-}
 
 const imgFiles = (datas) => {
   datas.forEach(ele => {
@@ -415,7 +453,7 @@ const imgFiles = (datas) => {
   });
 }
 
-const handleSubmit = (values) => {
+const onSubmit = (values) => {
 
   const temp = {
     images: imgs,
