@@ -9,6 +9,7 @@ import VeeValidate from './includes/validation'
 import { createHead } from '@vueuse/head'
 import authConfig from '../auth_config.json'
 import { setupAuth, apolloclient } from './auth'
+import { createPinia } from 'pinia'
 
 
 const app = createApp({
@@ -23,6 +24,7 @@ app.use(router)
 app.use(store)
 app.use(head)
 app.use(VeeValidate)
+app.use(createPinia())
 
 async function callbackRedirect(appState) {
     console.log('window location', window.location.pathname, appState);
