@@ -10,8 +10,8 @@
   </div>
   <div
     class="flex flex-wrap justify-center px-6 mx-auto max-w-screen-xl sm:px-8 md:px-12 lg:px-16 xl:px-24 z-0 bg-gradient-to-br from-transparent to-green-100">
-    <form class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      @submit.prevent="onSubmit">
+    <Form class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      :initial-values="initialData" :validation-schema="schema" @submit="handleSubmit">
       <!-- ================================== PROCESSES ================================================== -->
       <div class="w-full py-6">
         <div class="flex justify-center">
@@ -116,15 +116,18 @@
       </div>
 
       <transition name="slide" mode="out-in">
-        <div v-show="process === 1" ref="showVal">
+        <div v-show="process === 1">
           <!-- =========================== title =============================================== -->
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Name</label>
             <Field as="input" name="title" type="text"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="title" rules="required|max:20" />
-            <ErrorMessage class="text-red ml-4" name="title" />
+              placeholder="title" />
+            <!-- <ErrorMessage class="text-red ml-4" name="title" /> -->
+            <ErrorMessage name="title">
+              <span class="text-red ml-2">Required</span>
+            </ErrorMessage>
           </div>
           <!-- =========================== CATEGORY ======================= -->
           <hr mt-10 mb-10 />
@@ -146,7 +149,7 @@
           <hr mt-10 mb-10 />
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Preparation Time</label>
-            <Field as="input" name="prep_time" type="number" rules="required|integer"
+            <Field as="input" name="prep_time" type="number"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
             <ErrorMessage class="text-red ml-4" name="prep_time" />
           </div>
@@ -155,8 +158,7 @@
           <div class="flex w-full items-center mt-5 mb-5">
             <label class="w-2/12">Calories</label>
             <Field as="input" name="calories" type="number"
-              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required|integer" />
+              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
             <ErrorMessage class="text-red ml-4" name="calories" />
           </div>
           <!-- ============================= SERVING   ===================================== -->
@@ -175,7 +177,7 @@
             <label class="w-2/12">Description</label>
             <Field as="textarea" name="description" type="text" rows="5" cols="60"
               class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rules="required|max:100" placeholder="Description..."></Field>
+              placeholder="Description..."></Field>
             <ErrorMessage class="text-red ml-4" name="description" />
           </div>
         </div>
@@ -185,44 +187,48 @@
         <div v-show="process === 2">
           <hr mt-10 mb-10 />
 
-          <!-- ================================= NEW INGREDIANTS ==================================== -->
 
-          <div v-for="(field, idx) in recipesField" :key="field.key">
-            <Field
-              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
-              rules="required" /> :name="`ingredients[${idx}]`" type="text"/>
-            <ErrorMessage :name="`ingredients[${idx}]`">
-              <span class="text-red ml-4">Required</span>
-            </ErrorMessage>
-            <Field
-              class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5"
-              rules="required" /> :name="`amount[${idx}]`" type="text"/>
-            <ErrorMessage :name="`amount[${idx}]`">
-              <span class="text-red ml-4">Required</span>
-            </ErrorMessage>
-            <button v-if="idx > 0" type="button" @click="remove(idx)">Remove</button>
+          <!-- ================================= NEW INGREDIANTS ==================================== -->
+          <div class="w-full mt-10 mb-10 items-center">
+            <FieldArray name="ingredients" v-slot="{ fields, push, remove }">
+              <fieldset class="InputGroup w-full items-center mb-3" v-for="(field, idx) in fields" :key="field.key">
+                <legend>Ingredient {{ idx+1 }}</legend>
+                <label class="w-1/12" :for="`name_${idx}`">Name</label>
+                <Field :name="`ingredients[${idx}].name`" :id="`name_${idx}`"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5" />
+                <ErrorMessage :name="`ingredients[${idx}].name`"><span class="text-red text-sm">Required</span>
+                </ErrorMessage>
+
+                <label class="w-1/12 ml-3" :for="`amount_${idx}`">Amount</label>
+                <Field :name="`ingredients[${idx}].amount`" :id="`amount_${idx}`"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5" />
+                <ErrorMessage :name="`ingredients[${idx}].amount`"><span class="text-red text-sm">Required</span>
+                </ErrorMessage>
+
+                <button v-if="idx > 0" type="button" @click="remove(idx)"
+                  class="p-2 ml-2 border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 align-middle shadow-sm hover:shadow-lg rounded-full ">
+                  <svg width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"
+                    style="transform: rotate(360deg)">
+                    <path d="M12 12h2v12h-2z" fill="currentColor" />
+                    <path d="M18 12h2v12h-2z" fill="currentColor" />
+                    <path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z" fill="currentColor" />
+                    <path d="M12 2h8v2h-8z" fill="currentColor" />
+                  </svg>
+                </button>
+              </fieldset>
+
+              <button
+                class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full mb-5 mt-3"
+                type="button" @click="push({ name: '', amount: '' })">
+                Add Ingredient +
+              </button>
+            </FieldArray>
           </div>
 
-          <button type="button" @click="push('')">Add</button>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <!-- ================================= INGREDIANTS ==================================== -->
+          <!-- ================================= OLD INGREDIANTS ==================================== -->
 
 
           <!-- <div class="w-full mt-10 mb-10 items-center">
@@ -268,13 +274,41 @@
         </div>
       </transition>
 
+      <!-- ========================== NEW STEPS ============================================ -->
       <transition name="slide" mode="out-in">
         <div v-show="process === 3">
-          <!-- ========================== NEW STEPS ============================================ -->
           <hr mt-10 mb-10 />
 
 
+                    <div class="w-full mt-10 mb-10 items-center">
+            <FieldArray name="steps" v-slot="{ fields, push, remove }">
+              <fieldset class="InputGroup w-full items-center mb-3" v-for="(field, idx) in fields" :key="field.key">
+                <legend>Step {{ idx+1 }}</legend>
+                <!-- <label class="w-1/12" :for="`step_${idx}`">step</label> -->
+                <Field :name="`steps[${idx}].step`" :id="`step_${idx}`"
+                  class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5" />
+                <ErrorMessage :name="`steps[${idx}].step`"><span class="text-red text-sm">Required</span>
+                </ErrorMessage>
 
+                <button v-if="idx > 0" type="button" @click="remove(idx)"
+                  class="p-2 ml-2 border border-red-300 hover:border-red-600 text-red-500 hover:text-white hover:bg-red-600 align-middle shadow-sm hover:shadow-lg rounded-full ">
+                  <svg width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"
+                    style="transform: rotate(360deg)">
+                    <path d="M12 12h2v12h-2z" fill="currentColor" />
+                    <path d="M18 12h2v12h-2z" fill="currentColor" />
+                    <path d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z" fill="currentColor" />
+                    <path d="M12 2h8v2h-8z" fill="currentColor" />
+                  </svg>
+                </button>
+              </fieldset>
+
+              <button
+                class="bg-green hover:bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full mb-5 mt-3"
+                type="button" @click="push({ step: '' })">
+                Add Step +
+              </button>
+            </FieldArray>
+          </div>
 
 
 
@@ -313,8 +347,11 @@
         </div>
       </transition>
 
+      <!-- ============================== IMAGE UPLOAD ===================================== -->
       <transition name="slide" mode="out-in">
         <div v-show="process === 4" class="w-full">
+          <!-- <SingleUpload class="col-span-2"/>
+          <div></div>-->
           <MulUpload class="col-span-3" @imgFiles="imgFiles" />
           <Field as="input" name="image" v-model="imgTxt" type="text" class="hidden" rules="required" />
           <ErrorMessage class="text-red ml-4" name="image" />
@@ -347,17 +384,14 @@
 
 <script setup>
 import { routeGuard } from '../auth'
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref } from 'vue'
 import fetch from 'isomorphic-fetch';
 import { useRouter } from 'vue-router'
-import { configure, Form, Field, useForm, defineRule, ErrorMessage } from 'vee-validate'
+import { Form, Field, FieldArray, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup'
-import { email, required, min, integer, max } from '@vee-validate/rules'
+import { email, required, min, integer, max } from '@vee-validate/rules';
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import { useHead } from '@vueuse/head'
-import { useStore } from '../store/piniaStore'
-
-
 useHead({
   title: 'Recipe',
   style: [
@@ -378,64 +412,43 @@ const base64str = ref(null)
 let imgs = []
 const imgTxt = ref('')
 const isDisabled = ref(false)
-const recipeForm = useStore()
-
 // ======================================= FUNCTIONS  ===========================================
 
 
-onMounted(() => {
+const schema = yup.object().shape({
+  title: yup.string().required().label('title'),
+  category: yup.string().required().label('category'),
+  prep_time: yup.number().required().label('prep_time'),
+  calories: yup.number().required().label('calories'),
+  serving: yup.number().required().label('serving'),
+  description: yup.string().required().max(100).label('description'),
 
-  configure({
-    validateOnInput: true,
-  })
-``
-  // rules
-  defineRule("required", required);
-  defineRule("min", min);
-  defineRule("max", max);
-  defineRule("email", email);
-})
-
-
-// const addIngredient = (values) => {
-//   values.ingredients = (values.ingredients || []).concat([{}])
-// }
-
-// const removeIng = (i, values) => {
-//   const v = values.ingredients.filter((_, index) => {
-//     return i !== index
-//   })
-
-//   values.ingredients = v
-// }
-
-// const addSteps = (values) => {
-//   values.steps = (values.steps || []).concat([{}])
-// }
-
-// const removeStep = (i, values) => {
-//   const v = values.steps.filter((_, index) => {
-//     return i !== index
-//   })
-//   values.steps = v
-// }
+  ingredients: yup
+    .array()
+    .of(
+      yup.object().shape({
+        name: yup.string().required().label('Name'),
+        amount: yup.string().required().label('Amount'),
+      })
+    )
+    .strict(),
+  steps: yup
+    .array()
+    .of(
+      yup.object().shape({
+        step: yup.string().required().label('Step'),
+      })
+    )
+    .strict(),
+});
 
 
 
-// ======================= NEW CODE SEGMENT =======================================
-
-const { values, handleSubmit, errors, setValues } = useForm({
-  validationSchema: yup.object({
-    steps: yup.array().of(yup.string().required()).required().min(1),
-    amount: yup.array().of(yup.string().required()),
-    ingredients: yup.string().required(),
-  }),
-})
-
-
-
-
-// ======================= NEW CODE SEGMENT =======================================
+const initialData = {
+  ingredients: [{ name: '', amount: '' }],
+  steps: [{ step: '' }],
+  title: 'This is test'
+};
 
 
 const imgFiles = (datas) => {
@@ -453,7 +466,7 @@ const imgFiles = (datas) => {
   });
 }
 
-const onSubmit = (values) => {
+const handleSubmit = (values) => {
 
   const temp = {
     images: imgs,
@@ -522,6 +535,12 @@ const processor = (val) => {
     }
   }
 }
+
+
+// beforeEnter: (to, from, next) => {
+//   // ...
+// }
+
 
 
 </script>
