@@ -388,7 +388,7 @@ onMounted(() => {
   configure({
     validateOnInput: true,
   })
-
+``
   // rules
   defineRule("required", required);
   defineRule("min", min);
