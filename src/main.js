@@ -10,7 +10,10 @@ import { createHead } from '@vueuse/head'
 import authConfig from '../auth_config.json'
 import { setupAuth, apolloclient } from './auth'
 import { createPinia } from 'pinia'
+import piniaPersist from 'pinia-plugin-persist'
 
+const pinia = createPinia()
+pinia.use(piniaPersist)
 
 const app = createApp({
     setup() {
@@ -24,7 +27,8 @@ app.use(router)
 app.use(store)
 app.use(head)
 app.use(VeeValidate)
-app.use(createPinia())
+app.use(pinia)
+
 
 async function callbackRedirect(appState) {
     console.log('window location', window.location.pathname, appState);

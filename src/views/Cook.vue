@@ -10,8 +10,7 @@
   </div>
   <div
     class="flex flex-wrap justify-center px-6 mx-auto max-w-screen-xl sm:px-8 md:px-12 lg:px-16 xl:px-24 z-0 bg-gradient-to-br from-transparent to-green-100">
-    <Form class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      :initial-values="initialData" :validation-schema="schema" @submit="handleSubmit">
+    <form class="relative md:m-10 md:2-1/2 w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit="onSubmit">
       <!-- ================================== PROCESSES ================================================== -->
       <div class="w-full py-6">
         <div class="flex justify-center">
@@ -192,7 +191,7 @@
           <div class="w-full mt-10 mb-10 items-center">
             <FieldArray name="ingredients" v-slot="{ fields, push, remove }">
               <fieldset class="InputGroup w-full items-center mb-3" v-for="(field, idx) in fields" :key="field.key">
-                <legend>Ingredient {{ idx+1 }}</legend>
+                <legend>Ingredient {{ idx + 1 }}</legend>
                 <label class="w-1/12" :for="`name_${idx}`">Name</label>
                 <Field :name="`ingredients[${idx}].name`" :id="`name_${idx}`"
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5" />
@@ -280,10 +279,10 @@
           <hr mt-10 mb-10 />
 
 
-                    <div class="w-full mt-10 mb-10 items-center">
+          <div class="w-full mt-10 mb-10 items-center">
             <FieldArray name="steps" v-slot="{ fields, push, remove }">
               <fieldset class="InputGroup w-full items-center mb-3" v-for="(field, idx) in fields" :key="field.key">
-                <legend>Step {{ idx+1 }}</legend>
+                <legend>Step {{ idx + 1 }}</legend>
                 <!-- <label class="w-1/12" :for="`step_${idx}`">step</label> -->
                 <Field :name="`steps[${idx}].step`" :id="`step_${idx}`"
                   class="shadow appearance-none border rounded w-3/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-5" />
@@ -353,8 +352,16 @@
           <!-- <SingleUpload class="col-span-2"/>
           <div></div>-->
           <MulUpload class="col-span-3" @imgFiles="imgFiles" />
-          <Field as="input" name="image" v-model="imgTxt" type="text" class="hidden" rules="required" />
-          <ErrorMessage class="text-red ml-4" name="image" />
+          <Field as="input" name="imageUpload" type="text" 
+              v-model="imgTxt"
+              class="hidden"
+              placeholder="images" />
+            <!-- <ErrorMessage class="text-red ml-4" name="title" /> -->
+            <ErrorMessage name="imageUpload" class="w-full flex justify-center">
+              <span class="text-red ml-2 w-full flex justify-center">Image is required</span>
+            </ErrorMessage>
+          <!-- <Field as="input" name="image" v-model="imgTxt" type="text" class="text-black"/> -->
+          <!-- <ErrorMessage class="text-red ml-4" name="image" /> -->
         </div>
       </transition>
 
@@ -376,7 +383,7 @@
           :class="isDisabled ? 'bg-green-300' : 'bg-green hover:bg-gradient-to-r from-green-400 to-blue-500'"
           :disabled="isDisabled">Finish</button>
       </div>
-    </Form>
+    </form>
   </div>
 </template>
 
@@ -384,13 +391,14 @@
 
 <script setup>
 import { routeGuard } from '../auth'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect, watch } from 'vue'
 import fetch from 'isomorphic-fetch';
 import { useRouter } from 'vue-router'
-import { Form, Field, FieldArray, ErrorMessage } from 'vee-validate';
+import { Form, Field, FieldArray, ErrorMessage, useForm } from 'vee-validate';
 import * as yup from 'yup'
 import { email, required, min, integer, max } from '@vee-validate/rules';
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
+import { useStore } from '../store/piniaStore'
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Recipe',
@@ -402,7 +410,6 @@ useHead({
 });
 
 
-
 // ========================================= VARIABLES ========================================
 const router = useRouter()
 const userId = localStorage.getItem('user')
@@ -411,7 +418,9 @@ const process = ref(1)
 const base64str = ref(null)
 let imgs = []
 const imgTxt = ref('')
-const isDisabled = ref(false)
+const recipeStore = useStore()
+const isDisabled = ref(recipeStore.isDisable)
+console.log('this is is dissabled value: ', recipeStore.isDisable);
 // ======================================= FUNCTIONS  ===========================================
 
 
@@ -422,6 +431,7 @@ const schema = yup.object().shape({
   calories: yup.number().required().label('calories'),
   serving: yup.number().required().label('serving'),
   description: yup.string().required().max(100).label('description'),
+  imageUpload: yup.string().required().label('imageUpload'),
 
   ingredients: yup
     .array()
@@ -445,15 +455,20 @@ const schema = yup.object().shape({
 
 
 const initialData = {
-  ingredients: [{ name: '', amount: '' }],
-  steps: [{ step: '' }],
-  title: 'This is test'
+  title: recipeStore.recipeForm.title || '',
+  category: recipeStore.recipeForm.category || '',
+  calories: recipeStore.recipeForm.calories || '',
+  serving: recipeStore.recipeForm.serving || '',
+  prep_time: recipeStore.recipeForm.prep_time || '',
+  description: recipeStore.recipeForm.description || '',
+  ingredients: recipeStore.recipeForm.ingredients || [{ name: '', amount: '' }],
+  steps: recipeStore.recipeForm.steps || [{ step: '' }],
 };
 
 
 const imgFiles = (datas) => {
   datas.forEach(ele => {
-    imgTxt.value = datas
+    imgTxt.value = 'upload'
     const reader = new FileReader()
     reader.readAsDataURL(ele.url)
     reader.onloadend = () => {
@@ -466,63 +481,87 @@ const imgFiles = (datas) => {
   });
 }
 
-const handleSubmit = (values) => {
+const { handleSubmit, values } = useForm({
+  validationSchema: schema,
+  initialValues: initialData
+})
 
-  const temp = {
+console.log('values outisd', values);
+
+watch(values, (newRecipeData) => {
+  const tmp = {
     images: imgs,
     user_id: userId
   }
-  Object.assign(values, temp)
-  alert(JSON.stringify(values, null, 2))
-  console.log(values);
+  Object.assign(values, tmp)
   delete values.image
 
-  const variables = values
-  const url = 'http://localhost:8080/v1/graphql'
-  const RECIPE_UPLOAD_MUTATION = `
-  mutation($title: String!, $category: String!, $prep_time: Int!, $calories: Int!, $serving: Int!, $description: String!, $user_id: String!, $images: [InsertRecipeOneDerivedImagesInsertInput!]!, $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, $ingredients:[InsertRecipeOneDerivedIngredientInsertInput!]!){
-  InsertRecipeOneDerived(title:$title, 
-    category: $category, 
-    prep_time:$prep_time,
-    calories:$calories,
-    serving:$serving,
-    description: $description,
-    user_id:$user_id,
-    images: $images,
-    steps: $steps,
-    ingredients: $ingredients
-  ){
-    title
-  }
-}`
+  recipeStore.$patch({ recipeForm: newRecipeData })
+},
+  { deep: true })
 
 
-  const options = {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'authorization': 'Bearer ' + token,
-      "x-hasura-use-backend-only-permissions": "true",
-    },
-    body: JSON.stringify({
-      query: RECIPE_UPLOAD_MUTATION,
-      variables: variables
-    })
-  }
+const onSubmit = handleSubmit(recipeStore.registerRecipe)
 
-  fetch(url, options)
-    .then(res => res.json())
-    .then(res => {
-      if (res.errors) {
-        console.log(res.errors, 'something went wrong from front end');
-      } else {
-        alert('Recipe Uploaded Successfully!')
-        console.log('recipe uploaded successfully!');
-        router.push({ name: 'Browse' })
-      }
-    })
-  isDisabled.value = true
-}
+
+
+// const handleSubmit = (values) => {
+
+//   const temp = {
+//     images: imgs,
+//     user_id: userId
+//   }
+//   Object.assign(values, temp)
+//   alert(JSON.stringify(values, null, 2))
+//   console.log(values);
+//   delete values.image
+
+//   const variables = values
+//   const url = 'http://localhost:8080/v1/graphql'
+//   const RECIPE_UPLOAD_MUTATION = `
+//   mutation($title: String!, $category: String!, $prep_time: Int!, $calories: Int!, $serving: Int!, $description: String!, $user_id: String!, $images: [InsertRecipeOneDerivedImagesInsertInput!]!, $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, $ingredients:[InsertRecipeOneDerivedIngredientInsertInput!]!){
+//   InsertRecipeOneDerived(title:$title, 
+//     category: $category, 
+//     prep_time:$prep_time,
+//     calories:$calories,
+//     serving:$serving,
+//     description: $description,
+//     user_id:$user_id,
+//     images: $images,
+//     steps: $steps,
+//     ingredients: $ingredients
+//   ){
+//     title
+//   }
+// }`
+
+
+//   const options = {
+//     method: 'POST',
+//     headers: {
+//       'content-type': 'application/json',
+//       'authorization': 'Bearer ' + token,
+//       "x-hasura-use-backend-only-permissions": "true",
+//     },
+//     body: JSON.stringify({
+//       query: RECIPE_UPLOAD_MUTATION,
+//       variables: variables
+//     })
+//   }
+
+//   fetch(url, options)
+//     .then(res => res.json())
+//     .then(res => {
+//       if (res.errors) {
+//         console.log(res.errors, 'something went wrong from front end');
+//       } else {
+//         alert('Recipe Uploaded Successfully!')
+//         console.log('recipe uploaded successfully!');
+//         router.push({ name: 'Browse' })
+//       }
+//     })
+//   isDisabled.value = true
+// }
 
 const processor = (val) => {
   if (val == '+') {
@@ -535,13 +574,6 @@ const processor = (val) => {
     }
   }
 }
-
-
-// beforeEnter: (to, from, next) => {
-//   // ...
-// }
-
-
 
 </script>
 
