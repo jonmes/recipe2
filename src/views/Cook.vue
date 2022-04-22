@@ -346,20 +346,24 @@
         </div>
       </transition>
 
-      <!-- ============================== IMAGE UPLOAD ===================================== -->
+      <!-- ============================== NEW IMAGE UPLOAD ===================================== -->
       <transition name="slide" mode="out-in">
         <div v-show="process === 4" class="w-full">
-          <!-- <SingleUpload class="col-span-2"/>
-          <div></div>-->
+
+
+
+
+
+
+
+          <!-- ============================== IMAGE UPLOAD ===================================== -->
+
           <MulUpload class="col-span-3" @imgFiles="imgFiles" />
-          <Field as="input" name="imageUpload" type="text" 
-              v-model="imgTxt"
-              class="hidden"
-              placeholder="images" />
-            <!-- <ErrorMessage class="text-red ml-4" name="title" /> -->
-            <ErrorMessage name="imageUpload" class="w-full flex justify-center">
-              <span class="text-red ml-2 w-full flex justify-center">Image is required</span>
-            </ErrorMessage>
+          <Field as="input" name="imageUpload" type="text" v-model="imgTxt" class="hidden" placeholder="images" />
+          <!-- <ErrorMessage class="text-red ml-4" name="title" /> -->
+          <ErrorMessage name="imageUpload" class="w-full flex justify-center">
+            <span class="text-red ml-2 w-full flex justify-center">Image is required</span>
+          </ErrorMessage>
           <!-- <Field as="input" name="image" v-model="imgTxt" type="text" class="text-black"/> -->
           <!-- <ErrorMessage class="text-red ml-4" name="image" /> -->
         </div>
@@ -419,8 +423,7 @@ const base64str = ref(null)
 let imgs = []
 const imgTxt = ref('')
 const recipeStore = useStore()
-const isDisabled = ref(recipeStore.isDisable)
-console.log('this is is dissabled value: ', recipeStore.isDisable);
+const isDisabled = ref(false)
 // ======================================= FUNCTIONS  ===========================================
 
 
@@ -501,7 +504,64 @@ watch(values, (newRecipeData) => {
   { deep: true })
 
 
-const onSubmit = handleSubmit(recipeStore.registerRecipe)
+const onSubmit = handleSubmit(values => {
+  console.log('this are final submitted values', values.imageUpload);
+  delete values.imageUpload
+
+  const variables = values
+
+  const url = 'http://localhost:8080/v1/graphql'
+  const RECIPE_UPLOAD_MUTATION = `
+                mutation($title: String!, $category: String!, $prep_time: Int!, $calories: Int!, $serving: Int!, $description: String!, $user_id: String!, $images: [InsertRecipeOneDerivedImagesInsertInput!]!, $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, $ingredients:[InsertRecipeOneDerivedIngredientInsertInput!]!){
+                InsertRecipeOneDerived(title:$title, 
+                category: $category, 
+                prep_time:$prep_time,
+                calories:$calories,
+                serving:$serving,
+                description: $description,
+                user_id:$user_id,
+                images: $images,
+                steps: $steps,
+                ingredients: $ingredients
+                ){
+                title
+                }
+            }`
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: 'Bearer ' + token,
+      'x-hasura-use-backend-only-permissions': 'true',
+    },
+    body: JSON.stringify({
+      query: RECIPE_UPLOAD_MUTATION,
+      variables: variables,
+    }),
+  }
+
+  fetch(url, options)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.errors) {
+        console.log(
+          res.errors,
+          'something went wrong from front end'
+        )
+        alert('Recipe Upload Failed! \n Try Again!')
+        router.go()
+      } else {
+        alert('Recipe Uploaded Successfully!')
+        console.log('recipe uploaded successfully!')
+        router.push({ name: 'Browse' })
+        recipeStore.resetForm()
+      }
+    })
+
+  isDisabled.value = true
+
+})
 
 
 
