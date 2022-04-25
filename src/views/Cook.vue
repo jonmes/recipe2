@@ -555,7 +555,7 @@ const onSubmit = handleSubmit(values => {
         alert('Recipe Uploaded Successfully!')
         console.log('recipe uploaded successfully!')
         router.push({ name: 'Browse' })
-        recipeStore.resetForm()
+        // recipeStore.resetForm()
       }
     })
 

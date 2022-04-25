@@ -3,9 +3,9 @@
         <div class="max-w-screen-xl items-center py-6 px-6 mx-auto md:px-12 lg:px-16 xl:px-24">
             <div class="container mx-auto pt-12">
                 <!-- title -->
-                <div class="relative flex items-center font-bold">
-                    <h2 class="text-2xl">Browse by Category</h2>
-                    <router-link :to="{ name: 'Browse' }" class="ml-10 flex items-center text-gray-400">
+                    <h2 class="text-2xl font-bold">Browse by Category</h2>
+                <!-- <div class="relative flex items-center font-bold">
+                     <router-link :to="{ name: 'Browse' }" class="ml-10 flex items-center text-gray-400">
                         <span class="text-sm mr-4">All Categories</span>
                         <svg class="svg-inline--fa fa-chevron-right fa-w-8 fa-9x" width="15px" height="15px"
                             viewBox="0 0 256 512" aria-hidden="true" focusable="false" data-prefix="far"
@@ -14,7 +14,7 @@
                                 d="M24.707 38.101L4.908 57.899c-4.686 4.686-4.686 12.284 0 16.971L185.607 256 4.908 437.13c-4.686 4.686-4.686 12.284 0 16.971L24.707 473.9c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L41.678 38.101c-4.687-4.687-12.285-4.687-16.971 0z" />
                         </svg>
                     </router-link>
-                </div>
+                </div> -->
                 <!-- cards -->
                 <section>
                     <div class="mt-10 mb-10 w-full">
@@ -108,11 +108,12 @@
                             <h1>Sorty by</h1>
                             <hr class="w-40 mb-4" />
                             <button class="block hover:font-bold" :class="{ 'font-bold': sorter == 2 }"
-                                @click="sorter = 2; open = false; page = 0; isCat = false">Rating</button>
+                                @click="sorter = 2; open = false; page = 0; isCat = false; isFinal = false">Rating</button>
                             <button class="block hover:font-bold" :class="{ 'font-bold': sorter == 1 }"
-                                @click="sorter = 1; open = false; page = 0; isCat = false">Calories</button>
+                                @click="sorter = 1; open = false; page = 0; isCat = false; isFinal = false">Calories</button>
                             <button class="block hover:font-bold" :class="{ 'font-bold': sorter == 0 }"
-                                @click="sorter = 0; open = false; page = 0; isCat = false">Upload date</button>
+                                @click="sorter = 0; open = false; page = 0; isCat = false; isFinal = false">Upload
+                                date</button>
                         </div>
                     </div>
                     <hr class="mt-5" />
@@ -131,7 +132,7 @@
                             ref="scrollComponent">
                             <div class="text-center col-span-3" v-if="ctgResult.length == 0">
                                 <h1 class="text-4xl mb-4">No Result Found</h1>
-                                <h2 class="text-xl">Try different keywords or remove search filters</h2>
+                                <!-- <h2 class="text-xl">Try different keywords or remove search filters</h2> -->
                             </div>
                             <div class="max-w-xs mb-5 rounded-md overflow-hidden hover:scale-101 hover:shadow-2xl transition duration-100 cursor-pointer"
                                 v-else v-for="(rec, index) in ctgResult" :key="index">
@@ -164,7 +165,7 @@
                                                 controlSize="0" />
                                             <span
                                                 class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 mr-12">{{
-                                                    rec.ratings.length
+                                                        rec.ratings.length
                                                 }}</span>
                                             <button
                                                 class="text-white bg-green hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">View</button>
@@ -221,7 +222,7 @@
                                                 controlSize="0" />
                                             <span
                                                 class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 mr-12">{{
-                                                    rec.ratings.length
+                                                        rec.ratings.length
                                                 }}</span>
                                             <button
                                                 class="text-white bg-green hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">View</button>
@@ -233,7 +234,8 @@
                     </template>
                 </section>
             </div>
-        </div>  </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -267,19 +269,24 @@ const cursor = ref(0)
 const sort = ref({ "id": "asc" })
 const catFilter = ref('Seafoods')
 const isCat = ref(false)
+const isFinal = ref(false)
+
 // ========================== FUNCTIONS =============================
 
 
 const setSearch = () => {
     console.log('search enabled');
+    isFinal.value = false
     searchVal.value = search.value.toString()
     time_lte.value = 100000
     time_gt.value = 0
     page.value = 0
     isCat.value = false
     recipeRefetch()
+    search.value = ''
 }
 const filterTime = (val) => {
+
     if (val === 1) {
         time_gt.value = 0
         time_lte.value = 15
@@ -290,6 +297,7 @@ const filterTime = (val) => {
         time_gt.value = 30
         time_lte.value = 10000
     }
+    isFinal.value = false
     page.value = 0
     isCat = false
     recipeRefetch()
@@ -302,11 +310,16 @@ onMounted(() => {
 const handleScroll = (e) => {
     let element = scrollComponent.value
     if (element !== null) {
-        if (element.getBoundingClientRect().bottom < window.innerHeight) {
+        // console.log('bottom', element.getBoundingClientRect().bottom + 50);
+        // console.log('inner height', window.innerHeight);
+        console.log('is final', isFinal.value);
+        if (element.getBoundingClientRect().bottom + 100 <= window.innerHeight && !isFinal.value) {
             next()
         }
     }
 }
+
+
 
 // ================================= QUERY ========================================== 
 
@@ -326,14 +339,12 @@ const {
     }),
     {
         fetchPolicy: 'cache-first',
-        // pollInterval: 1000,
     }
 
 )
 
 const searchRecipe = useResult(searchResult, null, data => data.recipe)
 recipeRefetch()
-
 const next = () => {
     console.log('value', searchRecipe.value.length);
     if (searchRecipe.value.length !== 0) {
@@ -344,8 +355,13 @@ const next = () => {
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
                 console.log('prev', previousResult)
-                console.log('fetchmore', fetchMoreResult.recipe.length)
-                if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) return previousResult
+                console.log('fetchmore', fetchMoreResult.recipe.length === 0, fetchMoreResult.recipe.length)
+                if (fetchMoreResult.recipe.length === 0) {
+                    isFinal.value = true
+                }
+                if (!fetchMoreResult && fetchMoreResult.recipe.length === 0) {
+                    return previousResult
+                }
 
                 return {
                     recipe: [
@@ -356,8 +372,10 @@ const next = () => {
             }
         })
     }
-
 }
+
+
+
 
 
 const {
@@ -377,7 +395,7 @@ catRef()
 // ============================= WATCHEFFECT ================================
 
 watchEffect(() => {
-    console.log('ctg result', catRes);
+    console.log('ctg result', searchRecipe.value);
 })
 
 // ================================= CURSOR ================================

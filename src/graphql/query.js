@@ -94,8 +94,7 @@ export const search_recipe = {
                 offset: $offset
                 limit: $limit
                 order_by: $sort
-            ) # @connection(key: "recipe")
-            {
+            ) {
                 id
                 title
                 category
@@ -302,6 +301,7 @@ export const fav_check = {
                     }
                 }
             ) {
+                id
                 recipe_id
             }
         }
