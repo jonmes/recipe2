@@ -57,20 +57,7 @@ export const useStore = defineStore('recipe', {
     }),
 
     actions: {
-        // resetForm() {
-        //     setTimeout(() => {
-        //         this.recipeForm.title = ''
-        //         this.recipeForm.category = ''
-        //         this.recipeForm.calories = ''
-        //         this.recipeForm.serving = ''
-        //         this.recipeForm.prep_time = ''
-        //         this.recipeForm.description = ''
-        //         this.recipeForm.images = []
-        //         this.recipeForm.ingredients = [{ name: '', amount: '' }]
-        //         this.recipeForm.steps = [{ step: '' }]
-        //         this.recipeForm.user_id = null
-        //     }, 5000)
-        // }
+        
     },
     persist: {
         enabled: true,

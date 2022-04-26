@@ -312,7 +312,6 @@ const handleScroll = (e) => {
     if (element !== null) {
         // console.log('bottom', element.getBoundingClientRect().bottom + 50);
         // console.log('inner height', window.innerHeight);
-        console.log('is final', isFinal.value);
         if (element.getBoundingClientRect().bottom + 100 <= window.innerHeight && !isFinal.value) {
             next()
         }
@@ -354,8 +353,6 @@ const next = () => {
                 offset: (page.value * limit.value)
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
-                console.log('prev', previousResult)
-                console.log('fetchmore', fetchMoreResult.recipe.length === 0, fetchMoreResult.recipe.length)
                 if (fetchMoreResult.recipe.length === 0) {
                     isFinal.value = true
                 }
@@ -389,14 +386,9 @@ const {
 
 
 const ctgResult = useResult(catRes, null, data => data.recipe)
-
-console.log('ctg result', catRes);
 catRef()
 // ============================= WATCHEFFECT ================================
 
-watchEffect(() => {
-    console.log('ctg result', searchRecipe.value);
-})
 
 // ================================= CURSOR ================================
 // const next = () => {

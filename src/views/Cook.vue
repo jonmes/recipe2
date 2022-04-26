@@ -395,15 +395,16 @@
 
 <script setup>
 import { routeGuard } from '../auth'
-import { onMounted, ref, watchEffect, watch } from 'vue'
+import { onMounted, ref, watchEffect, watch, onBeforeMount } from 'vue'
 import fetch from 'isomorphic-fetch';
-import { useRouter } from 'vue-router'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { Form, Field, FieldArray, ErrorMessage, useForm } from 'vee-validate';
 import * as yup from 'yup'
 import { email, required, min, integer, max } from '@vee-validate/rules';
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import { useStore } from '../store/piniaStore'
 import { useHead } from '@vueuse/head'
+import { LocalStorageCache } from '@auth0/auth0-spa-js';
 useHead({
   title: 'Recipe',
   style: [
@@ -424,8 +425,9 @@ let imgs = []
 const imgTxt = ref('')
 const recipeStore = useStore()
 const isDisabled = ref(false)
-// ======================================= FUNCTIONS  ===========================================
+const pageReload = ref(false)
 
+// ======================================= FUNCTIONS  ===========================================
 
 const schema = yup.object().shape({
   title: yup.string().required().label('title'),
@@ -455,8 +457,7 @@ const schema = yup.object().shape({
     .strict(),
 });
 
-
-
+console.log('recipe form data', recipeStore.$state.recipeForm);
 const initialData = {
   title: recipeStore.recipeForm.title || '',
   category: recipeStore.recipeForm.category || '',
@@ -478,34 +479,38 @@ const imgFiles = (datas) => {
       imgs.push({ url: reader.result })
     }
     reader.onerror = (err) => {
-      console.log(err, 'something NEW went wrong');
+      console.log(err, 'something NEW went wrong')
       return
     }
   });
 }
-
 const { handleSubmit, values } = useForm({
   validationSchema: schema,
   initialValues: initialData
 })
 
-console.log('values outisd', values);
+onMounted(() => {
+    if(values.title !== JSON.parse(localStorage.getItem('recipe')).recipeForm.title){
+    router.go(0)
+  }
+})
 
 watch(values, (newRecipeData) => {
+  
   const tmp = {
     images: imgs,
     user_id: userId
   }
-  Object.assign(values, tmp)
-  delete values.image
-
+  Object.assign(newRecipeData, tmp)
+  delete newRecipeData.image
+  
   recipeStore.$patch({ recipeForm: newRecipeData })
 },
   { deep: true })
 
 
 const onSubmit = handleSubmit(values => {
-  console.log('this are final submitted values', values.imageUpload);
+  // console.log('this are final submitted values', values.imageUpload);
   delete values.imageUpload
 
   const variables = values
@@ -555,73 +560,13 @@ const onSubmit = handleSubmit(values => {
         alert('Recipe Uploaded Successfully!')
         console.log('recipe uploaded successfully!')
         router.push({ name: 'Browse' })
-        // recipeStore.resetForm()
+        recipeStore.$reset()
       }
     })
 
   isDisabled.value = true
 
 })
-
-
-
-// const handleSubmit = (values) => {
-
-//   const temp = {
-//     images: imgs,
-//     user_id: userId
-//   }
-//   Object.assign(values, temp)
-//   alert(JSON.stringify(values, null, 2))
-//   console.log(values);
-//   delete values.image
-
-//   const variables = values
-//   const url = 'http://localhost:8080/v1/graphql'
-//   const RECIPE_UPLOAD_MUTATION = `
-//   mutation($title: String!, $category: String!, $prep_time: Int!, $calories: Int!, $serving: Int!, $description: String!, $user_id: String!, $images: [InsertRecipeOneDerivedImagesInsertInput!]!, $steps: [InsertRecipeOneDerivedStepsInsertInput!]!, $ingredients:[InsertRecipeOneDerivedIngredientInsertInput!]!){
-//   InsertRecipeOneDerived(title:$title, 
-//     category: $category, 
-//     prep_time:$prep_time,
-//     calories:$calories,
-//     serving:$serving,
-//     description: $description,
-//     user_id:$user_id,
-//     images: $images,
-//     steps: $steps,
-//     ingredients: $ingredients
-//   ){
-//     title
-//   }
-// }`
-
-
-//   const options = {
-//     method: 'POST',
-//     headers: {
-//       'content-type': 'application/json',
-//       'authorization': 'Bearer ' + token,
-//       "x-hasura-use-backend-only-permissions": "true",
-//     },
-//     body: JSON.stringify({
-//       query: RECIPE_UPLOAD_MUTATION,
-//       variables: variables
-//     })
-//   }
-
-//   fetch(url, options)
-//     .then(res => res.json())
-//     .then(res => {
-//       if (res.errors) {
-//         console.log(res.errors, 'something went wrong from front end');
-//       } else {
-//         alert('Recipe Uploaded Successfully!')
-//         console.log('recipe uploaded successfully!');
-//         router.push({ name: 'Browse' })
-//       }
-//     })
-//   isDisabled.value = true
-// }
 
 const processor = (val) => {
   if (val == '+') {

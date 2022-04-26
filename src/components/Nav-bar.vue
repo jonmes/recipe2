@@ -119,7 +119,6 @@
                                                 <li
                                                     class="list-none py-2 border-t border-gray flex justify-start hover:text-black"
                                                 >
-                                                    <!-- License: Apache. Made by Remix Design: https://github.com/Remix-Design/remixicon -->
                                                     <svg
                                                         width="24px"
                                                         height="24px"

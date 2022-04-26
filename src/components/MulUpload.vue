@@ -23,7 +23,7 @@
                 </label>
             </div>
         </div>
-        <div class="ml-10">
+        <div class="ml-10" v-show="uploadButton">
             <div v-for="(file, index) in filesHolder" :key="index" class="flex justify-between w-80 mb-4">
                 <div class="text-black" :class="{ 'text-red': file.invalidMessage }">
                     <span v-if="index == 0">Thumbnail &nbsp;</span>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <button v-show="uploadButton" type="submit">Upload</button>
+        <button class="w-full py-2 bg-green-200 rounded-lg text-xl font-bold hover:bg-green-400" v-show="uploadButton" type="submit">Upload</button>
     </form>
 </template>
 
