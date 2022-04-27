@@ -268,7 +268,7 @@ const {
     () => ({ id: id.value }))
 
 const recipe = useResult(detailResult, null, data => data.recipe_by_pk)
-console.log('recipe result new', recipe);
+// console.log('recipe result new', recipe);
 
 const {
     result: ratingResult,
@@ -312,7 +312,6 @@ const {
 
 const checkLike = useResult(favCheck, null, data => data.favorite)
 
-
 const {
     result: favAgg,
     loading: aggL,
@@ -336,6 +335,9 @@ favRefetch()
 
 // ========================== WATCH ===========================
 
+// onMounted(() => {
+//     console.log('checkLike result', checkLike.value);
+// })
 watchEffect(() => {
     if (ratings.value) {
         if (ratings.value.length > 0) {
@@ -346,6 +348,7 @@ watchEffect(() => {
     }
     if (checkLike.value) {
         if (checkLike.value.length > 0) {
+            // console.log('liked value is greater than 0', checkLike.value);
             liked.value = true
             favId.value = checkLike.value[0].id
         }
@@ -391,7 +394,7 @@ const {
             favRefetch()
             refFavCheck()
             refAgg()
-            const rdata = cache.readQuery({query: fav_query.query, variables: {user_id: userId.value}})
+            const rdata = cache.readQuery({ query: fav_query.query, variables: { user_id: userId.value } })
         }
     }))
 
@@ -404,10 +407,21 @@ const {
 } = useMutation(delete_fav.mutations)
 
 
-function deleteFav_updateCache(id) {
-    console.log('some big int here', id);
-    deleteFav({ favId: id }, {
+function deleteFav_updateCache(favrid) {
+    // console.log('some big int here', favrid);
+    deleteFav({ favId: favrid }, {
         update: (cache, { data }) => {
+            // console.log('this is data', data);
+            // favRefetch()
+            // refFavCheck()
+            const cacheData = cache.readQuery({ query: fav_check.query, variables: { user_id: userId.value, recipeId: id.value} })
+            // console.log('cacheData', cacheData.favorite)
+            const updatedData = cacheData.favorite.filter(check => check.id !== favrid)
+            cache.writeQuery({ query: fav_check.query, variables: { user_id: userId.value, recipeId: id.value}, data: { favorite: updatedData } })
+            favRefetch()
+            refFavCheck()
+            // console.log('checkLike result', checkLike.value);
+
             refAgg()
         }
     })
@@ -447,7 +461,7 @@ const addrateRecipe = () => {
 const addComment = handleSubmit((values, { resetForm }) => {
     if (localStorage.getItem('user')) {
         comment.value = values.comment
-        console.log(values)
+        // console.log(values)
         comt()
         resetForm();
     } else {

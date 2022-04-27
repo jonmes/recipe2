@@ -257,7 +257,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="w-full flex justify-center">
+            <div class="w-full flex justify-center" v-if="rEnd">
                 <button class="bg-green py-2 px-10" @click="loadMore()">Load More!</button>
             </div>
         </div>
@@ -297,6 +297,7 @@ const filter = ref({ "title": "asc" })
 const recipe_id = ref(0)
 // const sortRecipe = ref([])
 const cursorVal = ref(0)
+const rEnd = ref(true)
 // ============ Functions ====================
 
 const cancelUpdate = () => updateCard.value = true
@@ -349,10 +350,14 @@ function loadMore() {
             recipe_id : sortRecipe.value[sortRecipe.value.length - 1].id
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
+
             if (!fetchMoreResult) return previousResult
-            console.log('previous cach', previousResult);
-            console.log('more: ', fetchMoreResult);
-            console.log('updated recipe id', sortRecipe.value);
+            // console.log('previous cach', previousResult);
+            // console.log('more: ', fetchMoreResult.recipe.length);
+            if(fetchMoreResult.recipe.length <= 1){
+                rEnd.value = false
+            }
+            // console.log('updated recipe id', sortRecipe.value);
             
             return {
                 recipe: [

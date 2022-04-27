@@ -457,7 +457,7 @@ const schema = yup.object().shape({
     .strict(),
 });
 
-console.log('recipe form data', recipeStore.$state.recipeForm);
+// console.log('recipe form data', recipeStore.$state.recipeForm);
 const initialData = {
   title: recipeStore.recipeForm.title || '',
   category: recipeStore.recipeForm.category || '',
