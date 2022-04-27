@@ -102,7 +102,7 @@
                             </h2>
                             <p class="text-gray-500 text-sm mt-5">
                                 By
-                                <a href="#" class="text-indigo-600 hover:underline">{{ recipe.user.name }}</a>
+                                <span class="text-indigo-600 ">{{ recipe.user.name }}</span>
                             </p>
                             <h4 class="text-gray-500 mt-5">Category: {{ recipe.category }}</h4>
                             <h4 class="text-gray-500 mt-5">
