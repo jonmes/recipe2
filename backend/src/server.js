@@ -76,7 +76,7 @@ const profileUpload = async (req, res, next) => {
 }
 
 const uploadRecipe = async (req, res, next) => {
-    console.log(req, 'req body authorization')
+    console.log(req.headers.authorization, 'req body authorization')
 
     // get request input
     let {
@@ -135,6 +135,9 @@ const uploadRecipe = async (req, res, next) => {
                 query: HASURA_OPERATION,
                 variables,
             }),
+            headers: {
+                authorization: req.headers.authorization
+            }
         })
         const data = await fetchResponse.json()
         console.log('DEBUG: ', data)

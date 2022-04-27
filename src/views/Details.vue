@@ -125,7 +125,7 @@
 
                             <div class="xl:mt-20 lg:pt-10 space-x-4">
                                 <button type="button"
-                                    class="flex justify-center items-center w-full sm:w-auto h-13 px-8 font-medium text-gray-900 border border-gray-900 rounded-xl hover:shadow-xl transition-shadow duration-300 transition-colors duration-500"
+                                    class="shadow hover:shadow-glowing flex justify-center items-center w-full sm:w-auto h-13 px-8 font-medium text-gray-900 border border-gray-900 rounded-xl hover:shadow-xl transition-shadow duration-300 transition-colors duration-500"
                                     :class="{ 'bg-green-300': liked }" @click="addFavorite(); refFavCheck(); refAgg()">
                                     <svg width="32px" height="32px" viewBox="0 0 32 32"
                                         enable-background="new 0 0 32 32" id="Stock_cut" version="1.1"
@@ -142,9 +142,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="relative col-span-2 h-0 pb-2/3 sm:pg-1/3 lg:pg-2/3">
-                        <h1>Hello Guys</h1>
-                    </div>-->
                 </div>
                 <div class="w-full mb-32 lg:mt-60 xl:mt-0">
                     <h2 class="w-full font-black font-great text-4xl mb-5">Ingredients</h2>
@@ -162,7 +159,6 @@
                                         class="inline-block" />
                                     Step {{ index + 1 }}
                                 </span>
-
                                 <br />
 
                                 <span class="ml-10">{{ step.step }}</span>

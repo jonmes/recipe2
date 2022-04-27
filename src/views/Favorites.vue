@@ -138,7 +138,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable'
-import { fav_query } from '../graphql/query'
+import { fav_query, fav_check } from '../graphql/query'
 import { delete_fav } from '../graphql/mutation'
 import { RotateSquare2 } from '@dgknca/vue-loading-spinner'
 import vue3starRatings from 'vue3-star-ratings'
@@ -173,11 +173,15 @@ function deleteFav_updateCache(id){
     deleteFav({ favId: id}, {
         update: (cache, { }) => {
             const data = cache.readQuery({query: fav_query.query, variables: { user_id: userId.value}})
-            console.log('fav data showing', data);
-            console.log('id', id);
-            data.favorite.forEach(fav => console.log('fav', fav.id))
+            const toBeDeleted = data.favorite.find(el => el.id == id)
+            console.log('toBeDelete', toBeDeleted.recipe_id)
+            // const cacheData = cache.readQuery({ query: fav_check.query, variables: { user_id: userId.value, recipeId: toBeDeleted.recipe_id} })
+            // console.log('favCheck Data', cacheData);
+            // console.log('fav data showing', data.favorite)
+            // console.log('id', id);
+            // data.favorite.forEach(fav => console.log('fav', fav.id))
             const updatedData = data.favorite.filter(fav => fav.id !== id)
-            console.log('updatedData', updatedData);
+            // console.log('updatedData', updatedData);
             cache.writeQuery({query: fav_query.query, variables: { user_id: userId.value}, data: { favorite: updatedData }})
         }
     })
